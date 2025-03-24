@@ -1,24 +1,24 @@
-# Répertoires de build
-*/build
-*/dist
-*/out
-*/target
-*/.cache
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Fichiers exécutables ou binaires
-*.exe
-*.dll
-*.so
-*.dylib
+node_modules
+dist
+dist-ssr
+*.local
 
-#ignoring .vscode folder but we keep some files for debuging
-*/.vscode/chrome
-*.vs/
-*package-lock.json
-*.DS_Store
-
-# Code Coverage Folder
-*coverage/
-
-#Node Modules
-*/node_modules
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
