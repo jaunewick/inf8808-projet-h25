@@ -22,6 +22,7 @@ class DBReader {
       }).data;
     } catch (error) {
       console.error('Error loading CSV:', error);
+      this._data = [];
     }
   }
 
