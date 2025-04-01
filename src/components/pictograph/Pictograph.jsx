@@ -40,7 +40,7 @@ const Pictograph = ({ value }) => {
       .data(myIndex)
       .enter()
       .append('use')
-      .attr('xlink:href', `#iconCustom${text}`)
+      .attr('href', `#iconCustom${text}`)
       .attr('id', (d) => `icon${text}${d}`)
       .attr('x', (d) => {
         const remainder = d % numCols;
