@@ -1,0 +1,11 @@
+svg {
+    margin-left: 10px;
+}
+
+.iconPlain {
+    fill: #555555;
+}
+
+.iconSelected {
+    fill: orange;
+}
