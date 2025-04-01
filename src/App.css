@@ -1,3 +1,10 @@
+body {
+  background-color: #344C65;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -39,4 +46,25 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+#source-target-row {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.link:hover {
+  stroke: #FDEFFF;
 }
