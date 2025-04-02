@@ -7,62 +7,50 @@ const WIDTH = 225;
 const HEIGHT = 225;
 const COLORS = ["#344C65", "#E9BA24"];
 
+const SIDES = [
+  { side: "Starboard", label: "Tribord", color: COLORS[0] },
+  { side: "Port", label: "Bâbord", color: COLORS[1] },
+];
+
 /**
  * @param {any[]} data
  * @param {"men" | "women" | "crew" | "total"} key
  * @returns {{ label: string, value: number }[]}
  */
-const aggregateBySide = (data, key) => {
-  const sumBySide = (side) =>
-    data
+const aggregateBySide = (data, key) =>
+  SIDES.map(({ side, label }) => ({
+    label,
+    value: data
       .filter((item) => item.side === side)
-      .reduce((sum, item) => sum + parseInt(item[key]), 0);
+      .reduce((sum, item) => sum + parseInt(item[key]), 0),
+  }));
 
-  return [
-    { label: "Tribord", value: sumBySide("Starboard") },
-    { label: "Bâbord", value: sumBySide("Port") },
-  ];
-};
+const CHART_CONFIGS = [
+  { key: "men", title: "Répartition des hommes" },
+  { key: "women", title: "Répartition des femmes" },
+  { key: "crew", title: "Répartition des membres de l'équipage" },
+  { key: "total", title: "Répartition globale" },
+];
 
 export const StarboardPortPieChart = () => {
   const [data, setData] = useState([]);
-
-  const [charts, setCharts] = useState([
-    {
-      key: "men",
-      title: "Répartition des hommes",
-      data: [],
-    },
-    {
-      key: "women",
-      title: "Répartition des femmes",
-      data: [],
-    },
-    {
-      key: "crew",
-      title: "Répartition des membres de l'équipage",
-      data: [],
-    },
-    {
-      key: "total",
-      title: "Répartition globale",
-      data: [],
-    },
-  ]);
+  const [charts, setCharts] = useState(
+    CHART_CONFIGS.map((c) => ({ ...c, data: [] }))
+  );
 
   useEffect(() => {
     DBReader.getLifeboatsData()
       .then(setData)
       .catch((error) => {
-        setData([]);
         console.error("Error fetching lifeboats data:", error);
+        setData([]);
       });
   }, []);
 
   useEffect(() => {
     if (data.length > 0) {
-      setCharts((prevCharts) =>
-        prevCharts.map((chart) => ({
+      setCharts((prev) =>
+        prev.map((chart) => ({
           ...chart,
           data: aggregateBySide(data, chart.key),
         }))
@@ -82,8 +70,8 @@ export const StarboardPortPieChart = () => {
             {charts.map(({ key, title, data }) => (
               <PieChart
                 key={key}
-                data={data}
                 title={title}
+                data={data}
                 colors={COLORS}
                 width={WIDTH}
                 height={HEIGHT}
@@ -93,20 +81,15 @@ export const StarboardPortPieChart = () => {
         </div>
         <div className={classes.right}>
           <div className={classes.legend}>
-            <div className={classes.legendItem}>
-              <div
-                className={classes.colorBox}
-                style={{ backgroundColor: COLORS[0] }}
-              />
-              <span>Tribord</span>
-            </div>
-            <div className={classes.legendItem}>
-              <div
-                className={classes.colorBox}
-                style={{ backgroundColor: COLORS[1] }}
-              />
-              <span>Bâbord</span>
-            </div>
+            {SIDES.map(({ label, color }) => (
+              <div key={label} className={classes.legendItem}>
+                <div
+                  className={classes.colorBox}
+                  style={{ backgroundColor: color }}
+                />
+                <span>{label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
