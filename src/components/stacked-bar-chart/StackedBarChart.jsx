@@ -72,7 +72,7 @@ const StackedBarChart = ({ data }) => {
     const color = d3
       .scaleOrdinal()
       .domain(keys)
-      .range(["#3b82f6", "#f59e0b", "#10b981", "#ef4444", "#f3f4f6"]);
+      .range(["#3b82f6", "#f59e0b", "#10b981", "#ef4444", "#f5f5f5"]);
 
     // Function to create a chart
     const createChart = (svgRef, title, subtitle, isUtilization = false) => {
