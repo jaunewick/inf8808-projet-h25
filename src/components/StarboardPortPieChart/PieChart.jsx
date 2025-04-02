@@ -63,7 +63,8 @@ export const PieChart = ({
       .attr("transform", (d) => `translate(${arc.centroid(d)})`)
       .style("text-anchor", "middle")
       .style("font-size", 14)
-      .style("fill", "#fff");
+      .style("font-weight", "bold")
+      .style("fill", (d, i) => color((i % colors.length) + 1));
   }, [data, width, height, colors, variant]);
 
   return (

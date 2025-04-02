@@ -30,22 +30,22 @@ export const StarboardPortPieChart = () => {
   const [charts, setCharts] = useState([
     {
       key: "men",
-      title: "Hommes par emplacement des canôts de sauvetages",
+      title: "Répartition des hommes",
       data: [],
     },
     {
       key: "women",
-      title: "Femmes par emplacement des canôts de sauvetages",
+      title: "Répartition des femmes",
       data: [],
     },
     {
       key: "crew",
-      title: "Membre de l'équipage par emplacement des canôts de sauvetages",
+      title: "Répartition des membres de l'équipage",
       data: [],
     },
     {
       key: "total",
-      title: "Total par emplacement des canôts de sauvetages",
+      title: "Répartition globale",
       data: [],
     },
   ]);
@@ -71,37 +71,45 @@ export const StarboardPortPieChart = () => {
   }, [data]);
 
   return (
-    <div className={classes.section}>
-      <div className={classes.left}>
-        <h2>
-          Répartition des passagers dans les canots de sauvetages selon la zone
-          du bateau
-        </h2>
-        <div className={classes.container}>
-          {charts.map(({ key, title, data }) => (
-            <PieChart
-              key={key}
-              data={data}
-              title={title}
-              colors={COLORS}
-              width={WIDTH}
-              height={HEIGHT}
-            />
-          ))}
-        </div>
-      </div>
-      <div className={classes.right}>
-        <div className={classes.legend}>
-          <div className={classes.legendItem}>
-            <div className={classes.colorBox} />
-            <span>Tribord</span>
-          </div>
-          <div className={classes.legendItem}>
-            <div className={classes.colorBox} />
-            <span>Bâbord</span>
+    <>
+      <h2>
+        Répartition des passagers dans les canots de sauvetages selon la zone du
+        bateau
+      </h2>
+      <div className={classes.section}>
+        <div className={classes.left}>
+          <div className={classes.container}>
+            {charts.map(({ key, title, data }) => (
+              <PieChart
+                key={key}
+                data={data}
+                title={title}
+                colors={COLORS}
+                width={WIDTH}
+                height={HEIGHT}
+              />
+            ))}
           </div>
         </div>
+        <div className={classes.right}>
+          <div className={classes.legend}>
+            <div className={classes.legendItem}>
+              <div
+                className={classes.colorBox}
+                style={{ backgroundColor: COLORS[0] }}
+              />
+              <span>Tribord</span>
+            </div>
+            <div className={classes.legendItem}>
+              <div
+                className={classes.colorBox}
+                style={{ backgroundColor: COLORS[1] }}
+              />
+              <span>Bâbord</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
