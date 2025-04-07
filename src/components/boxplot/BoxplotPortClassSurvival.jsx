@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 
 function BoxplotPortClassSurvival({ data }) {
     const svgRef = useRef();
-    const margin = { top: 40, right: 30, bottom: 150, left: 30 };
+    const margin = { top: 40, right: 40, bottom: 150, left: 60 };
     const width = 1200 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
@@ -40,6 +40,14 @@ function BoxplotPortClassSurvival({ data }) {
             .style("text-anchor", "middle")
             .style("font-size", "14px")
             .text("Port d'embarquement");
+
+        chart.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -height / 2)
+            .attr("y", -margin.left + 10)
+            .style("text-anchor", "middle")
+            .style("font-size", "14px")
+            .text("Prix du Billet (USD)");
 
         drawLegend(svg);
 
