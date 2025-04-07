@@ -2178,7 +2178,7 @@ name,gender,age,class,embarked,country,ticketno,fare,sibsp,parch,survived
 "Wilde, Mr. Henry Tingle",male,39,deck crew,S,England,NA,NA,NA,NA,no
 "Williams, Mr. Arthur John",male,42,victualling crew,S,England,NA,NA,NA,NA,no
 "Williams, Mr. Samuel Solomon",male,26,engineering crew,S,England,NA,NA,NA,NA,no
-"Williams, Mr. Walter John",male,28,victualling crew,S,England,NA,NA,NA,NA,yes
+"Williams, Mr. Walter John",male,28,victualling crew,S,England,NA,NA,NA,NA,yess
 "Williamson, Mr. James Bertram",male,35,victualling crew,S,Ireland,NA,NA,NA,NA,no
 "Willis, Mr. William",male,59,victualling crew,S,England,NA,NA,NA,NA,no
 "Willsher, Mr. William Aubrey",male,34,victualling crew,S,England,NA,NA,NA,NA,no

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
-import { GENDER, AGE, EMBARKED, SIBSP, SURVIVED, CLASS } from '../constants/column-titles'
+import { GENDER, AGE, EMBARKED, SIBSP, SURVIVED, CLASS } from '../../constants/column-titles'
+import Translate from '../../util/getTranslation'
+
 const MARGIN_X  = 10
 const MARGIN_Y  = 10
 const DEMOGRAPHIC_VARIABLES = [GENDER, CLASS, AGE, EMBARKED, SIBSP, SURVIVED]
 
-const LINK_COLOR = "#DBCEBF"
+const SOURCE_NODE_COLOR = "#E9BA24"
+const TARGET_NODE_COLOR = "#AC6C35"
 
 export default function SankeyDiagram ({width, height, data}) {
     
@@ -18,16 +21,7 @@ export default function SankeyDiagram ({width, height, data}) {
     const [processedData, setProcessedData] = useState({})
     const [availableSource, setAvailableSource] = useState(DEMOGRAPHIC_VARIABLES.filter(v => v !== target))
     const [availableTarget, setAvailableTarget] = useState(DEMOGRAPHIC_VARIABLES.filter(v => v !== source))
-
-
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF'
-        var color = '#'
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)]
-        }
-        return color
-    }
+    const translator = new Translate()
 
     const sankeyGenerator = sankey()
         .nodeWidth(26)
@@ -42,7 +36,7 @@ export default function SankeyDiagram ({width, height, data}) {
     function createNodes(nodeName) {
         let uniqueNodes
         if (nodeName === AGE) {
-            uniqueNodes = new Set(['child', 'adult'])
+            uniqueNodes = new Set(['enfant', 'adulte'])
         } else {
             uniqueNodes = new Set(
                 data?.map(passenger => passenger[nodeName])
@@ -51,13 +45,17 @@ export default function SankeyDiagram ({width, height, data}) {
         
        return Array.from(uniqueNodes).map(characteristic => ({id: characteristic}))
     }
-    
+
+    function isChild(age) {
+        return age < 18 ? 'enfant': 'adulte'
+    }
+
     function processData() {
         const allNodes = createNodes(source).concat(createNodes(target))      
         const linkMap = new Map()
         data?.forEach(passenger => {
-            const sourceNode = source === AGE ? (passenger[source] < 18 ? 'child': 'adult'): passenger[source]
-            const targetNode = target === AGE ? (passenger[target] < 18 ? 'child': 'adult'): passenger[target]
+            const sourceNode = source === AGE ? isChild(passenger[source]) : passenger[source]
+            const targetNode = target === AGE ? isChild(passenger[target]) : passenger[target]
             const link = linkMap.get(sourceNode + targetNode)
             if (link) {
                 link.value += 1
@@ -80,12 +78,13 @@ export default function SankeyDiagram ({width, height, data}) {
                 return (
                   <g key={node.index}>
                     <rect
+                      className='node'
                       height={node.y1 - node.y0}
                       width={sankeyGenerator.nodeWidth()}
                       x={node.x0}
                       y={node.y0}
                       stroke={"black"}
-                      fill={getRandomColor()}
+                      fill={node.x0 < width / 2 ? SOURCE_NODE_COLOR : TARGET_NODE_COLOR}
                       fillOpacity={0.8}
                       rx={0.9}
                     />
@@ -102,7 +101,7 @@ export default function SankeyDiagram ({width, height, data}) {
                     className='link'
                     key={i}
                     d={path}
-                    stroke={LINK_COLOR}
+                    stroke={TARGET_NODE_COLOR}
                     fill="none"
                     strokeOpacity={0.3}
                     strokeWidth={link.width}
@@ -121,10 +120,11 @@ export default function SankeyDiagram ({width, height, data}) {
                     fontSize={14}
                     fontWeight={400}
                   >
-                    {node.id}: {node.value}
+                    {translator.getTranslation(source, node.id) === node.id ? translator.getTranslation(target, node.id) : translator.getTranslation(source, node.id)}: {node.value}
                   </text>
                 )
-              }))
+            }))
+        
         } 
     }, [processedData])
 
@@ -150,13 +150,13 @@ export default function SankeyDiagram ({width, height, data}) {
                         value={source}
                         onChange={e => changeSource(e.target.value)}    
                     >
-                        {availableSource.map((value) => <option value={value} key={value}>{value}</option>)}
+                        {availableSource.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
                     </select>
                     <select 
                         value={target}
                         onChange={e => changeTarget(e.target.value)}
                     >
-                        {availableTarget.map((value) => <option value={value} key={value}>{value}</option>)}
+                        {availableTarget.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
                     </select>
                 </div>
             </div>

@@ -1,16 +1,15 @@
+import "./App.css";
+import SankeyDiagram from "./components/sankey/sankey";
+import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
 import { useState, useEffect } from 'react'
 import DBReader from './services/dbReader'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import SankeyDiagram from './components/sankey'
 
 function App() {
   const [count, setCount] = useState(0)
   const [data, setData] = useState(null)
 
   async function fetchData() {
-    const data = await DBReader.getData();
+    const data = await DBReader.getTitanicData();
     setData(data);
   }
 
@@ -21,10 +20,11 @@ function App() {
 
   return (
     <>
-      <h1>The Titanic Project</h1>
+      <StarboardPortPieChart />
+
       <SankeyDiagram width={500} height={500} data={data}></SankeyDiagram>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
