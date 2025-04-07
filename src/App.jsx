@@ -3,19 +3,24 @@ import DBReader from './services/dbReader'
 import BoxplotSurvival from './components/boxplot/BoxplotSurvival'
 import BoxplotClassSurvival from './components/boxplot/BoxplotClassSurvival';
 import BoxplotPortClassSurvival from './components/boxplot/BoxplotPortClassSurvival';
+import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
 
 function App() {
-    const [data, setData] = useState(null)
+    const [titanicData, setData] = useState(null)
+    const [lifeboatsData, setLifeboatsData] = useState(null)
 
     async function fetchData() {
-        const data = await DBReader.getData();
-        setData(data);
+        const titanicData = await DBReader.getTitanicData();
+        const lifeboatsData = await DBReader.getLifeboatsData();
+
+        setData(titanicData);
+        setLifeboatsData(lifeboatsData);
     }
 
     useEffect(() => {
         fetchData()
         console.log('fetched data')
-    }, [data])
+    }, [titanicData, lifeboatsData])
 
     return (
         <div className="vintage-newspaper">
@@ -70,9 +75,9 @@ function App() {
             <div className="maritime-bulletin">
                 <h3>Boîtes à moustaches</h3>
                 <p>La quatrième visualisation est représentée par des boîtes à moustaches...</p>
-                {data && <BoxplotSurvival data={data} />}
-                {data && <BoxplotClassSurvival data={data} />}
-                {data && <BoxplotPortClassSurvival data={data} />}
+                {titanicData && <BoxplotSurvival data={titanicData} />}
+                {titanicData && <BoxplotClassSurvival data={titanicData} />}
+                {titanicData && <BoxplotPortClassSurvival data={titanicData} />}
             </div>
 
             <div className="maritime-bulletin">
@@ -83,6 +88,7 @@ function App() {
             <div className="maritime-bulletin">
                 <h3>Small Multiple</h3>
                 <p>La cinquième visualisation sera illustrée par un small multiple...</p>
+                <StarboardPortPieChart />
             </div>
         </div>
     )
