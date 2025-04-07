@@ -32,7 +32,9 @@ function App() {
             <h2 className="headline"><span>Catastrophe Maritime :</span> Le Paquebot Titanic de la White Star Sombre dans l'Atlantique Nord</h2>
 
             <div className="telegraph-box">
-                DERNIER TÉLÉGRAMME : FEMMES ET ENFANTS D'ABORD DANS LES CANOTS DE SAUVETAGE - LE CARPATHIA SE PRÉCIPITE SUR LES LIEUX
+                <span>
+                    DERNIER TÉLÉGRAMME : FEMMES ET ENFANTS D'ABORD DANS LES CANOTS DE SAUVETAGE - LE CARPATHIA SE PRÉCIPITE SUR LES LIEUX
+                </span>
             </div>
 
             <div className="article-container">
