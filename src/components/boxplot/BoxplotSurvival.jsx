@@ -186,7 +186,7 @@ function BoxplotSurvival({ data }) {
     };
 
     const drawJitterPoints = (chart, processedData, xScale, yScale) => {
-        const jitterWidth = 80;
+        const jitterWidth = 110;
         chart.selectAll("points")
             .data(processedData)
             .enter()
