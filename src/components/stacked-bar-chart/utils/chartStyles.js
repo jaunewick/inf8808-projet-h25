@@ -11,9 +11,9 @@ export const COLORS = {
   grid: "#374151",
   capacity: "#d0021b",
   utilization: {
-    under80: "#10b981",
-    over80: "#f59e0b",
-    over100: "#ef4444",
+    under80: "teal",
+    over80: "orange",
+    over100: "tomato",
   },
   categories: {
     crew: "#3b82f6",
@@ -38,8 +38,8 @@ export const FONTS = {
     weight: "500",
   },
   label: {
-    size: "10px",
-    weight: "600",
+    size: "12px",
+    weight: "400",
   },
   tooltip: {
     size: "14px",

@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { COLORS, FONTS, STYLES } from "../utils/chartStyles";
 import "./TimeChart.css";
 
-const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
+const TimeChart = ({ svgRef, data, scales }) => {
   const { xTime, y, color, keys, width, height, margin } = scales;
 
   useEffect(() => {
@@ -30,20 +30,16 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
       .append("g")
       .attr("transform", `translate(0,${height})`)
       .call(
-        d3
-          .axisBottom(xTime)
-          .tickFormat((d) => {
-            if (d >= 0 && d < data.length) {
-              const time = data[d].time;
-              return time.toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-              });
-            }
-            return "";
-          })
-          .tickSize(-height)
-          .tickPadding(10)
+        d3.axisBottom(xTime).tickFormat((d) => {
+          if (d >= 0 && d < data.length) {
+            const time = data[d].time;
+            return time.toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+          }
+          return "";
+        })
       )
       .selectAll("text")
       .style("text-anchor", "end")
@@ -88,19 +84,9 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
       .style("letter-spacing", "0.5px")
       .text("Nombre de personnes");
 
-    // Add Y grid lines
-    timeChartGroup
-      .append("g")
-      .attr("class", "grid")
-      .call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(""))
-      .style("stroke-dasharray", STYLES.grid.strokeDasharray)
-      .style("opacity", STYLES.grid.opacity)
-      .style("stroke", COLORS.grid);
-
     // Stack the data
-    const stack = d3.stack().keys(keys);
+    const stack = d3.stack().keys(keys); // keys = ["Équipage", "Hommes", "Femmes", "Surcapacité", "Reste"]
     const stackedData = stack(data);
-
     // Create the stacked bars with initial state
     const barsGroup = timeChartGroup
       .append("g")
@@ -108,23 +94,23 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
       .data(stackedData)
       .join("g")
       .attr("fill", (d) => color(d.key))
+      .attr("fill-opacity", 0.7)
+      .attr("stroke", (d) => color(d.key))
+      .attr("stroke-width", 1.5)
+      .attr("stroke-opacity", 1)
       .selectAll("rect")
       .data((d) => d.map((value, i) => ({ key: d.key, value, index: i })))
       .join("rect")
       .attr("x", (d) => xTime(d.index))
       .attr("y", height) // Start from bottom
       .attr("height", 0) // Start with height 0
-      .attr("width", xTime.bandwidth())
-      .attr("rx", STYLES.bar.rx)
-      .attr("ry", STYLES.bar.ry)
-      .attr("stroke", STYLES.bar.stroke)
-      .attr("stroke-width", STYLES.bar.strokeWidth);
+      .attr("width", xTime.bandwidth());
 
     // Animate bars to their final positions
     barsGroup
       .transition()
       .duration(1000)
-      .ease(d3.easeBounceOut)
+      .ease(d3.easeCircle)
       .attr("x", (d) => xTime(d.index))
       .attr("y", (d) => y(d.value[1]))
       .attr("height", (d) => y(d.value[0]) - y(d.value[1]))
@@ -156,13 +142,15 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
         // Add each line of text separately
         const lines = [
           `Bateau #${boatData.boat}`,
-          `${d.key.charAt(0).toUpperCase() + d.key.slice(1)}: ${Math.round(
-            d.value[1] - d.value[0]
-          )}`,
           `Total: ${boatData.total}/${boatData.capacity}`,
           `Hommes: ${boatData.men}`,
           `Femmes: ${boatData.women}`,
           `Equipage: ${boatData.crew}`,
+          `Surcharge: ${
+            boatData.total > boatData.capacity
+              ? `+${boatData.total - boatData.capacity}`
+              : "0"
+          }`,
           `Heure de départ: ${boatData.time.toLocaleTimeString("fr-FR", {
             hour: "2-digit",
             minute: "2-digit",
@@ -190,7 +178,7 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
           .insert("rect", "g")
           .attr("width", bbox.width + STYLES.tooltip.padding)
           .attr("height", bbox.height + STYLES.tooltip.padding)
-          .attr("x", -bbox.width + 130 )
+          .attr("x", -bbox.width + 130)
           .attr("y", -bbox.height + 105)
           .attr("fill", COLORS.text.primary)
           .attr("rx", STYLES.tooltip.rx)
@@ -232,28 +220,6 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
       .attr("y1", (d) => y(d.capacity))
       .attr("y2", (d) => y(d.capacity));
 
-    // // Add boat number labels with smooth transitions
-    // const boatLabels = timeChartGroup
-    //   .selectAll(".boat-label")
-    //   .data(data)
-    //   .join("text")
-    //   .attr("class", "boat-label")
-    //   .attr("x", (d, i) => xTime(i) + xTime.bandwidth() / 2)
-    //   .attr("y", (d) => y(d.total) - 10)
-    //   .attr("text-anchor", "middle")
-    //   .style("font-size", FONTS.label.size)
-    //   .style("font-weight", FONTS.label.weight)
-    //   .style("fill", COLORS.text.primary)
-    //   .text((d) => `#${d.boat}`);
-
-    // // Add transition for boat labels
-    // boatLabels
-    //   .transition()
-    //   .duration(1000)
-    //   .ease(d3.easeBounceOut)
-    //   .attr("x", (d, i) => xTime(i) + xTime.bandwidth() / 2)
-    //   .attr("y", (d) => y(d.total) - 10);
-
     // Add title
     timeChartGroup
       .append("text")
@@ -266,7 +232,7 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
       .style("letter-spacing", "0.5px")
       .style("text-transform", "uppercase")
       .attr("transform", `translate(0, ${-margin.top})`)
-      .text(title);
+      .text("Distribution des passagers par bateau");
 
     // Add subtitle
     timeChartGroup
@@ -278,13 +244,13 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
       .style("fill", COLORS.text.secondary)
       .style("font-weight", FONTS.subtitle.weight)
       .attr("transform", `translate(0, ${-margin.top})`)
-      .text(subtitle);
+      .text("Nombre de personnes");
 
     // Add legend
     const legend = timeChartGroup
       .append("g")
       .attr("class", "chart-legend")
-      .attr("transform", `translate(${width +50 }, 20)`);
+      .attr("transform", `translate(${width + 50}, 20)`);
 
     // Add legend items
     scales.keys.forEach((key, i) => {
@@ -296,11 +262,15 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
       legendItem
         .append("rect")
         .attr("class", "legend-color")
-        .attr("width", 16)
-        .attr("height", 16)
+        .attr("width", 20)
+        .attr("height", 20)
         .attr("rx", 4)
         .attr("ry", 4)
-        .attr("fill", color(key));
+        .attr("fill", color(key))
+        .attr("fill-opacity", 0.7)
+        .attr("stroke", color(key))
+        .attr("stroke-width", 1.5)
+        .attr("stroke-opacity", 1);
 
       legendItem
         .append("text")
@@ -310,15 +280,25 @@ const TimeChart = ({ svgRef, data, scales, title, subtitle }) => {
         .style("font-size", FONTS.label.size)
         .style("fill", COLORS.text.primary)
         .style("font-weight", FONTS.label.weight)
-        .text(key.charAt(0).toUpperCase() + key.slice(1));
+        .text(() => {
+          const translations = {
+            crew: "Équipage",
+            men: "Hommes",
+            women: "Femmes",
+            overload: "Surcapacité",
+            remaining: "Reste",
+          };
+          return (
+            translations[key] || key.charAt(0).toUpperCase() + key.slice(1)
+          );
+        });
     });
 
     return () => {
       // Cleanup function
       timeChartGroup.remove();
     };
-  }, [svgRef, data, scales, title, subtitle]);
-
+  }, [svgRef, data, scales]);
   return null;
 };
 

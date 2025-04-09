@@ -8,44 +8,50 @@ class DBReader {
     if (!DBReader.instance) {
       this.#titanicData = null;
       this.#lifeboatsData = null;
-      this.ready = this.loadData();
+      this.titanicReady = this.loadTitanicData();
+      this.lifeboatsReady = this.loadLifeboatsData();
       DBReader.instance = this;
     }
     return DBReader.instance;
   }
 
-  async loadData() {
+  async loadTitanicData() {
     try {
-      // Load titanic data
       const titanicResponse = await fetch("data/titanic_with_crew.csv");
       const titanicText = await titanicResponse.text();
       this.#titanicData = Papa.parse(titanicText, {
         header: true,
         skipEmptyLines: true,
       }).data;
+    } catch (error) {
+      console.error('Error loading CSV:', error);
+      this.#titanicData = [];
+    }
+  }
 
-      // Load lifeboats data
-      const lifeboatsResponse = await fetch("data/Lifeboats.csv");
-      const lifeboatsText = await lifeboatsResponse.text();
-      this.#lifeboatsData = Papa.parse(lifeboatsText, {
+  async loadLifeboatsData() {
+    try {
+      const response = await fetch('data/lifeboats.csv');
+      const text = await response.text();
+
+      this.#lifeboatsData = Papa.parse(text, {
         header: true,
-        skipEmptyLines: true,
+        skipEmptyLines: true
       }).data;
     } catch (error) {
-      console.error("Error loading CSV:", error);
-      this.#titanicData = [];
+      console.error('Error loading CSV:', error);
       this.#lifeboatsData = [];
     }
   }
 
-  async getTitanicData() {
-    await this.ready;
-    return this.#titanicData;
+  async getLifeboatsData() {
+    await this.lifeboatsReady;
+    return this.#lifeboatsData;
   }
 
-  async getLifeboatsData() {
-    await this.ready;
-    return this.#lifeboatsData;
+  async getTitanicData() {
+    await this.titanicReady;
+    return this.#titanicData;
   }
 }
 

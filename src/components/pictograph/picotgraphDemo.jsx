@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
-import dbReader from "../../services/dbReader";
+import React, { useEffect, useState } from "react";
+import DBReader from "../../services/dbReader";
 import "./Pictograph.css"; // Import CSS for styling
 
 const Pictograph = () => {
@@ -11,7 +11,7 @@ const Pictograph = () => {
 
   const loadData = async () => {
     try {
-      const data = await dbReader.getTitanicData();
+      const data = await DBReader.getTitanicData();
       setPassengerData(data);
     } catch (error) {
       console.error("Error loading data:", error);

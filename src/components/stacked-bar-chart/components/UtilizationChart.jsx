@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { COLORS, FONTS, STYLES } from "../utils/chartStyles";
 import "./UtilizationChart.css";
 
-const UtilizationChart = ({ svgRef, data, scales, title, subtitle }) => {
+const UtilizationChart = ({ svgRef, data, scales }) => {
   const { x, y2 } = scales;
   const { width, height, margin } = scales;
 
@@ -128,8 +128,14 @@ const UtilizationChart = ({ svgRef, data, scales, title, subtitle }) => {
               if (d.utilization > 80) return COLORS.utilization.over80;
               return COLORS.utilization.under80;
             })
-            .attr("stroke", STYLES.bar.stroke)
-            .attr("stroke-width", STYLES.bar.strokeWidth)
+            .attr("fill-opacity", 0.7)
+            .attr("stroke", (d) => {
+              if (d.utilization > 100) return COLORS.utilization.over100;
+              if (d.utilization > 80) return COLORS.utilization.over80;
+              return COLORS.utilization.under80;
+            })
+            .attr("stroke-width", 1.5)
+            .attr("stroke-opacity", 1)
             .transition()
             .duration(1000)
             .ease(d3.easeBounceOut)
@@ -200,32 +206,6 @@ const UtilizationChart = ({ svgRef, data, scales, title, subtitle }) => {
             .remove()
       );
 
-    // Add title
-    utilizationChartGroup
-      .append("text")
-      .attr("x", width / 2)
-      .attr("y", -30)
-      .attr("text-anchor", "middle")
-      .style("font-size", FONTS.title.size)
-      .style("font-weight", FONTS.title.weight)
-      .style("fill", COLORS.text.primary)
-      .style("letter-spacing", "0.5px")
-      .style("text-transform", "uppercase")
-      .attr("transform", `translate(0, ${-margin.top})`)
-      .text(title);
-
-    // Add subtitle
-    utilizationChartGroup
-      .append("text")
-      .attr("x", width / 2)
-      .attr("y", -10)
-      .attr("text-anchor", "middle")
-      .style("font-size", FONTS.subtitle.size)
-      .style("fill", COLORS.text.secondary)
-      .style("font-weight", FONTS.subtitle.weight)
-      .attr("transform", `translate(0, ${-margin.top})`)
-      .text(subtitle);
-
     // Add legend
     const legend = utilizationChartGroup
       .append("g")
@@ -252,7 +232,11 @@ const UtilizationChart = ({ svgRef, data, scales, title, subtitle }) => {
         .attr("height", 16)
         .attr("rx", 4)
         .attr("ry", 4)
-        .attr("fill", level.color);
+        .attr("fill", level.color)
+        .attr("fill-opacity", 0.7)
+        .attr("stroke", level.color)
+        .attr("stroke-width", 1.5)
+        .attr("stroke-opacity", 1);
 
       legendItem
         .append("text")
@@ -269,7 +253,7 @@ const UtilizationChart = ({ svgRef, data, scales, title, subtitle }) => {
       // Cleanup function
       utilizationChartGroup.remove();
     };
-  }, [svgRef, data, scales, title, subtitle]);
+  }, [svgRef, data, scales]);
 
   return null;
 };
