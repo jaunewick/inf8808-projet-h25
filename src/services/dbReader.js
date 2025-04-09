@@ -31,7 +31,7 @@ class DBReader {
 
   async loadLifeboatsData() {
     try {
-      const response = await fetch('data/lifeboats.csv');
+      const response = await fetch('data/Lifeboats.csv');
       const text = await response.text();
 
       this.#lifeboatsData = Papa.parse(text, {
