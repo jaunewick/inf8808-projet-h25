@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import React, { useEffect, useState } from "react";
-import DBReader from "../../services/DBReader";
+import DBReader from "../../services/dbReader";
 import "./Pictograph.css"; // Import CSS for styling
 
 const Pictograph = () => {
