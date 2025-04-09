@@ -106,7 +106,7 @@ const UtilizationChart = ({ svgRef, data, scales }) => {
       .style("font-size", FONTS.label.size)
       .style("fill", COLORS.capacity)
       .style("font-weight", FONTS.label.weight)
-      .text("Full Capacity");
+      .text("Capacité maximale");
 
     // Add utilization bars
     utilizationChartGroup
