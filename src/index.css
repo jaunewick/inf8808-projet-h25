@@ -1,69 +1,187 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+.vintage-newspaper {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #e6d8c0;
+  background-image:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.1) 100%),
+    url('data:image/png;base64,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');
+  /* Paper texture */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid #5a4a42;
+  font-family: 'IM Fell English', 'Times New Roman', serif;
+  color: #2a2520;
   line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  transform: rotate(0.2deg);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+.newspaper-header {
+  text-align: center;
+  border-bottom: 4px double #5a4a42;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
-body {
+.newspaper-title {
+  font-family: 'IM Fell English SC', serif;
+  font-size: 3.5rem;
   margin: 0;
+  color: #2a2520;
+  text-shadow: 1px 1px 0px rgba(90, 74, 66, 0.2);
+  letter-spacing: 1px;
+}
+
+.newspaper-subtitle {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  color: #5a4a42;
+}
+
+.headline {
+  font-family: 'IM Fell English', serif;
+  font-size: 2.2rem;
+  margin: 1.5rem 0;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #5a4a42;
+  padding-bottom: 0.5rem;
+}
+
+.headline span {
+  color: #8b0000;
+  font-weight: bold;
+}
+.article-container {
   display: flex;
-  height: 100%;
-  width: 100%;
-  min-width: 320px;
-  min-height: 100vh;
+  gap: 2rem;
+  margin: 2rem 0;
+  align-items: flex-start;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+
+.article-body {
+  flex: 2;
+  column-count: 2;
+  column-gap: 2rem;
+  column-rule: 1px solid #d4c8b1;
+  text-align: justify;
+  hyphens: auto;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+  padding: 0 1rem;
+  border-right: 1px dashed #5a4a42;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.article-body p:first-child::first-letter {
+  float: left;
+  font-size: 3.2rem;
+  line-height: 0.1;
+  margin: 0.2em 0 0 0;
+  color: #5a4a42;
+  font-family: 'IM Fell English SC', serif;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.maritime-bulletin {
+  background: #f5f0e6;
+  border: 2px solid #5a4a42;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.9rem;
+}
+
+.weather-report {
+  float: right;
+  width: 30%;
+  margin: 1rem 0 1rem 2rem;
+  padding: 1rem;
+  border: 1px dashed #5a4a42;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.newspaper-image {
+  flex: 1;
+  max-width: 400px;
+  position: relative;
+  margin-top: 1rem;
+  align-self: flex-start;
+  border: 4px solid #5a4a42;
+  padding: 0.3rem;
+  background: white;
+  margin: 1rem 0;
+  filter: sepia(0.4) contrast(1.1) brightness(0.9);
+  box-shadow: 3px 3px 0px rgba(90, 74, 66, 0.2);
+  transform: rotate(0.3deg);
+}
+
+.passenger-list {
+  columns: 2;
+  column-gap: 2rem;
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 0.9rem;
+  margin: 1.5rem 0;
+}
+
+.telegraph-box {
+  border-top: 2px solid #8b0000;
+  border-bottom: 2px solid #8b0000;
+  padding: 1rem 0;
+  margin: 2rem 0;
+  font-family: 'Courier Prime', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.telegraph-box span {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #8b0000; /* Simulates a cursor */
+  animation: typing 6s steps(30, end), blink 0.8s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
   }
-  a:hover {
-    color: #747bff;
+  to {
+    width: 100%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@keyframes blink {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #8b0000;
+  }
+}
+
+.newspaper-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid #5a4a42;
+  font-size: 0.8rem;
+  color: #5a4a42;
+  font-family: 'Sorts Mill Goudy', serif;
+}
+
+@media (max-width: 768px) {
+  .article-container {
+    flex-direction: column;
+  }
+
+  .article-body {
+    border-right: none;
+    border-bottom: 1px dashed #5a4a42;
+    padding-bottom: 2rem;
+  }
+
+  .newspaper-image {
+    max-width: 100%;
   }
 }
