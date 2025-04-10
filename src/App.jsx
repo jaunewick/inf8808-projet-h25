@@ -1,4 +1,3 @@
-import "./App.css";
 import SankeyDiagram from "./components/sankey/sankey";
 import { useState, useEffect } from 'react'
 import DBReader from './services/dbReader'

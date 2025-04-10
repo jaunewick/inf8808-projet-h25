@@ -4,11 +4,12 @@ import { GENDER, AGE, EMBARKED, SIBSP, SURVIVED, CLASS } from '../../constants/c
 import Translate from '../../util/getTranslation'
 import * as d3 from 'd3'
 import d3Tip from 'd3-tip'
+import './sankey.css'
 
-const MARGIN_X  = 10
-const MARGIN_Y  = 10
+const MARGIN_X  = 20
+const MARGIN_Y  = 20
 const WIDTH = 500
-const HEIGHT = 400
+const HEIGHT = 500
 const DEMOGRAPHIC_VARIABLES = [GENDER, CLASS, AGE, EMBARKED, SIBSP, SURVIVED]
 
 const SOURCE_NODE_COLOR = "#E9BA24"
@@ -23,24 +24,6 @@ export default function SankeyDiagram ({data}) {
     const [availableSource, setAvailableSource] = useState(DEMOGRAPHIC_VARIABLES.filter(v => v !== target))
     const [availableTarget, setAvailableTarget] = useState(DEMOGRAPHIC_VARIABLES.filter(v => v !== source))
     const translator = new Translate()
-
-    const defs = d3.select('#sankey-diagram').append("defs")
-    const gradient = defs.append("linearGradient")
-                         .attr("id", "svgGradient")
-                         .attr("x1", "0%")
-                         .attr("x2", "100%")
-
-    gradient.append("stop")
-            .attr('class', 'start')
-            .attr("offset", "0%")
-            .attr("stop-color", SOURCE_NODE_COLOR)
-            .attr("stop-opacity", 1);
-
-    gradient.append("stop")
-            .attr('class', 'end')
-            .attr("offset", "100%")
-            .attr("stop-color", TARGET_NODE_COLOR)
-            .attr("stop-opacity", 1);
 
     const sankeyGenerator = sankey()
         .nodeWidth(32)
@@ -91,6 +74,7 @@ export default function SankeyDiagram ({data}) {
     }, [data])
 
     function drawNodes (data, tip) {
+        d3.selectAll('.sankey-node').remove()
         d3.select('#sankey-diagram')
           .selectAll('.sankey-node')
           .data(data)
@@ -104,6 +88,7 @@ export default function SankeyDiagram ({data}) {
     }
 
     function updateNodes () {
+        
         d3.selectAll('.sankey-node')
           .select('rect')
           .attr('height', (n) => n.y1 - n.y0)
@@ -112,11 +97,13 @@ export default function SankeyDiagram ({data}) {
           .attr('y', (n) => n.y0)
           .attr('stroke', "black")
           .attr('fill', (n) => n.x0 < WIDTH / 2 ? SOURCE_NODE_COLOR : TARGET_NODE_COLOR)
-          .attr('opacity', 0.8)
+          .attr('opacity', 1.0)
           .attr('rx', 0.9)
+          
     }
 
     function drawLinks (data, tip) {
+        d3.selectAll('.sankey-links').remove()
         d3.select('#sankey-diagram')
         .selectAll('.sankey-links')
         .data(data)
@@ -131,16 +118,18 @@ export default function SankeyDiagram ({data}) {
 
     function updateLinks () {
         const linkGenerator = sankeyLinkHorizontal()
+        
         d3.selectAll('.sankey-links')
           .select('path')
           .attr('d', (l) => linkGenerator(l))
-          .attr('stroke', "url(#svgGradient)")
           .attr('fill', 'none')
-          .style('stroke-opacity', 0.7)
+          .style('stroke-opacity', 0.6)
           .style('stroke-width', (l) => l.width)
+          .attr('stroke', SOURCE_NODE_COLOR)
     }
 
     function drawLabels(data) {
+        d3.selectAll('.sankey-labels').remove()
         d3.select('#sankey-diagram')
           .selectAll('.sankey-labels')
           .data(data)
@@ -150,6 +139,7 @@ export default function SankeyDiagram ({data}) {
     }
 
     function updateLabels() {
+        
         d3.selectAll('.sankey-labels')
           .select('text')
           .attr('x', (n) => n.x0 < WIDTH / 2 ? n.x1 + MARGIN_X: n.x0 - MARGIN_X)
@@ -162,6 +152,7 @@ export default function SankeyDiagram ({data}) {
             translator.getTranslation(source, n.id) === n.id
                 ? translator.getTranslation(target, n.id) 
                 : translator.getTranslation(source, n.id))
+        
     }
     
     function getContents (n) {
@@ -180,11 +171,12 @@ export default function SankeyDiagram ({data}) {
             const tip = d3Tip().attr('class', 'd3-tip').html(function (n) { return getContents(n) })
             d3.select('#sankey-diagram').call(tip)              
             
-            drawNodes(nodes, tip)
-            updateNodes()
 
             drawLinks(links, tip)
             updateLinks()
+
+            drawNodes(nodes, tip)
+            updateNodes()
 
             drawLabels(nodes)
             updateLabels()
@@ -207,24 +199,20 @@ export default function SankeyDiagram ({data}) {
     }
 
     return (
-        <div className="column">
-            <div className="row">
-                <div id="source-target-row">
-                    Source:  
-                    <select 
-                        value={source}
-                        onChange={e => changeSource(e.target.value)}    
-                    >
-                        {availableSource.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
-                    </select>
-                    Cible:  
-                    <select 
-                        value={target}
-                        onChange={e => changeTarget(e.target.value)}
-                    >
-                        {availableTarget.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
-                    </select>
-                </div>
+        <div id="sankey" className="maritime-bulletin">
+            <div id="source-target-row">
+                <select 
+                    value={source}
+                    onChange={e => changeSource(e.target.value)}    
+                >
+                    {availableSource.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
+                </select>
+                <select 
+                    value={target}
+                    onChange={e => changeTarget(e.target.value)}
+                >
+                    {availableTarget.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
+                </select>
             </div>
             <svg id="sankey-diagram" width={WIDTH} height={HEIGHT}>
             </svg>
