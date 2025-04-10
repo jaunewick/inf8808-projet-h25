@@ -58,6 +58,8 @@ export default class Translate {
                 return "ravitaillement"
             case "restaurant staff":
                 return "cuisine"
+            case "deck crew":
+                return "équipage de pont"
             default:
                 return passengerClass
         }  
