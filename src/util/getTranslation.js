@@ -75,7 +75,6 @@ export default class Translate {
     }
     
     getSurvival(passengerSurvival) {
-        console.log(passengerSurvival)
         switch (passengerSurvival) {
             
             case "yes":

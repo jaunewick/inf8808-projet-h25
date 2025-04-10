@@ -2,33 +2,52 @@ import React, { useEffect, useState } from 'react'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
 import { GENDER, AGE, EMBARKED, SIBSP, SURVIVED, CLASS } from '../../constants/column-titles'
 import Translate from '../../util/getTranslation'
+import * as d3 from 'd3'
+import d3Tip from 'd3-tip'
 
 const MARGIN_X  = 10
 const MARGIN_Y  = 10
+const WIDTH = 500
+const HEIGHT = 400
 const DEMOGRAPHIC_VARIABLES = [GENDER, CLASS, AGE, EMBARKED, SIBSP, SURVIVED]
 
 const SOURCE_NODE_COLOR = "#E9BA24"
-const TARGET_NODE_COLOR = "#AC6C35"
+const TARGET_NODE_COLOR = "#344C65"
 
-export default function SankeyDiagram ({width, height, data}) {
+export default function SankeyDiagram ({data}) {
     
     const [source, setSource] = useState(CLASS)
     const [target, setTarget] = useState(SURVIVED)
     
-    const [nodes, setNodes] = useState([])
-    const [links, setLinks] = useState([])
-    const [labels, setLabels] = useState([])
     const [processedData, setProcessedData] = useState({})
     const [availableSource, setAvailableSource] = useState(DEMOGRAPHIC_VARIABLES.filter(v => v !== target))
     const [availableTarget, setAvailableTarget] = useState(DEMOGRAPHIC_VARIABLES.filter(v => v !== source))
     const translator = new Translate()
 
+    const defs = d3.select('#sankey-diagram').append("defs")
+    const gradient = defs.append("linearGradient")
+                         .attr("id", "svgGradient")
+                         .attr("x1", "0%")
+                         .attr("x2", "100%")
+
+    gradient.append("stop")
+            .attr('class', 'start')
+            .attr("offset", "0%")
+            .attr("stop-color", SOURCE_NODE_COLOR)
+            .attr("stop-opacity", 1);
+
+    gradient.append("stop")
+            .attr('class', 'end')
+            .attr("offset", "100%")
+            .attr("stop-color", TARGET_NODE_COLOR)
+            .attr("stop-opacity", 1);
+
     const sankeyGenerator = sankey()
-        .nodeWidth(26)
+        .nodeWidth(32)
         .nodePadding(29)
         .extent([
             [MARGIN_X, MARGIN_Y],
-            [width - MARGIN_X, height - MARGIN_Y],
+            [WIDTH - MARGIN_X, HEIGHT - MARGIN_Y],
         ])
         .nodeId((node) => node.id)
         .nodeAlign(sankeyCenter)
@@ -42,7 +61,6 @@ export default function SankeyDiagram ({width, height, data}) {
                 data?.map(passenger => passenger[nodeName])
              )
         }
-        
        return Array.from(uniqueNodes).map(characteristic => ({id: characteristic}))
     }
 
@@ -67,64 +85,110 @@ export default function SankeyDiagram ({width, height, data}) {
             setProcessedData({nodes: allNodes, links: Array.from(linkMap.values())})
         }
     }
+
     useEffect(() => {
         processData()
     }, [data])
 
+    function drawNodes (data, tip) {
+        d3.select('#sankey-diagram')
+          .selectAll('.sankey-node')
+          .data(data)
+          .join('g')
+          .attr('class', 'sankey-node')
+          .append('rect')
+          .on('mouseover', (e, n) => {
+            tip.show({value: n.value}, e.currentTarget)
+          })
+          .on('mouseout', tip.hide)
+    }
+
+    function updateNodes () {
+        d3.selectAll('.sankey-node')
+          .select('rect')
+          .attr('height', (n) => n.y1 - n.y0)
+          .attr('width', (n) => sankeyGenerator.nodeWidth())
+          .attr('x', (n) => n.x0)
+          .attr('y', (n) => n.y0)
+          .attr('stroke', "black")
+          .attr('fill', (n) => n.x0 < WIDTH / 2 ? SOURCE_NODE_COLOR : TARGET_NODE_COLOR)
+          .attr('opacity', 0.8)
+          .attr('rx', 0.9)
+    }
+
+    function drawLinks (data, tip) {
+        d3.select('#sankey-diagram')
+        .selectAll('.sankey-links')
+        .data(data)
+        .join('g')
+        .attr('class', 'sankey-links')
+        .append('path')
+        .on('mouseover', (e, n) => {
+            tip.show({value: n.value}, e.currentTarget)
+          })
+        .on('mouseout', tip.hide)
+    }
+
+    function updateLinks () {
+        const linkGenerator = sankeyLinkHorizontal()
+        d3.selectAll('.sankey-links')
+          .select('path')
+          .attr('d', (l) => linkGenerator(l))
+          .attr('stroke', "url(#svgGradient)")
+          .attr('fill', 'none')
+          .style('stroke-opacity', 0.7)
+          .style('stroke-width', (l) => l.width)
+    }
+
+    function drawLabels(data) {
+        d3.select('#sankey-diagram')
+          .selectAll('.sankey-labels')
+          .data(data)
+          .join('g')
+          .attr('class', 'sankey-labels')
+          .append('text')
+    }
+
+    function updateLabels() {
+        d3.selectAll('.sankey-labels')
+          .select('text')
+          .attr('x', (n) => n.x0 < WIDTH / 2 ? n.x1 + MARGIN_X: n.x0 - MARGIN_X)
+          .attr('y', (n) => (n.y1 + n.y0) / 2)
+          .attr('dy', "0.34rem")
+          .attr('font-size', 16)
+          .attr('font-weight', 600)
+          .attr('text-anchor', (n) => n.x0 < WIDTH / 2 ? "start" : "end")
+          .text((n) => 
+            translator.getTranslation(source, n.id) === n.id
+                ? translator.getTranslation(target, n.id) 
+                : translator.getTranslation(source, n.id))
+    }
+    
+    function getContents (n) {
+        const tooltip = d3.create('div')
+
+        tooltip.append('div')
+               .attr('id', 'tooltip-content')
+               .text(`Passager(s): ${n.value}`)
+
+        return tooltip.html()
+    }
+
     useEffect(() => {
         if (Object.keys(processedData).length !== 0) {
             const { nodes, links } = sankeyGenerator(processedData)
-            setNodes(nodes.map((node) => {
-                return (
-                  <g key={node.index}>
-                    <rect
-                      className='node'
-                      height={node.y1 - node.y0}
-                      width={sankeyGenerator.nodeWidth()}
-                      x={node.x0}
-                      y={node.y0}
-                      stroke={"black"}
-                      fill={node.x0 < width / 2 ? SOURCE_NODE_COLOR : TARGET_NODE_COLOR}
-                      fillOpacity={0.8}
-                      rx={0.9}
-                    />
-                  </g>
-                )
-            }))
-
-            setLinks(links.map((link, i) => {
-                const linkGenerator = sankeyLinkHorizontal()
-                const path = linkGenerator(link)
-                
-                return (
-                  <path
-                    className='link'
-                    key={i}
-                    d={path}
-                    stroke={TARGET_NODE_COLOR}
-                    fill="none"
-                    strokeOpacity={0.3}
-                    strokeWidth={link.width}
-                  />
-                )
-            }))  
+            const tip = d3Tip().attr('class', 'd3-tip').html(function (n) { return getContents(n) })
+            d3.select('#sankey-diagram').call(tip)              
             
-            setLabels(nodes.map((node, i) => {
-                return (
-                  <text
-                    key={i}
-                    x={node.x0 < width / 2 ? node.x1 + 6 : node.x0 - 6}
-                    y={(node.y1 + node.y0) / 2}
-                    dy="0.35rem"
-                    textAnchor={node.x0 < width / 2 ? "start" : "end"}
-                    fontSize={14}
-                    fontWeight={400}
-                  >
-                    {translator.getTranslation(source, node.id) === node.id ? translator.getTranslation(target, node.id) : translator.getTranslation(source, node.id)}: {node.value}
-                  </text>
-                )
-            }))
-        
+            drawNodes(nodes, tip)
+            updateNodes()
+
+            drawLinks(links, tip)
+            updateLinks()
+
+            drawLabels(nodes)
+            updateLabels()
+
         } 
     }, [processedData])
 
@@ -146,12 +210,14 @@ export default function SankeyDiagram ({width, height, data}) {
         <div className="column">
             <div className="row">
                 <div id="source-target-row">
+                    Source:  
                     <select 
                         value={source}
                         onChange={e => changeSource(e.target.value)}    
                     >
                         {availableSource.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
                     </select>
+                    Cible:  
                     <select 
                         value={target}
                         onChange={e => changeTarget(e.target.value)}
@@ -160,10 +226,7 @@ export default function SankeyDiagram ({width, height, data}) {
                     </select>
                 </div>
             </div>
-            <svg width={width} height={height}>
-                {nodes}
-                {links}
-                {labels}
+            <svg id="sankey-diagram" width={WIDTH} height={HEIGHT}>
             </svg>
         </div>
     )   
