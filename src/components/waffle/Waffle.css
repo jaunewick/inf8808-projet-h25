@@ -1,0 +1,54 @@
+.waffle-bars {
+    display: flex;
+    overflow: auto;
+}
+
+.waffle-bars div svg {
+    height: 550px;
+    overflow: visible;
+}
+
+.waffle-bars .waffle-bar {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.waffle-bar div {
+    font-weight: bold;
+}
+
+.waffle-labels {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 300px;
+    border: 2px solid #5a4a42;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.square {
+    height: 7px;
+    width: 7px;
+}
+
+.survived-label {
+    background-color: #344C65;
+}
+
+.deceased-label {
+    background-color: #C2C9D1;
+}
+
+.waffle-labels span {
+    margin-right: 20px;
+}
+
+.waffle-labels .square {
+    margin-right: 5px;
+}
+
+select {
+    border: 2px solid #5a4a42;
+}
