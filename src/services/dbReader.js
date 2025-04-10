@@ -1,4 +1,4 @@
-import Papa from 'papaparse';
+import Papa from "papaparse";
 
 class DBReader {
   #titanicData;
@@ -17,13 +17,11 @@ class DBReader {
 
   async loadTitanicData() {
     try {
-      const response = await fetch('data/titanic_with_crew.csv');
-      const text = await response.text();
-
-      this.#titanicData = Papa.parse(text, {
+      const titanicResponse = await fetch("data/titanic_with_crew.csv");
+      const titanicText = await titanicResponse.text();
+      this.#titanicData = Papa.parse(titanicText, {
         header: true,
-        skipEmptyLines: true
-
+        skipEmptyLines: true,
       }).data;
     } catch (error) {
       console.error('Error loading CSV:', error);
@@ -33,7 +31,7 @@ class DBReader {
 
   async loadLifeboatsData() {
     try {
-      const response = await fetch('data/lifeboats.csv');
+      const response = await fetch('data/Lifeboats.csv');
       const text = await response.text();
 
       this.#lifeboatsData = Papa.parse(text, {
