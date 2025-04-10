@@ -4,6 +4,7 @@ import BoxplotSurvival from './components/boxplot/BoxplotSurvival'
 import BoxplotClassSurvival from './components/boxplot/BoxplotClassSurvival';
 import BoxplotPortClassSurvival from './components/boxplot/BoxplotPortClassSurvival';
 import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
+import Waffle from './components/waffle/waffle';
 
 function App() {
     const [titanicData, setData] = useState(null)
@@ -67,6 +68,7 @@ function App() {
             <div className="maritime-bulletin">
                 <h3>Waffle Chart</h3>
                 <p>La deuxième visualisation consiste en une série de waffle chart où chaque unité (carré) représente un passager du Titanic...</p>
+                <Waffle></Waffle>
             </div>
 
             <div className="maritime-bulletin">
