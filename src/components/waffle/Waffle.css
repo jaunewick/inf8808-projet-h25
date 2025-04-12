@@ -4,12 +4,11 @@
 }
 
 .waffle-bars div svg {
-    height: 550px;
+    height: 510px;
     overflow: visible;
 }
 
 .waffle-bars .waffle-bar {
-    margin-left: 20px;
     margin-right: 20px;
 }
 
@@ -24,8 +23,6 @@
     height: 40px;
     width: 300px;
     border: 2px solid #5a4a42;
-    margin-top: 15px;
-    margin-bottom: 20px;
 }
 
 .square {
@@ -39,6 +36,11 @@
 
 .deceased-label {
     background-color: #C2C9D1;
+}
+
+.waffle-labels {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .waffle-labels span {
