@@ -30,6 +30,11 @@ const REGIONS = {
   "Scandinavie": ["Norway", "Sweden", "Finland", "Denmark"]
 }
 
+const UNIT_SIDE_LENGTH = 7;
+const UNIT_SPACING = 2;
+const NUMBER_UNITS_PER_ROW = 20;
+const MAX_WIDTH = (UNIT_SIDE_LENGTH + UNIT_SPACING) * NUMBER_UNITS_PER_ROW;
+
 export default function Waffle() {
   const [countriesToRender, setCountriesToRender] = useState(REGIONS["Îles britanniques"]);
   const [survivorsPerCountry, setSurvivorsPerCountry] = useState(undefined);
@@ -55,44 +60,49 @@ export default function Waffle() {
     })
   }, []);
 
-    useEffect(() => {
-      d3.selectAll(".waffle-bars div").remove();
+  useEffect(() => {
+    d3.selectAll(".waffle-bars div").remove();
 
-      if (survivorsPerCountry === undefined)
-        return;
+    if (survivorsPerCountry === undefined || countriesToRender === undefined)
+      return;
 
-      if (countriesToRender === undefined)
-        return;
+    countriesToRender.sort((a, b) => {
+      return d3.descending(survivorsPerCountry[a].length, survivorsPerCountry[b].length);
+    })
 
-      countriesToRender.sort((a, b) => d3.descending(survivorsPerCountry[a].length, survivorsPerCountry[b].length))
+    for (const country of countriesToRender) {
+      const passagers = survivorsPerCountry[country];
 
-      for (const country of countriesToRender) {
-        const countryBar = d3.select(".waffle-bars").append("div").attr("className", "waffle-bar");
+      const countryBar = d3.select(".waffle-bars").append("div").attr("class", "waffle-bar");
+      countryBar
+        .append("div")
+        .text(COUNTRIES[country] ? COUNTRIES[country] : country);
+      
+      const svg = countryBar
+        .append("svg")
+        .attr("width", Math.min(passagers.length * (UNIT_SIDE_LENGTH + UNIT_SPACING), MAX_WIDTH));
 
-        countryBar.append("div").text(COUNTRIES[country] ? COUNTRIES[country] : country);
-        
-        const svg = countryBar.append("svg").attr("width", (Math.min(survivorsPerCountry[country].length * 10, 200)));
+      const g = svg.append("g");
 
-        const g = svg.append("g");
+      g.selectAll(".square")
+        .data(passagers)
+        .enter()
+        .append("rect")
+        .attr("class", "square")
+        .attr("x", (_, i) => (i % NUMBER_UNITS_PER_ROW) * (UNIT_SIDE_LENGTH + UNIT_SPACING))
+        .attr("y", (_, i) => Math.floor(i / NUMBER_UNITS_PER_ROW) * (UNIT_SIDE_LENGTH + UNIT_SPACING))
+        .attr("fill", (d) => d.survived === "no" ? "#C2C9D1" : "#344C65")
+        .exit();
+    }
+  }, [countriesToRender, survivorsPerCountry])
 
-        g.selectAll(".square")
-          .data(survivorsPerCountry[country])
-          .enter()
-          .append("rect")
-          .attr("class", "square")
-          .attr("x", (_, i) => (i % 20) * (7 + 2))
-          .attr("y", (_, i) => Math.floor(i / 20) * (7 + 2))
-          .attr("fill", (d) => d.survived === "no" ? "#C2C9D1" : "#344C65")
-          .exit();
-      }
-    }, [countriesToRender, survivorsPerCountry])
+  useEffect(() => {
+    setCountriesToRender(REGIONS[selectedRegion]);
+  }, [selectedRegion])
 
-    useEffect(() => {
-      setCountriesToRender(REGIONS[selectedRegion]);
-    }, [selectedRegion])
-
-    return (
-      <>
+  return (
+    <>
+      <div className="waffle-selection">
         <label>
           Région géographique:
           <select value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)}>
@@ -100,15 +110,16 @@ export default function Waffle() {
             <option value="Amérique">Amérique</option>
             <option value="Scandinavie">Scandinavie</option>
           </select>
-        </label>
-        <div className="waffle-labels">
-          <div className="survived-label square" background-color="#344C65"></div>
-          <span>Survivant</span>
-          <div className="deceased-label square" background-color="#C2C9D1"></div>
-          <span>Naufragé</span>
-        </div>
-        <div className="waffle-bars"></div>
-        <div className="waffle-hover"></div>
-      </>
-    );
+        </label>    
+      </div>
+      <div className="waffle-bars"></div>
+      <div className="waffle-hover"></div>
+      <div className="waffle-labels">
+      <div className="survived-label square" background-color="#344C65"></div>
+        <span>Survivant</span>
+        <div className="deceased-label square" background-color="#C2C9D1"></div>
+        <span>Naufragé</span>
+      </div>
+    </>
+  );
 }
