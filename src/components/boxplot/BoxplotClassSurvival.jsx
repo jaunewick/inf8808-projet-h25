@@ -3,12 +3,22 @@ import * as d3 from 'd3';
 
 const BoxplotClassSurvival = ({ data }) => {
     const svgRef = useRef();
+    const tooltipRef = useRef();
     const margin = { top: 40, right: 30, bottom: 120, left: 60 };
     const width = 1150 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
     useEffect(() => {
         if (!data) return;
+
+        const tooltip = d3.select(tooltipRef.current)
+            .style("position", "absolute")
+            .style("background-color", "white")
+            .style("border", "1px solid gray")
+            .style("border-radius", "4px")
+            .style("padding", "5px")
+            .style("pointer-events", "none")
+            .style("opacity", 0);
 
         const processedData = preprocessData(data);
         const sumstat = d3.group(processedData, d => d.classed, d => d.survived);
@@ -20,8 +30,8 @@ const BoxplotClassSurvival = ({ data }) => {
         const { xScale, yScale, colorScale } = createScales(processedData, classNames);
 
         drawAxes(chart, xScale, yScale);
-        drawBoxplots(chart, sumstat, xScale, yScale, colorScale, survivalStatus);
-        drawJitterPoints(chart, sumstat, xScale, yScale, colorScale, survivalStatus);
+        drawBoxplots(chart, sumstat, xScale, yScale, colorScale, survivalStatus, tooltip);
+        drawJitterPoints(chart, sumstat, xScale, yScale, colorScale, survivalStatus, tooltip);
         drawAnnotations(chart, sumstat, classNames, xScale, height);
         drawLegend(svg);
 
@@ -34,7 +44,8 @@ const BoxplotClassSurvival = ({ data }) => {
                 d.embarked !== 'B' &&
                 d.class &&
                 d.fare &&
-                !excludedClasses.includes(d.class)
+                !excludedClasses.includes(d.class) &&
+                !isNaN(d.fare)
             )
             .map(d => ({
                 class: d.class,
@@ -95,7 +106,7 @@ const BoxplotClassSurvival = ({ data }) => {
             .text("Prix du Billet (USD)");
     };
 
-    const drawBoxplots = (chart, portData, xScale, yScale, colorScale, survivalStatus) => {
+    const drawBoxplots = (chart, portData, xScale, yScale, colorScale, survivalStatus, tooltip) => {
         const boxWidthFactor = 0.25;
         const capWidth = 15;
 
@@ -115,7 +126,6 @@ const BoxplotClassSurvival = ({ data }) => {
                 const xPos = xScale(className) + xScale.bandwidth() * (status === 'oui' ? 0.25 : 0.75);
                 const boxWidth = xScale.bandwidth() * boxWidthFactor;
 
-
                 chart.append("line")
                     .attr("x1", xPos)
                     .attr("x2", xPos)
@@ -125,7 +135,6 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("stroke-opacity", 0.7)
                     .attr("stroke-width", 1.5);
 
-
                 chart.append("line")
                     .attr("x1", xPos)
                     .attr("x2", xPos)
@@ -134,7 +143,6 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
                     .attr("stroke-width", 1.5);
-
 
                 chart.append("line")
                     .attr("x1", xPos - capWidth / 2)
@@ -162,7 +170,28 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("fill", colorScale(status))
                     .attr("fill-opacity", 0.7)
                     .attr("stroke", colorScale(status))
-                    .attr("stroke-width", 1.5);
+                    .attr("stroke-width", 1.5)
+                    .on("mouseover", (event) => {
+                        tooltip.style("opacity", 1)
+                            .html(`
+                                <strong>Classe :</strong> ${className}<br>
+                                <strong>Survie :</strong> ${status === 'oui' ? 'Oui' : 'Non'}<br>
+                                <strong>Max :</strong> $${max.toFixed(2)}<br>
+                                <strong>Q3 :</strong> $${q3.toFixed(2)}<br>
+                                <strong>Médiane :</strong> $${median.toFixed(2)}<br>
+                                <strong>Q1 :</strong> $${q1.toFixed(2)}<br>
+                                <strong>Min :</strong> $${min.toFixed(2)}
+                            `)
+                            .style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip.style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mouseout", () => {
+                        tooltip.style("opacity", 0);
+                    });
 
                 chart.append("line")
                     .attr("x1", xPos - boxWidth / 2)
@@ -175,7 +204,7 @@ const BoxplotClassSurvival = ({ data }) => {
         });
     };
 
-    const drawJitterPoints = (chart, sumstat, xScale, yScale, colorScale, survivalStatus) => {
+    const drawJitterPoints = (chart, sumstat, xScale, yScale, colorScale, survivalStatus, tooltip) => {
         const jitterWidthFactor = 0.2;
 
         Array.from(sumstat).forEach(([className, survivalData]) => {
@@ -192,7 +221,24 @@ const BoxplotClassSurvival = ({ data }) => {
                         .attr("cy", yScale(d.fare))
                         .attr("r", 2.5)
                         .attr("fill", colorScale(status))
-                        .attr("opacity", 0.4);
+                        .attr("opacity", 0.4)
+                        .on("mouseover", (event) => {
+                            tooltip.style("opacity", 1)
+                                .html(`
+                                    <strong>Classe :</strong> ${d.classed}<br>
+                                    <strong>Survie :</strong> ${status === 'oui' ? 'Oui' : 'Non'}<br>
+                                    <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
+                                `)
+                                .style("left", `${event.pageX + 10}px`)
+                                .style("top", `${event.pageY - 20}px`);
+                        })
+                        .on("mousemove", (event) => {
+                            tooltip.style("left", `${event.pageX + 10}px`)
+                                .style("top", `${event.pageY - 20}px`);
+                        })
+                        .on("mouseout", () => {
+                            tooltip.style("opacity", 0);
+                        });
                 });
             });
         });
@@ -284,6 +330,7 @@ const BoxplotClassSurvival = ({ data }) => {
                 width={width + margin.left + margin.right}
                 height={height + margin.top + margin.bottom}
             />
+            <div ref={tooltipRef} />
         </div>
     );
 };

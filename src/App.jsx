@@ -63,7 +63,7 @@ function App() {
             trois heures. Le paquebot, qui transportait 2 202 âmes à son bord,
             aurait subi une brèche mortelle sur son flanc tribord. Malgré les
             efforts héroïques de l'équipage et la mobilisation du Carpathia,
-            seuls 500 rescapés ont pu être comptabilisés à ce jour.
+            seuls 498 rescapés ont pu être comptabilisés à ce jour.
           </p>
 
           <p>
