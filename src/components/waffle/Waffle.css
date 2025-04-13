@@ -1,15 +1,17 @@
 .waffle-bars {
     display: flex;
+    flex-wrap: wrap;
     overflow: auto;
+    margin-bottom: 20px;
 }
 
 .waffle-bars div svg {
-    height: 510px;
     overflow: visible;
 }
 
 .waffle-bars .waffle-bar {
     margin-right: 20px;
+    margin-top: 15px;
 }
 
 .waffle-bar div {

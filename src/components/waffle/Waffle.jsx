@@ -8,7 +8,7 @@ import "./Waffle.css";
 const COUNTRIES = {
   "Argentina": "Argentine", "Australia": "Australie", "Austria": "Autriche",
   "Belgium": "Belgique", "Canada": "Canada", "Channel Islands": "Îles Anglo-Normandes",
-  "Hong Kong": "Hong Kong", "Croatia": "Croatie", "Croatia (Modern)": "Croatie (Moderne)",
+  "China/Hong Kong": "Hong Kong", "Croatia": "Croatie", "Croatia (Modern)": "Croatie (Moderne)",
   "Cuba": "Cuba", "Egypt": "Égypte", "England": "Angleterre",
   "Finland": "Finlande", "France": "France", "Germany": "Allemagne",
   "Greece": "Grèce", "Guyana": "Guyanne",  "Hungary": "Hongrie",
@@ -20,14 +20,17 @@ const COUNTRIES = {
   "Slovakia (Modern day)": "Slovaquie (actuelle)", "Slovenia": "Slovenie", "South Africa": "Affrique du Sud",
   "Spain": "Espagne", "Sweden": "Suède", "Switzerland": "Suisse",
   "Syria": "Syrie", "Turkey": "Turquie", "United States": "États-Unis",
-  "Uruguay": "Uruguay", "Wales": "Pays de Galle", "Yugoslavia": "Yugoslavie",
+  "Uruguay": "Uruguay", "Wales": "Pays de Galles", "Yugoslavia": "Yugoslavie",
   "Norway": "Norvège"
 }
 
 const REGIONS = {
   "Îles britanniques": ["England", "Channel Islands", "Wales", "Northern Ireland", "Ireland", "Scotland"],
   "Amérique": ["United States", "Argentina", "Canada", "Peru", "Cuba", "Guyana", "Uruguay"],
-  "Scandinavie": ["Norway", "Sweden", "Finland", "Denmark"]
+  "Scandinavie": ["Norway", "Sweden", "Finland", "Denmark"],
+  "Asie": ["China/Hong Kong", "India", "Japan", "Lebanon", "Siam", "Syria", "Turkey"],
+  "Europe de l'Ouest et Centrale": ["Belgium", "Austria", "France", "Germany", "Slovakia (Modern day)", "Slovenia", "Switzerland", "Poland", "Hungary", "Latvia"],
+  "Monde": Object.keys(COUNTRIES)
 }
 
 const UNIT_SIDE_LENGTH = 7;
@@ -36,9 +39,9 @@ const NUMBER_UNITS_PER_ROW = 20;
 const MAX_WIDTH = (UNIT_SIDE_LENGTH + UNIT_SPACING) * NUMBER_UNITS_PER_ROW;
 
 export default function Waffle() {
-  const [countriesToRender, setCountriesToRender] = useState(REGIONS["Îles britanniques"]);
+  const [countriesToRender, setCountriesToRender] = useState(REGIONS["Monde"]);
   const [survivorsPerCountry, setSurvivorsPerCountry] = useState(undefined);
-  const [selectedRegion, setSelectedRegion] = useState("Îles britanniques");
+  const [selectedRegion, setSelectedRegion] = useState("Monde");
 
   useEffect(() => {
     DBReader.getTitanicData().then((passengerData) => {
@@ -80,7 +83,8 @@ export default function Waffle() {
       
       const svg = countryBar
         .append("svg")
-        .attr("width", Math.min(passagers.length * (UNIT_SIDE_LENGTH + UNIT_SPACING), MAX_WIDTH));
+        .attr("width", Math.min(passagers.length * (UNIT_SIDE_LENGTH + UNIT_SPACING), MAX_WIDTH))
+        .attr("height", passagers.length / 20 * (UNIT_SIDE_LENGTH + UNIT_SPACING));
 
       const g = svg.append("g");
 
@@ -106,20 +110,26 @@ export default function Waffle() {
         <label>
           Région géographique:
           <select value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)}>
+            <option value="Monde">Monde</option>
             <option value="Îles britanniques">Îles britanniques</option>
             <option value="Amérique">Amérique</option>
             <option value="Scandinavie">Scandinavie</option>
+            <option value="Asie">Asie</option>
+            <option value="Europe de l'Ouest et Centrale">Europe de l'Ouest et Centrale</option>
           </select>
-        </label>    
+        </label>
+        <label>
+
+        </label>
+      </div>
+      <div className="waffle-labels">
+          <div className="survived-label square" background-color="#344C65"></div>
+          <span>Survivant</span>
+          <div className="deceased-label square" background-color="#C2C9D1"></div>
+          <span>Naufragé</span>
       </div>
       <div className="waffle-bars"></div>
       <div className="waffle-hover"></div>
-      <div className="waffle-labels">
-      <div className="survived-label square" background-color="#344C65"></div>
-        <span>Survivant</span>
-        <div className="deceased-label square" background-color="#C2C9D1"></div>
-        <span>Naufragé</span>
-      </div>
     </>
   );
 }
