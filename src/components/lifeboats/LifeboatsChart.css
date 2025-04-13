@@ -1,0 +1,16 @@
+.lifeboats-chart-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: rgb(245, 0, 0);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lifeboats-chart-container > div {
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.1rem;
+  color: #666;
+}
