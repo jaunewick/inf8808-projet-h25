@@ -3,12 +3,22 @@ import * as d3 from 'd3';
 
 function BoxplotPortClassSurvival({ data }) {
     const svgRef = useRef();
+    const tooltipRef = useRef();
     const margin = { top: 40, right: 40, bottom: 150, left: 60 };
     const width = 1200 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
     useEffect(() => {
         if (!data) return;
+
+        const tooltip = d3.select(tooltipRef.current)
+            .style("position", "absolute")
+            .style("background-color", "white")
+            .style("border", "1px solid gray")
+            .style("border-radius", "4px")
+            .style("padding", "5px")
+            .style("pointer-events", "none")
+            .style("opacity", 0);
 
         const processedData = preprocessData(data);
         const ports = Array.from(new Set(processedData.map(d => d.port)));
@@ -29,8 +39,8 @@ function BoxplotPortClassSurvival({ data }) {
             const { xScale, yScale, colorScale } = createScales(processedData, classNames, portWidth);
 
             drawAxes(portGroup, xScale, yScale, port, portWidth);
-            drawBoxplots(portGroup, portData, xScale, yScale, colorScale, survivalStatus);
-            drawJitterPoints(portGroup, portData, xScale, yScale, colorScale, survivalStatus);
+            drawBoxplots(portGroup, portData, xScale, yScale, colorScale, survivalStatus, tooltip, port);
+            drawJitterPoints(portGroup, portData, xScale, yScale, colorScale, survivalStatus, tooltip, port);
             drawAnnotations(portGroup, processedData, port, height, portWidth);
         });
 
@@ -60,7 +70,8 @@ function BoxplotPortClassSurvival({ data }) {
                 d.embarked !== 'B' &&
                 d.class &&
                 d.fare &&
-                !excludedClasses.includes(d.class)
+                !excludedClasses.includes(d.class) &&
+                !isNaN(d.fare)
             )
             .map(d => ({
                 port: d.embarked === 'C' ? 'Cherbourg' : d.embarked === 'Q' ? 'Queenstown' : 'Southampton',
@@ -114,7 +125,7 @@ function BoxplotPortClassSurvival({ data }) {
             .text(`Port: ${port}`);
     };
 
-    const drawBoxplots = (chart, portData, xScale, yScale, colorScale, survivalStatus) => {
+    const drawBoxplots = (chart, portData, xScale, yScale, colorScale, survivalStatus, tooltip, port) => {
         const boxWidthFactor = 0.25;
         const capWidth = 15;
 
@@ -180,7 +191,29 @@ function BoxplotPortClassSurvival({ data }) {
                     .attr("fill", colorScale(status))
                     .attr("fill-opacity", 0.7)
                     .attr("stroke", colorScale(status))
-                    .attr("stroke-width", 1.5);
+                    .attr("stroke-width", 1.5)
+                    .on("mouseover", (event) => {
+                        tooltip.style("opacity", 1)
+                            .html(`
+                                <strong>Port :</strong> ${port}<br>
+                                <strong>Classe :</strong> ${className}<br>
+                                <strong>Survie :</strong> ${status === 'oui' ? 'Oui' : 'Non'}<br>
+                                <strong>Max :</strong> $${max.toFixed(2)}<br>
+                                <strong>Q3 :</strong> $${q3.toFixed(2)}<br>
+                                <strong>Médiane :</strong> $${median.toFixed(2)}<br>
+                                <strong>Q1 :</strong> $${q1.toFixed(2)}<br>
+                                <strong>Min :</strong> $${min.toFixed(2)}
+                            `)
+                            .style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip.style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mouseout", () => {
+                        tooltip.style("opacity", 0);
+                    });
 
                 chart.append("line")
                     .attr("x1", xPos - boxWidth / 2)
@@ -193,7 +226,7 @@ function BoxplotPortClassSurvival({ data }) {
         });
     };
 
-    const drawJitterPoints = (chart, portData, xScale, yScale, colorScale, survivalStatus) => {
+    const drawJitterPoints = (chart, portData, xScale, yScale, colorScale, survivalStatus, tooltip, port) => {
         const jitterWidthFactor = 0.1;
 
         Array.from(portData).forEach(([className, survivalData]) => {
@@ -210,7 +243,25 @@ function BoxplotPortClassSurvival({ data }) {
                         .attr("cy", yScale(d.fare))
                         .attr("r", 2.5)
                         .attr("fill", colorScale(status))
-                        .attr("opacity", 0.4);
+                        .attr("opacity", 0.4)
+                        .on("mouseover", (event) => {
+                            tooltip.style("opacity", 1)
+                                .html(`
+                                    <strong>Port :</strong> ${port}<br>
+                                    <strong>Classe :</strong> ${className}<br>
+                                    <strong>Survie :</strong> ${status === 'oui' ? 'Oui' : 'Non'}<br>
+                                    <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
+                                `)
+                                .style("left", `${event.pageX + 10}px`)
+                                .style("top", `${event.pageY - 20}px`);
+                        })
+                        .on("mousemove", (event) => {
+                            tooltip.style("left", `${event.pageX + 10}px`)
+                                .style("top", `${event.pageY - 20}px`);
+                        })
+                        .on("mouseout", () => {
+                            tooltip.style("opacity", 0);
+                        });
                 });
             });
         });
@@ -296,6 +347,7 @@ function BoxplotPortClassSurvival({ data }) {
                 width={width + margin.left + margin.right}
                 height={height + margin.top + margin.bottom}
             />
+            <div ref={tooltipRef} />
         </div>
     );
 }
