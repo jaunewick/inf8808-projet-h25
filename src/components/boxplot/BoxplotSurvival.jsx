@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 
 function BoxplotSurvival({ data }) {
     const svgRef = useRef();
+    const tooltipRef = useRef();
     const margin = { top: 40, right: 30, bottom: 80, left: 60 };
     const width = 1150 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
@@ -32,7 +33,8 @@ function BoxplotSurvival({ data }) {
                 d.embarked !== 'B' &&
                 d.class &&
                 d.fare &&
-                !excludedClasses.includes(d.class)
+                !excludedClasses.includes(d.class) &&
+                !isNaN(d.fare)
             )
             .map(d => ({
                 survived: d.survived === 'yes' ? 'oui' : 'non',
@@ -111,6 +113,7 @@ function BoxplotSurvival({ data }) {
 
     const drawBoxplots = (chart, sumstat, xScale, yScale) => {
         const boxWidth = 180;
+        const tooltip = d3.select(tooltipRef.current);
 
         chart.selectAll("boxes")
             .data(sumstat)
@@ -123,7 +126,27 @@ function BoxplotSurvival({ data }) {
             .attr("fill", d => d[0] === 'oui' ? 'teal' : 'tomato')
             .attr("fill-opacity", 0.7)
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(`
+                        <strong>Survie :</strong> ${d[0] === 'oui' ? 'Oui' : 'Non'}<br>
+                        <strong>Max :</strong> $${d[1].max.toFixed(2)}<br>
+                        <strong>Q3 :</strong> $${d[1].q3.toFixed(2)}<br>
+                        <strong>Médiane :</strong> $${d[1].median.toFixed(2)}<br>
+                        <strong>Q1 :</strong> $${d[1].q1.toFixed(2)}<br>
+                        <strong>Min :</strong> $${d[1].min.toFixed(2)}
+                    `)
+                    .style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
         chart.selectAll("whiskers")
             .data(sumstat)
@@ -187,6 +210,8 @@ function BoxplotSurvival({ data }) {
 
     const drawJitterPoints = (chart, processedData, xScale, yScale) => {
         const jitterWidth = 110;
+        const tooltip = d3.select(tooltipRef.current);
+
         chart.selectAll("points")
             .data(processedData)
             .enter()
@@ -195,7 +220,23 @@ function BoxplotSurvival({ data }) {
             .attr("cy", d => yScale(d.fare))
             .attr("r", 2.5)
             .attr("fill", d => d.survived === 'oui' ? 'teal' : 'tomato')
-            .attr("opacity", 0.4);
+            .attr("opacity", 0.4)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(`
+                        <strong>Survie :</strong> ${d.survived === 'oui' ? 'Oui' : 'Non'}<br>
+                        <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
+                    `)
+                    .style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
     };
 
     const drawAnnotations = (chart, sumstat, processedData, xScale) => {
@@ -276,6 +317,15 @@ function BoxplotSurvival({ data }) {
         <div className="maritime-bulletin">
             <h3>Étape 1: Distribution des prix des billets par survie</h3>
             <svg ref={svgRef} width={width + margin.left + margin.right} height={height + margin.top + margin.bottom} />
+            <div ref={tooltipRef} style={{
+                position: 'absolute',
+                backgroundColor: 'white',
+                border: '1px solid gray',
+                borderRadius: '4px',
+                padding: '5px',
+                pointerEvents: 'none',
+                opacity: 0
+            }} />
         </div>
     );
 }
