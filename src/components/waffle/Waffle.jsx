@@ -74,7 +74,7 @@ export default function Waffle() {
     })
 
     for (const country of countriesToRender) {
-      const passagers = survivorsPerCountry[country];
+      const passengers = survivorsPerCountry[country];
 
       const countryBar = d3.select(".waffle-bars").append("div").attr("class", "waffle-bar");
       countryBar
@@ -83,19 +83,34 @@ export default function Waffle() {
       
       const svg = countryBar
         .append("svg")
-        .attr("width", Math.min(passagers.length * (UNIT_SIDE_LENGTH + UNIT_SPACING), MAX_WIDTH))
-        .attr("height", passagers.length / 20 * (UNIT_SIDE_LENGTH + UNIT_SPACING));
+        .attr("width", Math.min(passengers.length * (UNIT_SIDE_LENGTH + UNIT_SPACING), MAX_WIDTH))
+        .attr("height", passengers.length / 20 * (UNIT_SIDE_LENGTH + UNIT_SPACING));
 
       const g = svg.append("g");
 
       g.selectAll(".square")
-        .data(passagers)
+        .data(passengers)
         .enter()
         .append("rect")
         .attr("class", "square")
         .attr("x", (_, i) => (i % NUMBER_UNITS_PER_ROW) * (UNIT_SIDE_LENGTH + UNIT_SPACING))
         .attr("y", (_, i) => Math.floor(i / NUMBER_UNITS_PER_ROW) * (UNIT_SIDE_LENGTH + UNIT_SPACING))
         .attr("fill", (d) => d.survived === "no" ? "#C2C9D1" : "#344C65")
+        .on("mouseenter", (event, passenger) => {
+          const passengerInfo = d3.select(".waffle-chart")
+            .append('div')
+            .attr("class", "passenger-unit-info")
+            .attr("style", `position: fixed; z-index: 100; left: ${event.pageX - 120}px; top: ${event.pageY}px;`)
+          
+            for (const [key, value] of Object.entries(passenger)) {
+              passengerInfo
+                .append("div")
+                .text(`${key}: ${value}`)
+            }
+        })
+        .on("mouseout", () => {
+          d3.selectAll(".passenger-unit-info").remove()
+        })
         .exit();
     }
   }, [countriesToRender, survivorsPerCountry])
@@ -105,7 +120,7 @@ export default function Waffle() {
   }, [selectedRegion])
 
   return (
-    <>
+    <div className="waffle-chart">
       <div className="waffle-selection">
         <label>
           Région géographique:
@@ -130,6 +145,6 @@ export default function Waffle() {
       </div>
       <div className="waffle-bars"></div>
       <div className="waffle-hover"></div>
-    </>
+    </div>
   );
 }

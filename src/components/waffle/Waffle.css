@@ -56,3 +56,21 @@
 select {
     border: 2px solid #5a4a42;
 }
+
+.passenger-unit-info {
+    background-color: #e6d8c0;
+    white-space: pre-line;
+    pointer-events: none;
+    user-select: none;
+    border: 2px solid #5a4a42;
+    overflow: visible;
+}
+
+.passenger-unit-info div {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.waffle-chart {
+    overflow: visible;
+}
