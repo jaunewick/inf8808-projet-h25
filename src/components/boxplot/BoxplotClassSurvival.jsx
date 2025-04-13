@@ -120,8 +120,10 @@ const BoxplotClassSurvival = ({ data }) => {
                 const median = d3.quantile(values, 0.5);
                 const q3 = d3.quantile(values, 0.75);
                 const iqr = q3 - q1;
-                const min = d3.max([values[0], q1 - 1.5 * iqr]);
-                const max = d3.min([values[values.length - 1], q3 + 1.5 * iqr]);
+                const lowerFence = d3.max([values[0], q1 - 1.5 * iqr]);
+                const upperFence = d3.min([values[values.length - 1], q3 + 1.5 * iqr]);
+                const min = values[0];
+                const max = values[values.length -1];
 
                 const xPos = xScale(className) + xScale.bandwidth() * (status === 'oui' ? 0.25 : 0.75);
                 const boxWidth = xScale.bandwidth() * boxWidthFactor;
@@ -129,7 +131,7 @@ const BoxplotClassSurvival = ({ data }) => {
                 chart.append("line")
                     .attr("x1", xPos)
                     .attr("x2", xPos)
-                    .attr("y1", yScale(min))
+                    .attr("y1", yScale(lowerFence))
                     .attr("y2", yScale(q1))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
@@ -139,7 +141,7 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("x1", xPos)
                     .attr("x2", xPos)
                     .attr("y1", yScale(q3))
-                    .attr("y2", yScale(max))
+                    .attr("y2", yScale(upperFence))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
                     .attr("stroke-width", 1.5);
@@ -147,8 +149,8 @@ const BoxplotClassSurvival = ({ data }) => {
                 chart.append("line")
                     .attr("x1", xPos - capWidth / 2)
                     .attr("x2", xPos + capWidth / 2)
-                    .attr("y1", yScale(min))
-                    .attr("y2", yScale(min))
+                    .attr("y1", yScale(lowerFence))
+                    .attr("y2", yScale(lowerFence))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
                     .attr("stroke-width", 1.5);
@@ -156,8 +158,8 @@ const BoxplotClassSurvival = ({ data }) => {
                 chart.append("line")
                     .attr("x1", xPos - capWidth / 2)
                     .attr("x2", xPos + capWidth / 2)
-                    .attr("y1", yScale(max))
-                    .attr("y2", yScale(max))
+                    .attr("y1", yScale(upperFence))
+                    .attr("y2", yScale(upperFence))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
                     .attr("stroke-width", 1.5);
@@ -174,13 +176,18 @@ const BoxplotClassSurvival = ({ data }) => {
                     .on("mouseover", (event) => {
                         tooltip.style("opacity", 1)
                             .html(`
+                                <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
                                 <strong>Classe :</strong> ${className}<br>
-                                <strong>Survie :</strong> ${status === 'oui' ? 'Oui' : 'Non'}<br>
-                                <strong>Max :</strong> $${max.toFixed(2)}<br>
-                                <strong>Q3 :</strong> $${q3.toFixed(2)}<br>
-                                <strong>Médiane :</strong> $${median.toFixed(2)}<br>
-                                <strong>Q1 :</strong> $${q1.toFixed(2)}<br>
-                                <strong>Min :</strong> $${min.toFixed(2)}
+                                <strong>Valeurs principales :</strong><br>
+                                - 3e quartile (Q3) : $${q3.toFixed(2)}<br>
+                                - Médiane : $${median.toFixed(2)}<br>
+                                - 1er quartile (Q1) : $${q1.toFixed(2)}<br>
+                                <strong>Limites :</strong><br>
+                                - Limite supérieure : $${upperFence.toFixed(2)}<br>
+                                - Limite inférieure : $${lowerFence.toFixed(2)}<br>
+                                <strong>Valeurs extrêmes :</strong><br>
+                                - Max (réel) : $${max.toFixed(2)}<br>
+                                - Min (réel) : $${min.toFixed(2)}
                             `)
                             .style("left", `${event.pageX + 10}px`)
                             .style("top", `${event.pageY - 20}px`);
@@ -225,8 +232,8 @@ const BoxplotClassSurvival = ({ data }) => {
                         .on("mouseover", (event) => {
                             tooltip.style("opacity", 1)
                                 .html(`
+                                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
                                     <strong>Classe :</strong> ${d.classed}<br>
-                                    <strong>Survie :</strong> ${status === 'oui' ? 'Oui' : 'Non'}<br>
                                     <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
                                 `)
                                 .style("left", `${event.pageX + 10}px`)

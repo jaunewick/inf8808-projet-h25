@@ -56,8 +56,10 @@ function BoxplotSurvival({ data }) {
                 q1,
                 median,
                 q3,
-                min: d3.max([values[0], q1 - 1.5 * iqr]),
-                max: d3.min([values[values.length - 1], q3 + 1.5 * iqr]),
+                lowerFence: d3.max([values[0], q1 - 1.5 * iqr]),
+                upperFence: d3.min([values[values.length - 1], q3 + 1.5 * iqr]),
+                min: values[0],
+                max: values[values.length - 1],
                 outliers: values.filter(d => d < (q1 - 1.5 * iqr) || d > (q3 + 1.5 * iqr))
             });
         });
@@ -130,12 +132,17 @@ function BoxplotSurvival({ data }) {
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(`
-                        <strong>Survie :</strong> ${d[0] === 'oui' ? 'Oui' : 'Non'}<br>
-                        <strong>Max :</strong> $${d[1].max.toFixed(2)}<br>
-                        <strong>Q3 :</strong> $${d[1].q3.toFixed(2)}<br>
-                        <strong>Médiane :</strong> $${d[1].median.toFixed(2)}<br>
-                        <strong>Q1 :</strong> $${d[1].q1.toFixed(2)}<br>
-                        <strong>Min :</strong> $${d[1].min.toFixed(2)}
+                        <strong>Survie :</strong> <span style="color: ${d[0] === 'oui' ? 'teal' : 'tomato'};">${d[0] === 'oui' ? 'Oui' : 'Non'}</span><br>
+                        <strong>Valeurs principales :</strong><br>
+                        - 3e quartile (Q3) : $${d[1].q3.toFixed(2)}<br>
+                        - Médiane : $${d[1].median.toFixed(2)}<br>
+                        - 1er quartile (Q1) : $${d[1].q1.toFixed(2)}<br>
+                        <strong>Limites :</strong><br>
+                        - Limite supérieure : $${d[1].upperFence.toFixed(2)}<br>
+                        - Limite inférieure : $${d[1].lowerFence.toFixed(2)}<br>
+                        <strong>Valeurs extrêmes :</strong><br>
+                        - Max (réel) : $${d[1].max.toFixed(2)}<br>
+                        - Min (réel) : $${d[1].min.toFixed(2)}
                     `)
                     .style("left", `${event.pageX + 10}px`)
                     .style("top", `${event.pageY - 20}px`);
@@ -155,7 +162,7 @@ function BoxplotSurvival({ data }) {
             .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("y1", d => yScale(d[1].q3))
-            .attr("y2", d => yScale(d[1].max))
+            .attr("y2", d => yScale(d[1].upperFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
             .attr("stroke-width", 1.5);
 
@@ -166,7 +173,7 @@ function BoxplotSurvival({ data }) {
             .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("y1", d => yScale(d[1].q1))
-            .attr("y2", d => yScale(d[1].min))
+            .attr("y2", d => yScale(d[1].lowerFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
             .attr("stroke-width", 1.5);
 
@@ -176,8 +183,8 @@ function BoxplotSurvival({ data }) {
             .append("line")
             .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2 - boxWidth / 4)
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 4)
-            .attr("y1", d => yScale(d[1].max))
-            .attr("y2", d => yScale(d[1].max))
+            .attr("y1", d => yScale(d[1].upperFence))
+            .attr("y2", d => yScale(d[1].upperFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
             .attr("stroke-width", 1.5);
 
@@ -187,8 +194,8 @@ function BoxplotSurvival({ data }) {
             .append("line")
             .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2 - boxWidth / 4)
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 4)
-            .attr("y1", d => yScale(d[1].min))
-            .attr("y2", d => yScale(d[1].min))
+            .attr("y1", d => yScale(d[1].lowerFence))
+            .attr("y2", d => yScale(d[1].lowerFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
             .attr("stroke-width", 1.5);
     };
@@ -224,7 +231,7 @@ function BoxplotSurvival({ data }) {
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(`
-                        <strong>Survie :</strong> ${d.survived === 'oui' ? 'Oui' : 'Non'}<br>
+                        <strong>Survie :</strong> <span style="color: ${d.survived === 'oui' ? 'teal' : 'tomato'};">${d.survived === 'oui' ? 'Oui' : 'Non'}</span><br>
                         <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
                     `)
                     .style("left", `${event.pageX + 10}px`)
