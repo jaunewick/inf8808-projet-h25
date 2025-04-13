@@ -24,7 +24,6 @@ function App() {
 
   useEffect(() => {
     fetchData();
-    console.log("fetched data");
   }, [titanicData, lifeboatsData]);
 
   return (
@@ -85,7 +84,9 @@ function App() {
         
         <div className="maritime-bulletin">
             <h3>Diagramme de Sankey</h3>
-            <p>La première visualisation est un diagramme de Sankey...</p>
+            <p>La première visualisation est un diagramme de Sankey qui met en évidence les liens
+              entre les variables démographique des passagers.
+            </p>
             {titanicData && <SankeyDiagram data={titanicData}></SankeyDiagram>}
         </div>
           

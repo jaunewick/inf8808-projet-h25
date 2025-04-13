@@ -75,7 +75,7 @@ export default function SankeyDiagram ({data}) {
 
     function drawNodes (data, tip) {
         d3.selectAll('.sankey-node').remove()
-        d3.select('#sankey-diagram')
+        d3.select('.sankey-diagram')
           .selectAll('.sankey-node')
           .data(data)
           .join('g')
@@ -104,7 +104,7 @@ export default function SankeyDiagram ({data}) {
 
     function drawLinks (data, tip) {
         d3.selectAll('.sankey-links').remove()
-        d3.select('#sankey-diagram')
+        d3.select('.sankey-diagram')
         .selectAll('.sankey-links')
         .data(data)
         .join('g')
@@ -130,7 +130,7 @@ export default function SankeyDiagram ({data}) {
 
     function drawLabels(data) {
         d3.selectAll('.sankey-labels').remove()
-        d3.select('#sankey-diagram')
+        d3.select('.sankey-diagram')
           .selectAll('.sankey-labels')
           .data(data)
           .join('g')
@@ -154,7 +154,7 @@ export default function SankeyDiagram ({data}) {
                 : translator.getTranslation(source, n.id))
         
     }
-    
+
     function getContents (n) {
         const tooltip = d3.create('div')
 
@@ -168,9 +168,8 @@ export default function SankeyDiagram ({data}) {
     useEffect(() => {
         if (Object.keys(processedData).length !== 0) {
             const { nodes, links } = sankeyGenerator(processedData)
-            const tip = d3Tip().attr('class', 'd3-tip').html(function (n) { return getContents(n) })
-            d3.select('#sankey-diagram').call(tip)              
-            
+            const tip = d3Tip().attr('class', 'd3-tip').html(function (node) { return getContents(node) })
+            d3.select('.sankey-diagram').call(tip)  
 
             drawLinks(links, tip)
             updateLinks()
@@ -180,7 +179,7 @@ export default function SankeyDiagram ({data}) {
 
             drawLabels(nodes)
             updateLabels()
-
+            
         } 
     }, [processedData])
 
@@ -199,23 +198,59 @@ export default function SankeyDiagram ({data}) {
     }
 
     return (
-        <div id="sankey" className="maritime-bulletin">
-            <div id="source-target-row">
-                <select 
-                    value={source}
-                    onChange={e => changeSource(e.target.value)}    
-                >
-                    {availableSource.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
-                </select>
-                <select 
-                    value={target}
-                    onChange={e => changeTarget(e.target.value)}
-                >
-                    {availableTarget.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
-                </select>
-            </div>
-            <svg id="sankey-diagram" width={WIDTH} height={HEIGHT}>
-            </svg>
-        </div>
+        <div className="sankey-container"> 
+            <section className="story-section">
+            <h2>Des passagers de tous les horizons</h2>
+                <p>
+                    Que ce soit pour donner un avenir meilleur à sa famille, pour vivre l'aventure 
+                    d'une vie ou tout simplement prendre des vacances, monter à bord du Titanic était
+                    une opportunité en or. Ce bateau écrivait l'histoire avant même son malheureux naufrage,
+                    étant le plus gros navire de son époque. Sa réputation a attiré plus de 1000 passagers
+                    de partout dans le monde, auquels un autre millier de membre de l'équipage se sont joint.
+                    Voici un bref aperçu de cette population au destin tragique.     
+                </p>
+            </section>
+  
+            <section className="chart-section">
+              <h3>Corrélation démographique des passagers</h3>
+              <p className="chart-description">
+                Ce graphique montre la corrélation entre les différentes variables démographiques 
+                identifiant les passagers. On peut y voir les proportions démographiques du groupe 
+                de voyageurs, ainsi que les liens qui les unissaient.
+              </p>
+              <div className="sankey">
+                  <div className={"sankey-container "}>
+                      <svg className="sankey-diagram maritime-bulletin" width={WIDTH} height={HEIGHT}>
+                      </svg>
+                  </div>
+                  <div className="sankey-controls">
+                        <select 
+                              value={source}
+                              onChange={e => changeSource(e.target.value)}                          
+                         >
+                              {availableSource.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
+                        </select>
+                        <select 
+                              value={target}
+                              onChange={e => changeTarget(e.target.value)}
+                          >
+                              {availableTarget.map((value) => <option value={value} key={value}>{translator.getTypeTranslation(value)}</option>)}
+                        </select>
+                    </div>
+              </div>
+              <div className="chart-analysis">
+                <p>
+                  L'analyse des corrélations nous donne une image de la distribution démographique:
+                </p>
+                <ul> 
+                  <li>Une plus grande proportion de femmes ont survécu par rapport aux hommes</li>
+                  <li>Une plus grande proportion d'enfant ont survécu par rapport aux adultes</li>
+                  <li>Faire partie de l'équipage n'était pas avantageux pour la survie</li>
+                  <li>Un très petit nombre de femmes faisaient parties de l'équipage</li> 
+                  <li>Faire partie des classes les plus luxueuses procurait de meilleure chance de survie</li>                      
+                </ul>
+              </div>
+            </section>
+      </div>
     )   
 }
