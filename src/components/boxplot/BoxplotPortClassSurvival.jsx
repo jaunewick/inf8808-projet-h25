@@ -33,7 +33,11 @@ function BoxplotPortClassSurvival({ data }) {
                 .attr("transform", `translate(${i * (portWidth + 20)}, 0)`);
 
             const portData = sumstat.get(port);
-            const classNames = Array.from(portData.keys());
+            let classNames = Array.from(portData.keys());
+            classNames = classNames.sort((a, b) => {
+                const order = ['3ème', '2ème', '1ère'];
+                return order.indexOf(a) - order.indexOf(b);
+            });
             const survivalStatus = ['oui', 'non'];
 
             const { xScale, yScale, colorScale } = createScales(processedData, classNames, portWidth);
