@@ -128,6 +128,7 @@ function BoxplotPortClassSurvival({ data }) {
     const drawBoxplots = (chart, portData, xScale, yScale, colorScale, survivalStatus, tooltip, port) => {
         const boxWidthFactor = 0.25;
         const capWidth = 15;
+        const minBoxHeight = 3;
 
         Array.from(portData).forEach(([className, survivalData]) => {
             survivalStatus.forEach(status => {
@@ -146,6 +147,9 @@ function BoxplotPortClassSurvival({ data }) {
 
                 const xPos = xScale(className) + xScale.bandwidth() * (status === 'oui' ? 0.25 : 0.75);
                 const boxWidth = xScale.bandwidth() * boxWidthFactor;
+
+                const boxHeight = Math.max(yScale(q1) - yScale(q3), minBoxHeight);
+                const boxY = yScale(q3) - (boxHeight - (yScale(q1) - yScale(q3))) / 2;
 
                 const whiskerTooltipContent = `
                     <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
@@ -263,9 +267,9 @@ function BoxplotPortClassSurvival({ data }) {
 
                 chart.append("rect")
                     .attr("x", xPos - boxWidth / 2)
-                    .attr("y", yScale(q3))
+                    .attr("y", boxY)
                     .attr("width", boxWidth)
-                    .attr("height", yScale(q1) - yScale(q3))
+                    .attr("height", boxHeight)
                     .attr("fill", colorScale(status))
                     .attr("fill-opacity", 0.7)
                     .attr("stroke", colorScale(status))
