@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 
 function BoxplotSurvival({ data }) {
     const svgRef = useRef();
+    const tooltipRef = useRef();
     const margin = { top: 40, right: 30, bottom: 80, left: 60 };
     const width = 1150 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
@@ -32,7 +33,8 @@ function BoxplotSurvival({ data }) {
                 d.embarked !== 'B' &&
                 d.class &&
                 d.fare &&
-                !excludedClasses.includes(d.class)
+                !excludedClasses.includes(d.class) &&
+                !isNaN(d.fare)
             )
             .map(d => ({
                 survived: d.survived === 'yes' ? 'oui' : 'non',
@@ -54,8 +56,10 @@ function BoxplotSurvival({ data }) {
                 q1,
                 median,
                 q3,
-                min: d3.max([values[0], q1 - 1.5 * iqr]),
-                max: d3.min([values[values.length - 1], q3 + 1.5 * iqr]),
+                lowerFence: d3.max([values[0], q1 - 1.5 * iqr]),
+                upperFence: d3.min([values[values.length - 1], q3 + 1.5 * iqr]),
+                min: values[0],
+                max: values[values.length - 1],
                 outliers: values.filter(d => d < (q1 - 1.5 * iqr) || d > (q3 + 1.5 * iqr))
             });
         });
@@ -111,6 +115,21 @@ function BoxplotSurvival({ data }) {
 
     const drawBoxplots = (chart, sumstat, xScale, yScale) => {
         const boxWidth = 180;
+        const tooltip = d3.select(tooltipRef.current);
+
+        const tooltipContent = (d) => `
+            <strong>Survie :</strong> <span style="color: ${d[0] === 'oui' ? 'teal' : 'tomato'};">${d[0] === 'oui' ? 'Oui' : 'Non'}</span><br>
+            <strong>Valeurs principales :</strong><br>
+            - 3e quartile (Q3) : $${d[1].q3.toFixed(2)}<br>
+            - Médiane : $${d[1].median.toFixed(2)}<br>
+            - 1er quartile (Q1) : $${d[1].q1.toFixed(2)}<br>
+            <strong>Limites :</strong><br>
+            - Limite supérieure : $${d[1].upperFence.toFixed(2)}<br>
+            - Limite inférieure : $${d[1].lowerFence.toFixed(2)}<br>
+            <strong>Valeurs aberrantes :</strong><br>
+            - Max : $${d[1].max.toFixed(2)}<br>
+            - Min : $${d[1].min.toFixed(2)}
+        `;
 
         chart.selectAll("boxes")
             .data(sumstat)
@@ -123,51 +142,120 @@ function BoxplotSurvival({ data }) {
             .attr("fill", d => d[0] === 'oui' ? 'teal' : 'tomato')
             .attr("fill-opacity", 0.7)
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+                console.log("pageX_1: " + event.pageX)
+                console.log("pageY_1: " + event.pageY)
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+                console.log("pageX_2: " + event.pageX)
+                console.log("pageY_2: " + event.pageY)
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
-        chart.selectAll("whiskers")
+        chart.selectAll("upperWhiskers")
             .data(sumstat)
             .enter()
             .append("line")
             .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("y1", d => yScale(d[1].q3))
-            .attr("y2", d => yScale(d[1].max))
+            .attr("y2", d => yScale(d[1].upperFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
-        chart.selectAll("whiskers")
+        chart.selectAll("lowerWhiskers")
             .data(sumstat)
             .enter()
             .append("line")
             .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("y1", d => yScale(d[1].q1))
-            .attr("y2", d => yScale(d[1].min))
+            .attr("y2", d => yScale(d[1].lowerFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
-        chart.selectAll("whiskerCaps")
+        chart.selectAll("upperCaps")
             .data(sumstat)
             .enter()
             .append("line")
             .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2 - boxWidth / 4)
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 4)
-            .attr("y1", d => yScale(d[1].max))
-            .attr("y2", d => yScale(d[1].max))
+            .attr("y1", d => yScale(d[1].upperFence))
+            .attr("y2", d => yScale(d[1].upperFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
-        chart.selectAll("whiskerCaps")
+        chart.selectAll("lowerCaps")
             .data(sumstat)
             .enter()
             .append("line")
             .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2 - boxWidth / 4)
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 4)
-            .attr("y1", d => yScale(d[1].min))
-            .attr("y2", d => yScale(d[1].min))
+            .attr("y1", d => yScale(d[1].lowerFence))
+            .attr("y2", d => yScale(d[1].lowerFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
     };
 
     const drawMedianLines = (chart, sumstat, xScale, yScale) => {
@@ -187,6 +275,8 @@ function BoxplotSurvival({ data }) {
 
     const drawJitterPoints = (chart, processedData, xScale, yScale) => {
         const jitterWidth = 110;
+        const tooltip = d3.select(tooltipRef.current);
+
         chart.selectAll("points")
             .data(processedData)
             .enter()
@@ -195,7 +285,23 @@ function BoxplotSurvival({ data }) {
             .attr("cy", d => yScale(d.fare))
             .attr("r", 2.5)
             .attr("fill", d => d.survived === 'oui' ? 'teal' : 'tomato')
-            .attr("opacity", 0.4);
+            .attr("opacity", 0.4)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(`
+                        <strong>Survie :</strong> <span style="color: ${d.survived === 'oui' ? 'teal' : 'tomato'};">${d.survived === 'oui' ? 'Oui' : 'Non'}</span><br>
+                        <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
+                    `)
+                    .style("left", `${event.pageX - 185}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX - 185}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
     };
 
     const drawAnnotations = (chart, sumstat, processedData, xScale) => {
@@ -274,8 +380,16 @@ function BoxplotSurvival({ data }) {
 
     return (
         <div className="maritime-bulletin">
-            <h3>Étape 1: Distribution des prix des billets par survie</h3>
             <svg ref={svgRef} width={width + margin.left + margin.right} height={height + margin.top + margin.bottom} />
+            <div ref={tooltipRef} style={{
+                position: 'absolute',
+                backgroundColor: 'white',
+                border: '1px solid gray',
+                borderRadius: '4px',
+                padding: '5px',
+                pointerEvents: 'none',
+                opacity: 0
+            }} />
         </div>
     );
 }
