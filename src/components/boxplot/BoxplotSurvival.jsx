@@ -146,15 +146,14 @@ function BoxplotSurvival({ data }) {
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(tooltipContent(d))
-                    .style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
                 console.log("pageX_1: " + event.pageX)
                 console.log("pageY_1: " + event.pageY)
-
             })
             .on("mousemove", (event) => {
-                tooltip.style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
                 console.log("pageX_2: " + event.pageX)
                 console.log("pageY_2: " + event.pageY)
             })
@@ -175,14 +174,12 @@ function BoxplotSurvival({ data }) {
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(tooltipContent(d))
-                    .style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
-
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
             })
             .on("mousemove", (event) => {
-                tooltip.style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
-
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
             })
             .on("mouseout", () => {
                 tooltip.style("opacity", 0);
@@ -201,14 +198,12 @@ function BoxplotSurvival({ data }) {
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(tooltipContent(d))
-                    .style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
-
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
             })
             .on("mousemove", (event) => {
-                tooltip.style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
-
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
             })
             .on("mouseout", () => {
                 tooltip.style("opacity", 0);
@@ -227,14 +222,12 @@ function BoxplotSurvival({ data }) {
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(tooltipContent(d))
-                    .style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
-
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
             })
             .on("mousemove", (event) => {
-                tooltip.style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
-
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
             })
             .on("mouseout", () => {
                 tooltip.style("opacity", 0);
@@ -253,14 +246,12 @@ function BoxplotSurvival({ data }) {
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(tooltipContent(d))
-                    .style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
-
+                    .style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
             })
             .on("mousemove", (event) => {
-                tooltip.style("left", `${event.pageX - 275}px`)
-                    .style("top", `${event.pageY - 250}px`);
-
+                tooltip.style("left", `${event.pageX - 200}px`)
+                    .style("top", `${event.pageY - 270}px`);
             })
             .on("mouseout", () => {
                 tooltip.style("opacity", 0);
@@ -301,14 +292,12 @@ function BoxplotSurvival({ data }) {
                         <strong>Survie :</strong> <span style="color: ${d.survived === 'oui' ? 'teal' : 'tomato'};">${d.survived === 'oui' ? 'Oui' : 'Non'}</span><br>
                         <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
                     `)
-                    .style("left", `${event.pageX - 275}px`)
+                    .style("left", `${event.pageX - 185}px`)
                     .style("top", `${event.pageY - 20}px`);
-
             })
             .on("mousemove", (event) => {
-                tooltip.style("left", `${event.pageX - 275}px`)
+                tooltip.style("left", `${event.pageX - 185}px`)
                     .style("top", `${event.pageY - 20}px`);
-
             })
             .on("mouseout", () => {
                 tooltip.style("opacity", 0);
