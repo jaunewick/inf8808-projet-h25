@@ -405,7 +405,6 @@ function BoxplotPortClassSurvival({ data }) {
 
     return (
         <div className="maritime-bulletin">
-            <h3>Étape 3 : Distribution des prix des billets par classe et port d'embarquement</h3>
             <svg
                 ref={svgRef}
                 width={width + margin.left + margin.right}

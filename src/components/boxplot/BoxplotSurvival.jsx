@@ -380,7 +380,6 @@ function BoxplotSurvival({ data }) {
 
     return (
         <div className="maritime-bulletin">
-            <h3>Étape 1: Distribution des prix des billets par survie</h3>
             <svg ref={svgRef} width={width + margin.left + margin.right} height={height + margin.top + margin.bottom} />
             <div ref={tooltipRef} style={{
                 position: 'absolute',

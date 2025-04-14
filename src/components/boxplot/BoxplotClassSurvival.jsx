@@ -380,7 +380,6 @@ const BoxplotClassSurvival = ({ data }) => {
 
     return (
         <div className="maritime-bulletin">
-            <h3>Étape 2: Distribution des prix des billets par classe et survie</h3>
             <svg
                 ref={svgRef}
                 width={width + margin.left + margin.right}

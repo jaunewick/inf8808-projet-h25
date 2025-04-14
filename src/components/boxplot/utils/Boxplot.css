@@ -1,0 +1,57 @@
+.boxplot-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    max-width: 1200px;
+    margin: 0px auto;
+    height: fit-content;
+    --parchment: #f5f1e4;
+    --ink: #2b2518;
+    --accent: #8b2e16;
+    --gold: #d4a951;
+    --navy: #1a3a5a;
+    --aged-paper: #e8e0cc;
+    --border-color: #c9b38c;
+
+    h3 {
+        font-family: "Playfair Display", Georgia, serif;
+        color: var(--accent);
+        border-bottom: 2px solid var(--gold);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+        border-bottom-width: 1px;
+    }
+}
+
+p {
+    margin-bottom: 1.2rem;
+    text-align: justify;
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-shadow: 0.5px 0.5px 0px rgba(200, 180, 140, 0.2);
+}
+
+.chart-description {
+    font-style: italic;
+    border-left: 3px solid var(--gold);
+    padding-left: 1rem;
+    font-size: 1rem;
+    color: var(--navy);
+    margin: 1rem 0 2rem;
+}
+
+.chart-analysis
+.chart-info {
+    background-color: rgba(26, 58, 90, 0.05);
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-top: 2rem;
+    border-left: 4px solid var(--navy);
+}
