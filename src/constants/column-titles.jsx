@@ -1,0 +1,12 @@
+
+export const NAME = 'name';
+export const GENDER = 'gender';
+export const AGE = 'age';
+export const CLASS = 'class';
+export const EMBARKED = 'embarked';
+export const COUNTRY = 'country';
+export const TICKET_NO = 'ticketno';
+export const FARE = 'fare';
+export const SIBSP = 'sibsp';
+export const PARCH = 'parch';
+export const SURVIVED = 'survived';
