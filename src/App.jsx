@@ -1,17 +1,12 @@
 import SankeyDiagram from "./components/sankey/sankey";
 import { useState, useEffect } from 'react'
 import DBReader from './services/dbReader'
-import BoxplotSurvival from './components/boxplot/BoxplotSurvival'
-import BoxplotClassSurvival from './components/boxplot/BoxplotClassSurvival';
-import BoxplotPortClassSurvival from './components/boxplot/BoxplotPortClassSurvival';
-import BoxplotSurvivalHeader from "./components/boxplot/utils/BoxplotSurvivalHeader";
-import BoxplotClassSurvivalHeader from "./components/boxplot/utils/BoxplotClassSurvivalHeader";
-import BoxplotPortClassSurvivalHeader from "./components/boxplot/utils/BoxplotPortClassSurvivalHeader";
 import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
 import LifeboatsChart from "./components/lifeboats/LifeboatsChart";
 import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
 import TimeChart from "./components/stacked-bar-chart/components/TimeChart";
 import UtilizationChart from "./components/stacked-bar-chart/components/UtilizationChart";
+import Boxplot from "./components/boxplot/Boxplot";
 
 function App() {
   const [titanicData, setData] = useState(null);
@@ -122,12 +117,7 @@ function App() {
         <p>
           Ces étapes vous guideront d’une vue globale vers une analyse détaillée.
         </p>
-        {titanicData && <BoxplotSurvivalHeader />}
-        {titanicData && <BoxplotSurvival data={titanicData} />}
-        {titanicData && <BoxplotClassSurvivalHeader />}
-        {titanicData && <BoxplotClassSurvival data={titanicData} />}
-        {titanicData && <BoxplotPortClassSurvivalHeader />}
-        {titanicData && <BoxplotPortClassSurvival data={titanicData} />}
+        {titanicData && <Boxplot data={titanicData} />}
       </div>
 
       <div className="maritime-bulletin">
