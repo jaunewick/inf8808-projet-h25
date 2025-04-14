@@ -153,12 +153,16 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("stroke-width", 1.5)
                     .on("mouseover", (event) => {
                         tooltip.style("opacity", 1).html(whiskerTooltipContent)
-                            .style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                            .style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
+
                     })
                     .on("mousemove", (event) => {
-                        tooltip.style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                        tooltip.style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
+
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
@@ -174,12 +178,16 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("stroke-width", 1.5)
                     .on("mouseover", (event) => {
                         tooltip.style("opacity", 1).html(whiskerTooltipContent)
-                            .style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                            .style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
+
                     })
                     .on("mousemove", (event) => {
-                        tooltip.style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                        tooltip.style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
+
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
@@ -195,12 +203,16 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("stroke-width", 1.5)
                     .on("mouseover", (event) => {
                         tooltip.style("opacity", 1).html(whiskerTooltipContent)
-                            .style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                            .style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
+
                     })
                     .on("mousemove", (event) => {
-                        tooltip.style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                        tooltip.style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
+
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
@@ -216,12 +228,16 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("stroke-width", 1.5)
                     .on("mouseover", (event) => {
                         tooltip.style("opacity", 1).html(whiskerTooltipContent)
-                            .style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                            .style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
+
                     })
                     .on("mousemove", (event) => {
-                        tooltip.style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                        tooltip.style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
+
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
@@ -238,12 +254,14 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("stroke-width", 1.5)
                     .on("mouseover", (event) => {
                         tooltip.style("opacity", 1).html(whiskerTooltipContent)
-                            .style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                            .style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
                     })
                     .on("mousemove", (event) => {
-                        tooltip.style("left", `${event.pageX + 10}px`)
-                            .style("top", `${event.pageY - 20}px`);
+                        tooltip.style("left", `${event.pageX - 275}px`)
+                            .style("top", `${event.pageY - 275}px`);
+
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
@@ -285,12 +303,14 @@ const BoxplotClassSurvival = ({ data }) => {
                                     <strong>Classe :</strong> ${d.classed}<br>
                                     <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
                                 `)
-                                .style("left", `${event.pageX + 10}px`)
+                                .style("left", `${event.pageX - 275}px`)
                                 .style("top", `${event.pageY - 20}px`);
+
                         })
                         .on("mousemove", (event) => {
-                            tooltip.style("left", `${event.pageX + 10}px`)
+                            tooltip.style("left", `${event.pageX - 275}px`)
                                 .style("top", `${event.pageY - 20}px`);
+
                         })
                         .on("mouseout", () => {
                             tooltip.style("opacity", 0);
