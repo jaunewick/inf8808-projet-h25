@@ -117,6 +117,20 @@ function BoxplotSurvival({ data }) {
         const boxWidth = 180;
         const tooltip = d3.select(tooltipRef.current);
 
+        const tooltipContent = (d) => `
+            <strong>Survie :</strong> <span style="color: ${d[0] === 'oui' ? 'teal' : 'tomato'};">${d[0] === 'oui' ? 'Oui' : 'Non'}</span><br>
+            <strong>Valeurs principales :</strong><br>
+            - 3e quartile (Q3) : $${d[1].q3.toFixed(2)}<br>
+            - Médiane : $${d[1].median.toFixed(2)}<br>
+            - 1er quartile (Q1) : $${d[1].q1.toFixed(2)}<br>
+            <strong>Limites :</strong><br>
+            - Limite supérieure : $${d[1].upperFence.toFixed(2)}<br>
+            - Limite inférieure : $${d[1].lowerFence.toFixed(2)}<br>
+            <strong>Valeurs extrêmes :</strong><br>
+            - Max (réel) : $${d[1].max.toFixed(2)}<br>
+            - Min (réel) : $${d[1].min.toFixed(2)}
+        `;
+
         chart.selectAll("boxes")
             .data(sumstat)
             .enter()
@@ -131,19 +145,7 @@ function BoxplotSurvival({ data }) {
             .attr("stroke-width", 1.5)
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
-                    .html(`
-                        <strong>Survie :</strong> <span style="color: ${d[0] === 'oui' ? 'teal' : 'tomato'};">${d[0] === 'oui' ? 'Oui' : 'Non'}</span><br>
-                        <strong>Valeurs principales :</strong><br>
-                        - 3e quartile (Q3) : $${d[1].q3.toFixed(2)}<br>
-                        - Médiane : $${d[1].median.toFixed(2)}<br>
-                        - 1er quartile (Q1) : $${d[1].q1.toFixed(2)}<br>
-                        <strong>Limites :</strong><br>
-                        - Limite supérieure : $${d[1].upperFence.toFixed(2)}<br>
-                        - Limite inférieure : $${d[1].lowerFence.toFixed(2)}<br>
-                        <strong>Valeurs extrêmes :</strong><br>
-                        - Max (réel) : $${d[1].max.toFixed(2)}<br>
-                        - Min (réel) : $${d[1].min.toFixed(2)}
-                    `)
+                    .html(tooltipContent(d))
                     .style("left", `${event.pageX + 10}px`)
                     .style("top", `${event.pageY - 20}px`);
             })
@@ -155,7 +157,7 @@ function BoxplotSurvival({ data }) {
                 tooltip.style("opacity", 0);
             });
 
-        chart.selectAll("whiskers")
+        chart.selectAll("upperWhiskers")
             .data(sumstat)
             .enter()
             .append("line")
@@ -164,9 +166,22 @@ function BoxplotSurvival({ data }) {
             .attr("y1", d => yScale(d[1].q3))
             .attr("y2", d => yScale(d[1].upperFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
-        chart.selectAll("whiskers")
+        chart.selectAll("lowerWhiskers")
             .data(sumstat)
             .enter()
             .append("line")
@@ -175,9 +190,22 @@ function BoxplotSurvival({ data }) {
             .attr("y1", d => yScale(d[1].q1))
             .attr("y2", d => yScale(d[1].lowerFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
-        chart.selectAll("whiskerCaps")
+        chart.selectAll("upperCaps")
             .data(sumstat)
             .enter()
             .append("line")
@@ -186,9 +214,22 @@ function BoxplotSurvival({ data }) {
             .attr("y1", d => yScale(d[1].upperFence))
             .attr("y2", d => yScale(d[1].upperFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
 
-        chart.selectAll("whiskerCaps")
+        chart.selectAll("lowerCaps")
             .data(sumstat)
             .enter()
             .append("line")
@@ -197,7 +238,20 @@ function BoxplotSurvival({ data }) {
             .attr("y1", d => yScale(d[1].lowerFence))
             .attr("y2", d => yScale(d[1].lowerFence))
             .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
-            .attr("stroke-width", 1.5);
+            .attr("stroke-width", 1.5)
+            .on("mouseover", (event, d) => {
+                tooltip.style("opacity", 1)
+                    .html(tooltipContent(d))
+                    .style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mousemove", (event) => {
+                tooltip.style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 20}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("opacity", 0);
+            });
     };
 
     const drawMedianLines = (chart, sumstat, xScale, yScale) => {

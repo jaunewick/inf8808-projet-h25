@@ -123,10 +123,25 @@ const BoxplotClassSurvival = ({ data }) => {
                 const lowerFence = d3.max([values[0], q1 - 1.5 * iqr]);
                 const upperFence = d3.min([values[values.length - 1], q3 + 1.5 * iqr]);
                 const min = values[0];
-                const max = values[values.length -1];
+                const max = values[values.length - 1];
 
                 const xPos = xScale(className) + xScale.bandwidth() * (status === 'oui' ? 0.25 : 0.75);
                 const boxWidth = xScale.bandwidth() * boxWidthFactor;
+
+                const whiskerTooltipContent = `
+                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
+                    <strong>Classe :</strong> ${className}<br>
+                    <strong>Valeurs principales :</strong><br>
+                    - 3e quartile (Q3) : $${q3.toFixed(2)}<br>
+                    - Médiane : $${median.toFixed(2)}<br>
+                    - 1er quartile (Q1) : $${q1.toFixed(2)}<br>
+                    <strong>Limites :</strong><br>
+                    - Limite supérieure : $${upperFence.toFixed(2)}<br>
+                    - Limite inférieure : $${lowerFence.toFixed(2)}<br>
+                    <strong>Valeurs extrêmes :</strong><br>
+                    - Max (réel) : $${max.toFixed(2)}<br>
+                    - Min (réel) : $${min.toFixed(2)}
+                `;
 
                 chart.append("line")
                     .attr("x1", xPos)
@@ -135,7 +150,19 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("y2", yScale(q1))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
-                    .attr("stroke-width", 1.5);
+                    .attr("stroke-width", 1.5)
+                    .on("mouseover", (event) => {
+                        tooltip.style("opacity", 1).html(whiskerTooltipContent)
+                            .style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip.style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mouseout", () => {
+                        tooltip.style("opacity", 0);
+                    });
 
                 chart.append("line")
                     .attr("x1", xPos)
@@ -144,7 +171,19 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("y2", yScale(upperFence))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
-                    .attr("stroke-width", 1.5);
+                    .attr("stroke-width", 1.5)
+                    .on("mouseover", (event) => {
+                        tooltip.style("opacity", 1).html(whiskerTooltipContent)
+                            .style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip.style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mouseout", () => {
+                        tooltip.style("opacity", 0);
+                    });
 
                 chart.append("line")
                     .attr("x1", xPos - capWidth / 2)
@@ -153,7 +192,19 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("y2", yScale(lowerFence))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
-                    .attr("stroke-width", 1.5);
+                    .attr("stroke-width", 1.5)
+                    .on("mouseover", (event) => {
+                        tooltip.style("opacity", 1).html(whiskerTooltipContent)
+                            .style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip.style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mouseout", () => {
+                        tooltip.style("opacity", 0);
+                    });
 
                 chart.append("line")
                     .attr("x1", xPos - capWidth / 2)
@@ -162,7 +213,19 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("y2", yScale(upperFence))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
-                    .attr("stroke-width", 1.5);
+                    .attr("stroke-width", 1.5)
+                    .on("mouseover", (event) => {
+                        tooltip.style("opacity", 1).html(whiskerTooltipContent)
+                            .style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip.style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mouseout", () => {
+                        tooltip.style("opacity", 0);
+                    });
 
                 chart.append("rect")
                     .attr("x", xPos - boxWidth / 2)
@@ -174,21 +237,7 @@ const BoxplotClassSurvival = ({ data }) => {
                     .attr("stroke", colorScale(status))
                     .attr("stroke-width", 1.5)
                     .on("mouseover", (event) => {
-                        tooltip.style("opacity", 1)
-                            .html(`
-                                <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
-                                <strong>Classe :</strong> ${className}<br>
-                                <strong>Valeurs principales :</strong><br>
-                                - 3e quartile (Q3) : $${q3.toFixed(2)}<br>
-                                - Médiane : $${median.toFixed(2)}<br>
-                                - 1er quartile (Q1) : $${q1.toFixed(2)}<br>
-                                <strong>Limites :</strong><br>
-                                - Limite supérieure : $${upperFence.toFixed(2)}<br>
-                                - Limite inférieure : $${lowerFence.toFixed(2)}<br>
-                                <strong>Valeurs extrêmes :</strong><br>
-                                - Max (réel) : $${max.toFixed(2)}<br>
-                                - Min (réel) : $${min.toFixed(2)}
-                            `)
+                        tooltip.style("opacity", 1).html(whiskerTooltipContent)
                             .style("left", `${event.pageX + 10}px`)
                             .style("top", `${event.pageY - 20}px`);
                     })
