@@ -166,9 +166,9 @@ function BoxplotPortClassSurvival({ data }) {
                     <strong>Limites :</strong><br>
                     - Limite supérieure : $${upperFence.toFixed(2)}<br>
                     - Limite inférieure : $${lowerFence.toFixed(2)}<br>
-                    <strong>Valeurs extrêmes :</strong><br>
-                    - Max (réel) : $${max.toFixed(2)}<br>
-                    - Min (réel) : $${min.toFixed(2)}
+                    <strong>Valeurs aberrantes :</strong><br>
+                    - Max : $${max.toFixed(2)}<br>
+                    - Min : $${min.toFixed(2)}
                 `;
 
                 chart.append("line")

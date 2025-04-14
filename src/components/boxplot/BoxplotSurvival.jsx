@@ -126,9 +126,9 @@ function BoxplotSurvival({ data }) {
             <strong>Limites :</strong><br>
             - Limite supérieure : $${d[1].upperFence.toFixed(2)}<br>
             - Limite inférieure : $${d[1].lowerFence.toFixed(2)}<br>
-            <strong>Valeurs extrêmes :</strong><br>
-            - Max (réel) : $${d[1].max.toFixed(2)}<br>
-            - Min (réel) : $${d[1].min.toFixed(2)}
+            <strong>Valeurs aberrantes :</strong><br>
+            - Max : $${d[1].max.toFixed(2)}<br>
+            - Min : $${d[1].min.toFixed(2)}
         `;
 
         chart.selectAll("boxes")
