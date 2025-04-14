@@ -1,0 +1,76 @@
+.waffle-bars {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+    margin-bottom: 20px;
+}
+
+.waffle-bars div svg {
+    overflow: visible;
+}
+
+.waffle-bars .waffle-bar {
+    margin-right: 20px;
+    margin-top: 15px;
+}
+
+.waffle-bar div {
+    font-weight: bold;
+}
+
+.waffle-labels {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 300px;
+    border: 2px solid #5a4a42;
+}
+
+.square {
+    height: 7px;
+    width: 7px;
+}
+
+.survived-label {
+    background-color: #344C65;
+}
+
+.deceased-label {
+    background-color: #C2C9D1;
+}
+
+.waffle-labels {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.waffle-labels span {
+    margin-right: 20px;
+}
+
+.waffle-labels .square {
+    margin-right: 5px;
+}
+
+select {
+    border: 2px solid #5a4a42;
+}
+
+.passenger-unit-info {
+    background-color: #e6d8c0;
+    white-space: pre-line;
+    pointer-events: none;
+    user-select: none;
+    border: 2px solid #5a4a42;
+    overflow: visible;
+}
+
+.passenger-unit-info div {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.waffle-chart {
+    overflow: visible;
+}

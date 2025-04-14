@@ -2,6 +2,8 @@ import SankeyDiagram from "./components/sankey/sankey";
 import { useState, useEffect } from 'react'
 import DBReader from './services/dbReader'
 import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
+import Waffle from './components/waffle/waffle';
+
 import LifeboatsChart from "./components/lifeboats/LifeboatsChart";
 import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
 import TimeChart from "./components/stacked-bar-chart/components/TimeChart";
@@ -94,6 +96,7 @@ function App() {
           La deuxième visualisation consiste en une série de waffle chart où
           chaque unité (carré) représente un passager du Titanic...
         </p>
+        <Waffle></Waffle>
       </div>
 
       <div className="maritime-bulletin">
