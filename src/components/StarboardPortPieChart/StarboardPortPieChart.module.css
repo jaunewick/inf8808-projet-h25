@@ -12,6 +12,7 @@
       padding: 0.5rem 1rem;
       margin-left: 1rem;
       display: flex;
+      align-items: flex-start;
       flex-direction: column;
       position: sticky;
       top: 0;
@@ -48,4 +49,31 @@
 
 .container > *:nth-last-child(-n + 2) {
   margin-bottom: 0 !important;
+}
+
+.scrollytelling {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.step {
+  text-align: center;
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.step.active {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.chart {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.chart.visible {
+  opacity: 1;
+  transform: translateY(0);
 }

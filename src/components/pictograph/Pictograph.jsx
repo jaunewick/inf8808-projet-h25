@@ -19,6 +19,33 @@ const Pictograph = ({ value, isSmaller=true }) => {
       .append('svg')
       .attr('width', isSmaller ? 350 : 550)
       .attr('height', isSmaller ? 100 : 200)
+      
+      const tooltip = d3.select(containerRef.current)
+        .append("div")
+        .attr("class", "d3-tooltip")
+        .style("position", "absolute")
+        .style("background", "#fff")
+        .style("padding", "5px")
+        .style("border-radius", "4px")
+        .style("border", "1px solid gray")
+        .style("font-size", "12px")
+        .style("pointer-events", "none")
+        .style("opacity", 0)
+
+      svgDoc
+        .on("mouseover", () => {
+          tooltip
+            .style("opacity", 0.9)
+            .html(`Chance de survie : ${Math.round(value * 10)} %`)
+        })
+        .on("mousemove", (event) => {
+          tooltip
+            .style("left", `${event.layerX + 20}px`)
+            .style("top", `${event.layerY - 25}px`);
+        })
+        .on("mouseout", () => {
+          tooltip.style("opacity", 0);
+        });
 
     const scale = isSmaller ? 0.6 : 1;
 
@@ -55,7 +82,7 @@ const Pictograph = ({ value, isSmaller=true }) => {
         const whole = Math.floor(d / numCols);
         return yPadding + (whole * hBuffer);
       })
-      .attr('class', (d) => (d < value ? 'iconSelected' : 'iconPlain'));
+      .attr('class', (d) => (d < Math.round(value) ? 'iconSelected' : 'iconPlain'));
   };  
 
   return (

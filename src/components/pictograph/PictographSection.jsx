@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import scrollama from "scrollama";
 import Pictograph from "./Pictograph";
 import SurvivalCalculator from "../../services/ProbabilityCalculator";
-import "./Pictograph.css";
 import PictographFilters from "./PictographFilters";
+import "./Pictograph.css";
 
 const PictographSection = () => {
   const [global, setGlobal] = useState(0);
@@ -77,7 +77,6 @@ const PictographSection = () => {
         setThirdClassProb(thirdClassProbResult);
 
         const roseProbResult = await SurvivalCalculator.getSurvivalProbability({
-          isChild: false,
           isMale: false,
           passengerClass: 1,
           ageRange: [18, 25],
@@ -85,10 +84,9 @@ const PictographSection = () => {
         setRoseProb(roseProbResult);
 
         const jackProbResult = await SurvivalCalculator.getSurvivalProbability({
-          isChild: false,
           isMale: true,
           passengerClass: 3,
-          ageRange: [18, 25],
+          ageRange: [18, 24],
         });
         setJackProb(jackProbResult);
 
@@ -236,7 +234,7 @@ const PictographSection = () => {
 
       
       {/* User's input*/}
-      <div className={`step ${currentStep === "user" ? "is-active" : ""}`} data-step="user">
+      <div className="step is-active" data-step="user">
         <section className="chart-section ">
           <h3>Et vous, auriez-vous survécu ?</h3>
           <p className="section-description">

@@ -242,7 +242,7 @@ svg {
   .step {
     text-align: center;
     opacity: 0.2;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease;
   }
   
   .step.is-active {
