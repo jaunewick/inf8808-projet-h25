@@ -42,7 +42,7 @@ const PictographSection = () => {
     const fetchSurvivalProbability = async () => {
       try {
         const womanAdultProbResult = await SurvivalCalculator.getSurvivalProbability({
-          isChild: true,
+          isChild: false,
           isMale: false,
         });
         setWomanAdultProb(womanAdultProbResult);
