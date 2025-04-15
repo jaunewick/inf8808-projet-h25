@@ -62,6 +62,7 @@ export const PieChart = ({
       })
       .attr("transform", (d) => `translate(${arc.centroid(d)})`)
       .style("text-anchor", "middle")
+      .style("user-select", "none")
       .style("font-size", 14)
       .style("font-weight", "bold")
       .style("fill", (d, i) => color((i % colors.length) + 1));
@@ -69,7 +70,7 @@ export const PieChart = ({
 
   return (
     <div className={classes.container}>
-      {title && <h3>{title}</h3>}
+      {title && <p><b>{title} </b></p>}
       <svg ref={ref}></svg>
     </div>
   );

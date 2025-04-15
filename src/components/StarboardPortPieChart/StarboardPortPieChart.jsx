@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import scrollama from "scrollama";
 import DBReader from "../../services/dbReader";
 import { PieChart } from "./PieChart";
 import classes from "./StarboardPortPieChart.module.css";
@@ -33,6 +34,10 @@ const CHART_CONFIGS = [
 ];
 
 export const StarboardPortPieChart = () => {
+  const scrollerRef = useRef(null);
+  const [currentStep, setCurrentStep] = useState(null);
+  const [effectDone, setEffectDone] = useState(false);
+  
   const [data, setData] = useState([]);
   const [charts, setCharts] = useState(
     CHART_CONFIGS.map((c) => ({ ...c, data: [] }))
@@ -58,16 +63,47 @@ export const StarboardPortPieChart = () => {
     }
   }, [data]);
 
+    useEffect(() => {
+      const scroller = scrollama();
+      scroller
+        .setup({
+          step: ".step",
+          offset: 0.6,
+          progress: false,
+        })
+        .onStepEnter(response => {
+          const step = response.element.getAttribute("data-step");
+          setCurrentStep(step);
+        })
+        .onStepExit(() => {
+          setCurrentStep(null);
+          console.log("Effect done:", effectDone);
+          if (!effectDone) {
+            setEffectDone(true);
+          }
+        });
+  
+      return () => scroller.destroy();
+    }, []);
+
   return (
-    <>
-      <h2>
-        Répartition des passagers dans les canots de sauvetages selon la zone du
-        bateau
-      </h2>
-      <div className={classes.section}>
+    <div className="pictograph-container scrollytelling" ref={scrollerRef}>
+    {/* Introduction Section */}
+    <section className="story-section">
+      <h2>Tribord ou bâbord : un côté plus sûr que l’autre ?</h2>
+      <p>
+        Dans la panique du naufrage, chaque minute comptait… et chaque côté du navire aussi. Cette visualisation
+        explore la répartition des passagers dans les canots de sauvetage selon qu’ils aient embarqué du côté tribord ou bâbord.
+      </p>
+    </section>
+      <div className={`${classes.section} step ${currentStep === "charts" ? "is-active" : ""}`} data-step="charts">
         <div className={classes.left}>
           <div className={classes.container}>
             {charts.map(({ key, title, data }) => (
+              <div 
+                key={key} 
+                className={`${!effectDone  ? classes.fadeInWrapper : ""}`}
+              >
               <PieChart
                 key={key}
                 title={title}
@@ -76,6 +112,7 @@ export const StarboardPortPieChart = () => {
                 width={WIDTH}
                 height={HEIGHT}
               />
+              </div>
             ))}
           </div>
         </div>
@@ -93,6 +130,14 @@ export const StarboardPortPieChart = () => {
           </div>
         </div>
       </div>
-    </>
+      <div className="chart-analysis">
+        <p>
+          Les différences sont frappantes : alors que les femmes sont réparties de façon quasi équilibrée, les hommes
+          ont été massivement dirigés vers bâbord, tout comme une majorité de membres de l’équipage. Cette asymétrie soulève
+          une question : était-ce une simple conséquence du positionnement des canots? Ou le fruit de décisions humaines, conscientes
+          ou non, prises dans l’urgence? Une chose est sûre : même l’orientation sur le navire pouvait influencer le destin.
+        </p>
+      </div>
+    </div>
   );
 };
