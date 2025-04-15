@@ -3,9 +3,249 @@ svg {
 }
 
 .iconPlain {
-    fill: #555555;
+    fill: #777777;
 }
 
 .iconSelected {
-    fill: orange;
+    fill: #E9BA24;
 }
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 1rem 0;
+  }
+  
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 180px;
+  }
+  
+  .filter-label {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--navy);
+  }
+  
+  select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s;
+  }
+  
+  select:focus {
+    border-color: var(--accent);
+    outline: none;
+  }
+  
+
+.pictograph-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-evenly;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.sub-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: center;
+    margin: 0;
+    width: ma-content;
+    display: flex;
+}
+
+.chart-analysis {
+    background-color: rgba(26, 58, 90, 0.05);
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    border-left: 4px solid var(--navy);
+  }
+
+/* Main container */
+.pictograph-container {
+    position: relative;
+    width: 100vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: fit-content;
+    --parchment: #f5f1e4;
+    --ink: #2b2518;
+    --accent: #8b2e16;
+    --gold: #d4a951;
+    --navy: #1a3a5a;
+    --aged-paper: #e8e0cc;
+    --border-color: #c9b38c;
+  
+    /* Headings */
+    h2,
+    h3 {
+      font-family: "Playfair Display", Georgia, serif;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  
+    h2 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+      position: relative;
+    }
+  
+    h2:after {
+      content: "⚓";
+      display: block;
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      color: var(--navy);
+    }
+  
+    h3 {
+      font-size: 1.2rem;
+      border-bottom-width: 1px;
+    }
+  }
+  .section-description {
+    font-size: 1.1rem !important;
+    padding: 0 2rem;
+    margin: 0 !important;
+  }
+  
+  /* Chart sections */
+  .chart-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .chart-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .chart-section p {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  
+  /* Story Section Styling */
+  .story-section {
+    position: relative;
+    margin: 3rem 0;
+    padding: 2rem;
+    background-color: var(--parchment);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+  
+  /* Paragraphs and Lists */
+  p {
+    margin-bottom: 1.2rem;
+    text-align: justify;
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-shadow: 0.5px 0.5px 0px rgba(200, 180, 140, 0.2);
+  }
+  
+  ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    list-style-type: none;
+  }
+  
+  ul li {
+    margin-bottom: 0.75rem;
+    position: relative;
+    padding-left: 1.5rem;
+    font-size: 1.05rem;
+  }
+  
+  ul li:before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    color: var(--navy);
+  }
+  
+  /* Chart Sections */
+  .chart-section {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+  }
+  
+  .chart-description {
+    font-style: italic;
+    border-left: 3px solid var(--gold);
+    padding-left: 1rem;
+    font-size: 1rem;
+    color: var(--navy);
+    margin: 1rem 0 0.5rem;
+  }
+
+  .chart-analysis {
+    background-color: rgba(26, 58, 90, 0.05);
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-top: 2rem;
+    border-left: 4px solid var(--navy);
+  }
+  
+  /* Chart containers */
+  .time-chart-container,
+  .utilization-chart-container {
+    width: 100%;
+    height: 80vh;
+    max-height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .scrollytelling {
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .step {
+    text-align: center;
+    opacity: 0.2;
+    transition: opacity 0.5s ease;
+  }
+  
+  .step.is-active {
+    opacity: 1;
+  }
+  
