@@ -2,7 +2,7 @@ import SankeyDiagram from "./components/sankey/sankey";
 import { useState, useEffect } from 'react'
 import DBReader from './services/dbReader'
 import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
-import Waffle from './components/waffle/waffle';
+import Waffle from './components/waffle/Waffle';
 
 import LifeboatsChart from "./components/lifeboats/LifeboatsChart";
 import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
