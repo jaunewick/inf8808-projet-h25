@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { standingPerson } from '../../assets/standingPerson';
 import './Pictograph.css';
 
-const Pictograph = ({ value }) => {
+const Pictograph = ({ value, isSmaller=true }) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -17,8 +17,10 @@ const Pictograph = ({ value }) => {
   const createVisualization = (text, value) => {
     const svgDoc = d3.select(containerRef.current)
       .append('svg')
-      .attr('width', 600)
-      .attr('height', 130);
+      .attr('width', isSmaller ? 350 : 550)
+      .attr('height', isSmaller ? 100 : 200)
+
+    const scale = isSmaller ? 0.6 : 1;
 
     svgDoc.append('defs')
       .append('g')
@@ -31,7 +33,7 @@ const Pictograph = ({ value }) => {
     const xPadding = 0;
     const yPadding = 5;
     const hBuffer = 0;
-    const wBuffer = 55;
+    const wBuffer = isSmaller ? 50 : 55;
     const myIndex = d3.range(numCols * numRows);
 
     svgDoc.append('g')
@@ -40,6 +42,9 @@ const Pictograph = ({ value }) => {
       .data(myIndex)
       .enter()
       .append('use')
+      .attr('transform', () => {
+        return `scale(${scale})`;
+      })
       .attr('href', `#iconCustom${text}`)
       .attr('id', (d) => `icon${text}${d}`)
       .attr('x', (d) => {

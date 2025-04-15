@@ -148,14 +148,10 @@ function BoxplotSurvival({ data }) {
                     .html(tooltipContent(d))
                     .style("left", `${event.pageX - 200}px`)
                     .style("top", `${event.pageY - 270}px`);
-                console.log("pageX_1: " + event.pageX)
-                console.log("pageY_1: " + event.pageY)
             })
             .on("mousemove", (event) => {
                 tooltip.style("left", `${event.pageX - 200}px`)
                     .style("top", `${event.pageY - 270}px`);
-                console.log("pageX_2: " + event.pageX)
-                console.log("pageY_2: " + event.pageY)
             })
             .on("mouseout", () => {
                 tooltip.style("opacity", 0);

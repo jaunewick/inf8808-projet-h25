@@ -1,22 +1,13 @@
 import * as d3 from "d3";
 import React, { useEffect, useState } from "react";
 import DBReader from "../../services/dbReader";
-import "./Pictograph.css"; // Import CSS for styling
+import SurvivalCalculator from "../../services/ProbabilityCalculator";
+import "./Pictograph.css";
 
-const Pictograph = () => {
+const PictographFilters = () => {
   const [genderFilter, setGenderFilter] = useState("all");
   const [ageFilter, setAgeFilter] = useState("all");
   const [classFilter, setClassFilter] = useState("all");
-  const [passengerData, setPassengerData] = useState([]);
-
-  const loadData = async () => {
-    try {
-      const data = await DBReader.getTitanicData();
-      setPassengerData(data);
-    } catch (error) {
-      console.error("Error loading data:", error);
-    }
-  };
 
   const createVisualization = (text, value) => {
     const svgDoc = d3
@@ -63,35 +54,33 @@ const Pictograph = () => {
       .attr("class", (d) => (d < value ? "iconSelected" : "iconPlain"));
   };
 
-  const updateVisualization = React.useCallback(() => {
+  const updateVisualization = React.useCallback(async () => {
     d3.select("#visualization-container").html("");
-
-    createVisualization("test", 0.3);
-  }, []);
+    const result = await SurvivalCalculator.getSurvivalProbability({
+      isMale: genderFilter === "all" ? null : genderFilter === "male",
+      passengerClass: classFilter === "all" ? null : parseInt(classFilter),
+      ageRange:
+        ageFilter === "all" ? null : 
+        ageFilter === "child" ? [0, 17] :
+        ageFilter === "youngadult" ? [18, 24] :
+        ageFilter === "adult" ? [25, 64] :
+        ageFilter === "elderly" ? [65, 100] : null
+    });
+    
+    createVisualization("user", result || 0);
+  }, [genderFilter, ageFilter, classFilter]);
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    console.log("Filters updated:", genderFilter, ageFilter, classFilter);
-    if (passengerData.length > 0) {
       updateVisualization();
-    }
   }, [
     genderFilter,
     ageFilter,
     classFilter,
-    passengerData,
     updateVisualization,
   ]);
 
   return (
     <div>
-      <div className="title">
-        Visualisation des caractéristiques des passagers du Titanic
-      </div>
-
       <div className="filters">
         <div className="filter-group">
           <div className="filter-label">Genre</div>
@@ -113,10 +102,11 @@ const Pictograph = () => {
             value={ageFilter}
             onChange={(e) => setAgeFilter(e.target.value)}
           >
-            <option value="all">0-19 ans</option>
-            <option value="child">30-39 ans</option>
-            <option value="adult">Adulte</option>
-            <option value="elderly">Âgé</option>
+            <option value="all">Tous</option>
+            <option value="child">0-17 ans</option>
+            <option value="youngadult">18-25 ans</option>
+            <option value="adult">25-64</option>
+            <option value="elderly">65+</option>
           </select>
         </div>
 
@@ -140,4 +130,4 @@ const Pictograph = () => {
   );
 };
 
-export default Pictograph;
+export default PictographFilters;

@@ -9,6 +9,8 @@ import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
 import TimeChart from "./components/stacked-bar-chart/components/TimeChart";
 import UtilizationChart from "./components/stacked-bar-chart/components/UtilizationChart";
 import Boxplot from "./components/boxplot/Boxplot";
+import PictographChart from "./components/pictograph/PictographFilters";
+import PictographSection from "./components/pictograph/PictographSection";
 
 function App() {
   const [titanicData, setData] = useState(null);
@@ -124,20 +126,22 @@ function App() {
       </div>
 
       <div className="maritime-bulletin">
-        <h3>Pictogramme Statistique</h3>
-        <p>
-          La cinquième visualisation sera illustrée par un pictogramme
-          statistique...
-        </p>
-      </div>
-
-      <div className="maritime-bulletin">
         <h3>Small Multiple</h3>
         <p>
           La cinquième visualisation sera illustrée par un small multiple...
         </p>
         <StarboardPortPieChart />
       </div>
+
+      <div className="maritime-bulletin">
+        <h3>Pictogramme Statistique</h3>
+        <p>
+          La cinquième visualisation sera illustrée par un pictogramme
+          statistique...
+        </p>
+        <PictographSection />
+      </div>
+
     </div>
   );
 }
