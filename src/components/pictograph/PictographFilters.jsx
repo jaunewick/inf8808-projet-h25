@@ -48,7 +48,7 @@ const PictographFilters = () => {
         const whole = Math.floor(d / numCols);
         return yPadding + whole * hBuffer;
       })
-      .attr("class", (d) => (d < value ? "iconSelected" : "iconPlain"));
+      .attr("class", (d) => (d < Math.round(value) ? "iconSelected" : "iconPlain"));
   };
 
   const updateVisualization = React.useCallback(async () => {
@@ -101,7 +101,7 @@ const PictographFilters = () => {
           >
             <option value="all">Tous</option>
             <option value="child">0-17 ans</option>
-            <option value="youngadult">18-25 ans</option>
+            <option value="youngadult">18-24 ans</option>
             <option value="adult">25-64</option>
             <option value="elderly">65+</option>
           </select>

@@ -67,33 +67,13 @@
   transition: opacity 0.3s ease;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fadeInWrapper {
+.chart {
   opacity: 0;
-  animation-name: fadeIn;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.fadeInWrapper:nth-child(1) {
-  animation-delay: 0.2s;
-}
-.fadeInWrapper:nth-child(2) {
-  animation-delay: 0.6s;
-}
-.fadeInWrapper:nth-child(3) {
-  animation-delay: 1s;
-}
-.fadeInWrapper:nth-child(4) {
-  animation-delay: 1.4s;
+.chart.visible {
+  opacity: 1;
+  transform: translateY(0);
 }

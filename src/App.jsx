@@ -130,7 +130,8 @@ function App() {
         <p>
           La cinquième visualisation sera illustrée par un small multiple...
         </p>
-        <StarboardPortPieChart />
+
+        {lifeboatsData && (<StarboardPortPieChart data={lifeboatsData} />)}
       </div>
 
       <div className="maritime-bulletin">
@@ -141,7 +142,6 @@ function App() {
         </p>
         <PictographSection />
       </div>
-
     </div>
   );
 }

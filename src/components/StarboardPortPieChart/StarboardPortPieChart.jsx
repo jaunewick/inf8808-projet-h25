@@ -33,24 +33,14 @@ const CHART_CONFIGS = [
   { key: "total", title: "Répartition globale" },
 ];
 
-export const StarboardPortPieChart = () => {
+export const StarboardPortPieChart = ({ data }) => {
   const scrollerRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(null);
-  const [effectDone, setEffectDone] = useState(false);
+  const [visibleCharts, setVisibleCharts] = useState(false);
   
-  const [data, setData] = useState([]);
   const [charts, setCharts] = useState(
     CHART_CONFIGS.map((c) => ({ ...c, data: [] }))
   );
-
-  useEffect(() => {
-    DBReader.getLifeboatsData()
-      .then(setData)
-      .catch((error) => {
-        console.error("Error fetching lifeboats data:", error);
-        setData([]);
-      });
-  }, []);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -74,17 +64,20 @@ export const StarboardPortPieChart = () => {
         .onStepEnter(response => {
           const step = response.element.getAttribute("data-step");
           setCurrentStep(step);
+
+          if (charts.length > 0) {
+            const timeouts = charts.map((_, index) =>
+              setTimeout(() => setVisibleCharts((prev) => prev + 1), index * 250)
+            );
+            return () => timeouts.forEach(clearTimeout);
+          }
         })
         .onStepExit(() => {
           setCurrentStep(null);
-          console.log("Effect done:", effectDone);
-          if (!effectDone) {
-            setEffectDone(true);
-          }
         });
   
       return () => scroller.destroy();
-    }, []);
+    }, [charts]);
 
   return (
     <div className="pictograph-container scrollytelling" ref={scrollerRef}>
@@ -96,13 +89,15 @@ export const StarboardPortPieChart = () => {
         explore la répartition des passagers dans les canots de sauvetage selon qu’ils aient embarqué du côté tribord ou bâbord.
       </p>
     </section>
-      <div className={`${classes.section} step ${currentStep === "charts" ? "is-active" : ""}`} data-step="charts">
+      <div className={`${classes.section} step ${currentStep === "charts" ? "is-active" : ""}`} data-step="charts" >
         <div className={classes.left}>
           <div className={classes.container}>
-            {charts.map(({ key, title, data }) => (
+            {charts.map(({ key, title, data }, index) => (
               <div 
                 key={key} 
-                className={`${!effectDone  ? classes.fadeInWrapper : ""}`}
+                className={`${classes.chart} ${
+                  index < visibleCharts ? classes.visible : ""
+                }`}
               >
               <PieChart
                 key={key}
