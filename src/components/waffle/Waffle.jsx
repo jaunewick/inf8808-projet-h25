@@ -38,15 +38,14 @@ const UNIT_SPACING = 2;
 const NUMBER_UNITS_PER_ROW = 20;
 const MAX_WIDTH = (UNIT_SIDE_LENGTH + UNIT_SPACING) * NUMBER_UNITS_PER_ROW;
 
-export default function Waffle() {
+export const Waffle = ({ passengerData }) => {
   const [countriesToRender, setCountriesToRender] = useState(REGIONS["Monde"]);
   const [survivorsPerCountry, setSurvivorsPerCountry] = useState(undefined);
   const [selectedRegion, setSelectedRegion] = useState("Monde");
 
   useEffect(() => {
-    DBReader.getTitanicData().then((passengerData) => {
       const survivors = {};
-
+      
       for (const passenger of passengerData) {
         if (survivors[passenger.country] === undefined) {
           survivors[passenger.country] = [passenger];
@@ -54,14 +53,13 @@ export default function Waffle() {
           survivors[passenger.country].push(passenger);
         }
       }
-
+    
       for (const country in survivors) {
         survivors[country].sort((a, b) => d3.ascending(a.survived, b.survived));
       }
 
       setSurvivorsPerCountry(survivors);
-    })
-  }, []);
+  }, [passengerData]);
 
   useEffect(() => {
     d3.selectAll(".waffle-bars div").remove();

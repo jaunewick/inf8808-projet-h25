@@ -98,7 +98,7 @@ function App() {
           La deuxième visualisation consiste en une série de waffle chart où
           chaque unité (carré) représente un passager du Titanic...
         </p>
-        <Waffle></Waffle>
+        <Waffle data={titanicData} />
       </div>
 
       <div className="maritime-bulletin">
