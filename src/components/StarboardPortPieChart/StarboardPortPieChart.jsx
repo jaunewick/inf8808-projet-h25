@@ -77,7 +77,6 @@ export const StarboardPortPieChart = () => {
         })
         .onStepExit(() => {
           setCurrentStep(null);
-          console.log("Effect done:", effectDone);
           if (!effectDone) {
             setEffectDone(true);
           }
