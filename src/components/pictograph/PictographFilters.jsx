@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import React, { useEffect, useState } from "react";
 import DBReader from "../../services/dbReader";
-import SurvivalCalculator from "../../services/ProbabiltyCalculator";
+import SurvivalCalculator from "../../services/ProbabilityCalculator";
 import "./Pictograph.css";
 
 const PictographFilters = () => {
