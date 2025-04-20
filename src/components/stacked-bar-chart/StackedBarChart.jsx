@@ -93,7 +93,7 @@ const StackedBarChart = ({ data }) => {
   if (!scales) return null;
 
   return (
-    <div className="stacked-bar-charts-container">
+    <div className="container">
     {/* Introduction Section */}
     <section className="story-section">
       <h2>Le Naufrage du Titanic : Une Analyse des Canots de Sauvetage</h2>

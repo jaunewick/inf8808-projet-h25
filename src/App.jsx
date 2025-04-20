@@ -3,13 +3,8 @@ import { useState, useEffect } from 'react'
 import DBReader from './services/dbReader'
 import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
 import Waffle from './components/waffle/Waffle';
-
-import LifeboatsChart from "./components/lifeboats/LifeboatsChart";
 import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
-import TimeChart from "./components/stacked-bar-chart/components/TimeChart";
-import UtilizationChart from "./components/stacked-bar-chart/components/UtilizationChart";
 import Boxplot from "./components/boxplot/Boxplot";
-import PictographChart from "./components/pictograph/PictographFilters";
 import PictographSection from "./components/pictograph/PictographSection";
 
 function App() {
@@ -44,7 +39,7 @@ function App() {
 
       <div className="telegraph-box">
         <span>
-          DERNIER TÉLÉGRAMME : FEMMES ET ENFANTS D'ABORD DANS LES CANOTS DE
+          DERNIER TÉLÉGRAMME: FEMMES ET ENFANTS D'ABORD DANS LES CANOTS DE
           SAUVETAGE - LE CARPATHIA SE PRÉCIPITE SUR LES LIEUX
         </span>
       </div>
@@ -85,61 +80,26 @@ function App() {
       </div>
 
       <div className="maritime-bulletin">
-        <h3>Diagramme de Sankey</h3>
-        <p>La première visualisation est un diagramme de Sankey qui met en évidence les liens
-          entre les variables démographique des passagers.
-        </p>
         {titanicData && <SankeyDiagram data={titanicData}></SankeyDiagram>}
       </div>
 
       <div className="maritime-bulletin">
-        <h3>Waffle Chart</h3>
-        <p>
-          La deuxième visualisation consiste en une série de waffle chart où
-          chaque unité (carré) représente un passager du Titanic...
-        </p>
        {titanicData && <Waffle data={titanicData} />}
       </div>
 
       <div className="maritime-bulletin">
-        <h3>Stacked Barplot</h3>
-        <p>
-          La troisième visualisation est un stacked barplot qui présente
-          l'analyse temporelle et le taux d'utilisation des canots de
-          sauvetage.
-        </p>
         {lifeboatsData && <StackedBarChart data={lifeboatsData} />}
       </div>
 
       <div className="maritime-bulletin">
-        <h3>Boîtes à moustaches</h3>
-        <p>
-          La quatrième visualisation est représentée par des boîtes à moustaches
-          et se décompose en trois étapes progressives pour explorer la répartition
-          des passagers du Titanic selon leur classe, le prix des billets et leur survie,
-          en fonction du port d’embarquement.
-        </p>
-        <p>
-          Ces étapes vous guideront d’une vue globale vers une analyse détaillée.
-        </p>
         {titanicData && <Boxplot data={titanicData} />}
       </div>
 
       <div className="maritime-bulletin">
-        <h3>Small Multiple</h3>
-        <p>
-          La cinquième visualisation sera illustrée par un small multiple...
-        </p>
-
         {lifeboatsData && (<StarboardPortPieChart data={lifeboatsData} />)}
       </div>
 
       <div className="maritime-bulletin">
-        <h3>Pictogramme Statistique</h3>
-        <p>
-          La cinquième visualisation sera illustrée par un pictogramme
-          statistique...
-        </p>
         <PictographSection />
       </div>
     </div>

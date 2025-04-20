@@ -99,14 +99,14 @@ const PictographSection = () => {
   }, []);
 
   return (
-    <div className="pictograph-container scrollytelling" ref={scrollerRef}>
+    <div className="container scrollytelling" ref={scrollerRef}>
       {/* Introduction Section */}
       <section className="story-section">
-        <h2>Survivre à bord : Une question de profil ?</h2>
+        <h2>Survivre à bord : Une question de profil?</h2>
         <p>
           Dans le chaos de la nuit du naufrage, les chances de survie ne dépendaient pas que de la chance... Le sexe,
           l’âge ou encore la classe du billet détenu pouvaient jouer un rôle crucial. Qui avait plus de chances d’être
-          sauvé ? Qui, au contraire, voyait ses espoirs sombrer avec le navire ? Notre analyse permet de visualiser
+          sauvé? Qui, au contraire, voyait ses espoirs sombrer avec le navire ? Notre analyse permet de visualiser
           comment ces facteurs ont influencé le sort des passagers, en comparant les différences selon les profils.
         </p>
       </section>
@@ -118,8 +118,8 @@ const PictographSection = () => {
           <p className="section-description">
             C’est la fameuse règle de galanterie qu’on entend dans tous les récits de naufrage. On imagine les femmes
             serrant leurs enfants, guidées vers les canots pendant que les hommes restent en arrière, résignés. Cette
-            règle a-t-elle vraiment été respectée ? Les femmes ont-elles été priorisées peu importe leur classe ? Et
-            qu’en est-il des enfants: tous ont-ils eu les mêmes chances, riches ou pauvres ?
+            règle a-t-elle vraiment été respectée? Les femmes ont-elles été priorisées peu importe leur classe? Et
+            qu’en est-il des enfants: tous ont-ils eu les mêmes chances, riches ou pauvres?
           </p>
         </section>
         <div className="pictograph-section" id="by_sex_all_classes">
@@ -147,7 +147,7 @@ const PictographSection = () => {
         </div>
         <div className="chart-analysis">
           <p>
-            Cette visualisation révèle un constat frappant : les chances de survie dépendaient fortement du profil.
+            Cette visualisation révèle un constat frappant: les chances de survie dépendaient fortement du profil.
             Enfants et femmes ont été nettement avantagés, tandis que les hommes, eux, ont payé le plus lourd tribut.
             Une évacuation où la galanterie, réelle ou imposée, a clairement influencé le destin.
           </p>
@@ -204,7 +204,7 @@ const PictographSection = () => {
           <h3>Et Rose et Jack dans tout ça ?</h3>
           <p className="section-description">
             Qui n’a jamais entendu parler de Rose, passagère raffinée de première classe, et de Jack, jeune artiste sans billet, 
-            monté à bord à la dernière seconde ? Leur romance dramatique est devenue l’icône du Titanic. Mais au-delà du cinéma, 
+            monté à bord à la dernière seconde? Leur romance dramatique est devenue l’icône du Titanic. Mais au-delà du cinéma, 
             leurs profils illustrent deux réalités bien différentes à bord : celle des classes privilégiées, proches des canots en
             1êre classe, et celle des passagers relégués dans les ponts inférieurs. Cette section met en lumière les écarts de survie
             entre Rose et Jack, révélant comment leur statut social a influencé leurs chances de survie.

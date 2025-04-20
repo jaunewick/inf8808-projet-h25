@@ -80,10 +80,10 @@ export const StarboardPortPieChart = ({ data }) => {
     }, [charts]);
 
   return (
-    <div className="pictograph-container scrollytelling" ref={scrollerRef}>
+    <div className="container scrollytelling" ref={scrollerRef}>
     {/* Introduction Section */}
     <section className="story-section">
-      <h2>Tribord ou bâbord : un côté plus sûr que l’autre ?</h2>
+      <h2>Tribord ou bâbord: un côté plus sûr que l’autre?</h2>
       <p>
         Dans la panique du naufrage, chaque minute comptait… et chaque côté du navire aussi. Cette visualisation
         explore la répartition des passagers dans les canots de sauvetage selon qu’ils aient embarqué du côté tribord ou bâbord.
@@ -129,7 +129,7 @@ export const StarboardPortPieChart = ({ data }) => {
         <p>
           Les différences sont frappantes : alors que les femmes sont réparties de façon quasi équilibrée, les hommes
           ont été massivement dirigés vers bâbord, tout comme une majorité de membres de l’équipage. Cette asymétrie soulève
-          une question : était-ce une simple conséquence du positionnement des canots? Ou le fruit de décisions humaines, conscientes
+          une question: était-ce une simple conséquence du positionnement des canots? Ou le fruit de décisions humaines, conscientes
           ou non, prises dans l’urgence? Une chose est sûre : même l’orientation sur le navire pouvait influencer le destin.
         </p>
       </div>
