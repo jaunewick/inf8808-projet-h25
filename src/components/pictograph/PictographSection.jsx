@@ -99,7 +99,7 @@ const PictographSection = () => {
   }, []);
 
   return (
-    <div className="pictograph-container scrollytelling" ref={scrollerRef}>
+    <div className="container scrollytelling" ref={scrollerRef}>
       {/* Introduction Section */}
       <section className="story-section">
         <h2>Survivre à bord : Une question de profil ?</h2>

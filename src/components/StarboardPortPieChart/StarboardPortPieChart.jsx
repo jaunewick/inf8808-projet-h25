@@ -80,7 +80,7 @@ export const StarboardPortPieChart = ({ data }) => {
     }, [charts]);
 
   return (
-    <div className="pictograph-container scrollytelling" ref={scrollerRef}>
+    <div className="container scrollytelling" ref={scrollerRef}>
     {/* Introduction Section */}
     <section className="story-section">
       <h2>Tribord ou bâbord : un côté plus sûr que l’autre ?</h2>

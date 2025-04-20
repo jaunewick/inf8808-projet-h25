@@ -198,7 +198,7 @@ export default function SankeyDiagram ({data}) {
     }
 
     return (
-        <div className="sankey-container"> 
+        <div className="container"> 
             <section className="story-section">
             <h2>Des passagers de tous les horizons</h2>
                 <p>

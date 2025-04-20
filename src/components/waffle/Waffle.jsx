@@ -299,7 +299,7 @@ export function Waffle({ data }) {
     <div className="waffle-chart">
       {/* Introduction Section */}
       <section className="story-section">
-        <h2>Qui étaient à bord du Titanic ?</h2>
+        <h2>Qui était à bord du Titanic ?</h2>
         <p>
         Le Titanic transportait des passagers venus d'Europe, d'Amérique, d'Asie et d'autres régions du monde.
         Cette diversité d'origines montre à quel point le voyage dépassait les frontières nationales.
