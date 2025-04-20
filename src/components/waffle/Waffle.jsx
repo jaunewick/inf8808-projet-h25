@@ -114,7 +114,6 @@ export function Waffle({ data }) {
       .onStepEnter(({ index }) => {
         setCurrentStep(index);
         renderWaffle(index);
-        console.log("Step entered:", index);
       });
 
     return () => {
