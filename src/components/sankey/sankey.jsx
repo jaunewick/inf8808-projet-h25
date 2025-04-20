@@ -92,7 +92,7 @@ export default function SankeyDiagram ({data}) {
         d3.selectAll('.sankey-node')
           .select('rect')
           .attr('height', (n) => n.y1 - n.y0)
-          .attr('width', (n) => sankeyGenerator.nodeWidth())
+          .attr('width', () => sankeyGenerator.nodeWidth())
           .attr('x', (n) => n.x0)
           .attr('y', (n) => n.y0)
           .attr('stroke', "black")

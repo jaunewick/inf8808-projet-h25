@@ -239,13 +239,13 @@ svg {
     margin: 0 auto;
   }
   
-  .step {
+  .step-picto {
     text-align: center;
     opacity: 0.2;
     transition: opacity 0.3s ease;
   }
   
-  .step.is-active {
+  .step-picto.is-active {
     opacity: 1;
   }
   
