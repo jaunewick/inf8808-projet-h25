@@ -26,7 +26,7 @@ const PictographSection = () => {
 
     scroller
       .setup({
-        step: ".step",
+        step: ".step-picto",
         offset: 0.6,
         progress: false,
       })
@@ -112,7 +112,7 @@ const PictographSection = () => {
       </section>
 
       {/* Women, Child, Men */}
-      <div className={`step ${currentStep === "gender" ? "is-active" : ""}`} data-step="gender">
+      <div className={`step-picto ${currentStep === "gender" ? "is-active" : ""}`} data-step="gender">
         <section className="chart-section">
           <h3>Les femmes et les enfants d’abord ?</h3>
           <p className="section-description">
@@ -155,7 +155,7 @@ const PictographSection = () => {
       </div>
 
       {/* Social Class */}
-      <div className={`step ${currentStep === "class" ? "is-active" : ""}`} data-step="class">
+      <div className={`step-picto ${currentStep === "class" ? "is-active" : ""}`} data-step="class">
         <section className="chart-section">
           <h3>Les privilèges ne s’arrêtaient-ils qu’au confort ?</h3>
           <p className="section-description">
@@ -199,7 +199,7 @@ const PictographSection = () => {
       </div>
 
       {/* Rose and Jack */}
-      <div className={`step ${currentStep === "rosejack" ? "is-active" : ""}`} data-step="rosejack">
+      <div className={`step-picto ${currentStep === "rosejack" ? "is-active" : ""}`} data-step="rosejack">
         <section className="chart-section ">
           <h3>Et Rose et Jack dans tout ça ?</h3>
           <p className="section-description">
@@ -234,7 +234,7 @@ const PictographSection = () => {
 
       
       {/* User's input*/}
-      <div className="step is-active" data-step="user">
+      <div className="step-picto is-active" data-step="user">
         <section className="chart-section ">
           <h3>Et vous, auriez-vous survécu ?</h3>
           <p className="section-description">

@@ -107,7 +107,7 @@ export function Waffle({ data }) {
     scroller.current = scrollama();
     scroller.current
       .setup({
-        step: ".step",
+        step: ".step-waffle",
         offset: 0.5,
         debug: false
       })
@@ -305,12 +305,12 @@ export function Waffle({ data }) {
       </div>
       
       <div className="steps-container">
-        <div className="step step-0" data-scrollama-index="0">
+        <div className="step-waffle step-0" data-scrollama-index="0">
           <div className="step-content">
           </div>
         </div>
         
-        <div className="step step-1" data-scrollama-index="1">
+        <div className="step-waffle step-1" data-scrollama-index="1">
           <div className="step-content">
           </div>
         </div>

@@ -75,16 +75,14 @@
   /* Steps container - this contains the scroll steps */
   .steps-container {
     position: relative;
-    /* Add enough height to allow scrolling through steps */
-    /* min-height:00vh; */
   }
   
   /* Each step */
   .step-0 {
-    height: 10vh; /* Full viewport height */
+    height: 10vh;
   }
   .step-1 {
-    height: 60vh; /* Full viewport height */
+    height: 60vh;
   }
   
   .step-content {
