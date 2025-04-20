@@ -37,17 +37,16 @@ const REGION_COLORS = {
   "Scandinavie": "#1D3557",
   "Asie": "#F1C453",
   "Europe de l'Ouest et Centrale": "#2A9D8F",
-  "Autre": "#777777" // Couleur pour la catégorie "Autre"
+  "Autre": "#777777"
 };
 
-// Définir la position personnalisée pour chaque région
 const REGION_POSITIONS = {
   "Îles britanniques": { column: 0, row: 0 },
   "Amérique": { column: 1, row: 0 },
   "Scandinavie": { column: 2, row: 0 },
   "Asie": { column: 2, row: 1 },
   "Europe de l'Ouest et Centrale": { column: 1, row: 1 },
-  "Autre": { column: 1, row: 2 } // Position pour la catégorie "Autre"
+  "Autre": { column: 1, row: 2 } 
 };
 
 const PORTS = {
@@ -76,7 +75,6 @@ export function Waffle({ data }) {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    // if "crew" in i.class, set it to "crew" and remove "unknown"
     const enhancedData = data.map((p, i) => ({ ...p, id: `passenger-${i}`, class: p.class.includes("crew") ? "crew" : p.class}));
     setPassengers(enhancedData);
   }, [data]);
@@ -110,7 +108,6 @@ export function Waffle({ data }) {
       svg.append("g").attr("class", "passengers-group");
       svgRef.current = svg.node();
       
-      // Initial render of the visualization
       renderWaffle(0);
     }
 
@@ -200,7 +197,6 @@ export function Waffle({ data }) {
         const region = getRegion(d.country);
         const regionPassengers = regionMap.get(region) || [];
         
-        // Utiliser les positions personnalisées
         const position = REGION_POSITIONS[region] || REGION_POSITIONS["Autre"];
         
         // Calculer les coordonnées en fonction de la colonne et de la ligne
