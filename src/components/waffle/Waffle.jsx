@@ -47,6 +47,7 @@ export function Waffle({ data }) {
   const [passengers, setPassengers] = useState([]);
   const waffleRef = useRef(null);
   const svgRef = useRef(null);
+  const scrollerRef = useRef(null);
   const stepRefs = useRef([]);
   const scroller = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
@@ -54,7 +55,7 @@ export function Waffle({ data }) {
   useEffect(() => {
     const enhancedData = data.map((p, i) => ({ ...p, id: `passenger-${i}` }));
     setPassengers(enhancedData);
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     if (!passengers.length || svgRef.current) return;
@@ -81,8 +82,9 @@ export function Waffle({ data }) {
     scroller.current = scrollama();
     scroller.current
       .setup({
-        step: ".step-content",
-        offset: 0.7,
+        step: ".step",
+        offset: 0.5,
+        progress: true,
         debug: false
       })
       .onStepEnter(({ index }) => {
@@ -123,7 +125,6 @@ export function Waffle({ data }) {
       return a.survived === "yes" && b.survived !== "yes" ? -1 : 0;
     });
     
-
     const positions = sortedPassengers.map((d, i) => {
       if (step === 0) {
         const cols = Math.floor(width / (UNIT_SIDE_LENGTH + UNIT_SPACING));
@@ -169,7 +170,6 @@ export function Waffle({ data }) {
       .attr("fill", d => posMap.get(d.id).fill)
       .style("opacity", 0)
       .on("mouseenter", (event, d) => {
-        console.log(d["survived"]);
         const tooltip = d3.select(".waffle-chart")
           .append("div")
           .attr("class", "passenger-tooltip")
@@ -212,42 +212,44 @@ export function Waffle({ data }) {
   };
 
   return (
-    <div className="waffle-chart scrollytelling" ref={waffleRef}>
-        {/* Introduction Section */}
-        <section className="story-section">
-          <h2>Qui étaient à bord du Titanic ?</h2>
-          <p>
-          Le Titanic transportait des passagers venus d’Europe, d’Amérique, d’Asie et d’autres régions du monde.
-          Cette diversité d’origines montre à quel point le voyage dépassait les frontières nationales.
-          Des personnes de différents pays se retrouvaient à bord, réunies pour traverser l’Atlantique.
-          </p>
-        </section>
-      <div className="scroller">
+    <div className="waffle-chart-container">
+      {/* Introduction Section */}
+      <section className="story-section">
+        <h2>Qui étaient à bord du Titanic ?</h2>
+        <p>
+        Le Titanic transportait des passagers venus d'Europe, d'Amérique, d'Asie et d'autres régions du monde.
+        Cette diversité d'origines montre à quel point le voyage dépassait les frontières nationales.
+        Des personnes de différents pays se retrouvaient à bord, réunies pour traverser l'Atlantique.
+        </p>
+      </section>
+      
+      {/* Visualization Title */}
+      <div className="sticky-header">
+        <h3>
+          {currentStep === 0 ? "Répartition mondiale" : "Répartition par région d'origine"}
+        </h3>
+        <div className="waffle-labels">
+          <div className="survived-label square"></div>
+          <span>Survivant</span>
+          <div className="deceased-label square"></div>
+          <span>Naufragé</span>
+        </div>
+      </div>
+      
+      {/* Main visualization - fixed position */}
+      <div className="waffle-chart" ref={waffleRef}>
+        {/* The SVG will be appended here */}
+      </div>
+      
+      {/* Scrolling trigger elements - these are hidden but control the visualization state */}
+      <div className="scroll-triggers" ref={scrollerRef}>
         {[0, 1].map((_, i) => (
-          <div className="step-content" key={i} ref={el => stepRefs.current[i] = el}>
-            {i === 0 && (
-              <>
-              <h3>
-                {currentStep === 0 ? "Répartition mondiale" : "Répartition par région d'origine"}
-              </h3>
-              <p>
-                  Chaque carré représente un passager. Les couleurs des carrés indiquent la région d'origine du passager.
-                </p>
-              </>
-            ) }
-            {i === 0 && (
-              <div className="waffle-labels">
-              <div className="survived-label square"></div>
-              <span>Survivant</span>
-              <div className="deceased-label square"></div>
-              <span>Naufragé</span>
+          <div className="step" key={i} ref={el => stepRefs.current[i] = el}>
+            <div className="step-content">
             </div>
-            )}
-            <div style={{height: "100px", display: "none"}} />
           </div>
         ))}
       </div>
-      <div className="footer-spacer" />
     </div>
   );
 }

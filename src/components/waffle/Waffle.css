@@ -1,9 +1,8 @@
-.waffle-chart {
+.waffle-chart-container {
     position: relative;
     width: 100vw;
     max-width: 1200px;
     margin: 0 auto;
-    height: fit-content;
     --parchment: #f5f1e4;
     --ink: #2b2518;
     --accent: #8b2e16;
@@ -11,68 +10,44 @@
     --navy: #1a3a5a;
     --aged-paper: #e8e0cc;
     --border-color: #c9b38c;
-  
-    /* Headings */
-    h2,
-    h3 {
-      font-family: "Playfair Display", Georgia, serif;
-      color: var(--accent);
-      border-bottom: 2px solid var(--gold);
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-  
-    h2 {
-      font-size: 1.5rem;
-      text-align: center;
-      margin-top: 1rem;
-      position: relative;
-    }
-  
-    h2:after {
-      content: "⚓";
-      display: block;
-      text-align: center;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-      color: var(--navy);
-    }
-  
-    h3 {
-      font-size: 1.2rem;
-      border-bottom-width: 1px;
-    }
-  }
-  .section-description {
-    font-size: 1.1rem !important;
-    padding: 0 2rem;
-    margin: 0 !important;
   }
   
-  /* Chart sections */
-  .chart-section {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  /* Headings */
+  .waffle-chart-container h2,
+  .waffle-chart-container h3 {
+    font-family: "Playfair Display", Georgia, serif;
+    color: var(--accent);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
-  .chart-section h3 {
+  .waffle-chart-container h2 {
     font-size: 1.5rem;
-    font-weight: 600;
+    text-align: center;
+    margin-top: 1rem;
+    position: relative;
   }
   
-  .chart-section p {
+  .waffle-chart-container h2:after {
+    content: "⚓";
+    display: block;
+    text-align: center;
     font-size: 1rem;
-    font-weight: 400;
+    margin-top: 0.5rem;
+    color: var(--navy);
+  }
+  
+  .waffle-chart-container h3 {
+    font-size: 1.2rem;
+    border-bottom-width: 1px;
+    margin-bottom: 1rem;
   }
   
   /* Story Section Styling */
   .story-section {
-    position: relative;
     margin: 3rem 0;
     padding: 2rem;
     background-color: var(--parchment);
@@ -80,106 +55,104 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-radius: 4px;
   }
-
-.waffle-labels {
+  
+  /* Sticky visualization */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+  }
+  
+  .waffle-chart {
+    position: sticky;
+    top: 120px; /* Positioned below the sticky header */
+    height: 600px;
+    width: 100%;
+    z-index: 5;
+    padding: 20px;
+    overflow: visible;
+  }
+  
+  /* Scrolling triggers */
+  .scroll-triggers {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .step {
+    height: 80vh; /* Each step takes up most of the viewport height */
+    opacity: 0.3;
+    padding: 1rem;
+    margin: 2rem 0;
+    border-left: 4px solid var(--accent);
+  }
+  
+  .step-content {
+    margin-top: 650px; /* Push content below the visualization */
+    background-color: var(--parchment);
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  .step-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  /* Labels for the visualization */
+  .waffle-labels {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 40px;
-    width: 300px;
-    border: 2px solid #5a4a42;
-    margin: 20px auto;
-}
-
-.square {
-    height: 7px;
-    width: 7px;
-}
-
-.survived-label {
-    background-color: #344C65;
-}
-
-.deceased-label {
-    background-color: #C2C9D1;
-}
-
-.waffle-labels span {
-    margin-right: 20px;
-}
-
-.waffle-labels .square {
+    margin: 10px auto;
+    padding: 5px 15px;
+    background-color: var(--parchment);
+    border-radius: 20px;
+    display: inline-flex;
+  }
+  
+  .square {
+    height: 10px;
+    width: 10px;
+    border-radius: 2px;
     margin-right: 5px;
-}
-
-.passenger-unit-info {
-    background-color: #e6d8c0;
-    white-space: pre-line;
-    pointer-events: none;
-    user-select: none;
-    border: 2px solid #5a4a42;
-    padding: 8px;
-    max-width: 250px;
-}
-
-.passenger-unit-info div {
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-.waffle-chart {
-    overflow: visible;
-    padding: 20px;
-}
-
-.current-region-indicator {
-    position: sticky;
-    top: 0;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px;
-    z-index: 10;
-    text-align: center;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #5a4a42;
-}
-
-.waffle-navigation {
-    position: sticky;
-    top: 60px;
-    z-index: 10;
+  }
+  
+  .survived-label {
+    background-color: #344C65;
+  }
+  
+  .deceased-label {
+    background-color: #C2C9D1;
+  }
+  
+  .waffle-labels span {
+    margin-right: 20px;
+    font-size: 0.9rem;
+  }
+  
+  /* Tooltip styling */
+  .passenger-tooltip {
     background-color: white;
+    border: 1px solid var(--border-color);
     padding: 10px;
-    border: 2px solid #5a4a42;
-    margin-bottom: 20px;
-}
-
-.region-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.region-buttons button {
-    padding: 8px 15px;
-    background-color: #e6d8c0;
-    border: 1px solid #5a4a42;
-    cursor: pointer;
-    transition: all;
-}
-
-.region-buttons button:hover {
-    background-color: #5a4a42;
-    color: white;
-}
-
-.region-buttons button.active {
-    background-color: #5a4a42;
-    color: white;
-    font-weight: bold;
-}
-
-/* Animation pour les transitions */
-@keyframes fadeIn {
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 0.85rem;
+    max-width: 250px;
+    z-index: 100;
+  }
+  
+  .passenger-tooltip div {
+    margin-bottom: 3px;
+  }
+  
+  /* Animation for transitions */
+  @keyframes fadeIn {
     from { opacity: 0.2; }
     to { opacity: 1; }
   }
@@ -193,4 +166,19 @@
     stroke-width: 1px;
     cursor: pointer;
   }
-
+  
+  /* For small screens */
+  @media (max-width: 768px) {
+    .sticky-header {
+      padding: 0.5rem;
+    }
+    
+    .waffle-chart {
+      top: 100px;
+      height: 500px;
+    }
+    
+    .step-content {
+      margin-top: 550px;
+    }
+  }
