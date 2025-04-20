@@ -57,22 +57,19 @@
     border-radius: 4px;
   }
   
-  /* Chart container - this holds the visualization */
   .chart-container {
     position: sticky;
-    top: 20px; /* Distance from top of viewport when fixed */
+    top: 20px;
     z-index: 100;
     padding: 1rem;
     margin-bottom: 2rem;
     border-radius: 4px;
-    /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
   }
   
   .chart-header {
     padding-bottom: 1rem;
   }
   
-  /* Steps container - this contains the scroll steps */
   .steps-container {
     position: relative;
   }
@@ -89,7 +86,7 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 1rem;
-    margin-top: 30px; /* Push content below the fixed visualization */
+    margin-top: 30px;
   }
   
   .step-content p {
