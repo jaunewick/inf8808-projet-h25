@@ -1,6 +1,6 @@
-.waffle-chart-container {
+.waffle-chart {
     position: relative;
-    width: 100vw;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     --parchment: #f5f1e4;
@@ -13,8 +13,8 @@
   }
   
   /* Headings */
-  .waffle-chart-container h2,
-  .waffle-chart-container h3 {
+  .waffle-chart h2,
+  .waffle-chart h3 {
     font-family: "Playfair Display", Georgia, serif;
     color: var(--accent);
     border-bottom: 2px solid var(--gold);
@@ -24,14 +24,14 @@
     letter-spacing: 1px;
   }
   
-  .waffle-chart-container h2 {
+  .waffle-chart h2 {
     font-size: 1.5rem;
     text-align: center;
     margin-top: 1rem;
     position: relative;
   }
   
-  .waffle-chart-container h2:after {
+  .waffle-chart h2:after {
     content: "⚓";
     display: block;
     text-align: center;
@@ -40,15 +40,16 @@
     color: var(--navy);
   }
   
-  .waffle-chart-container h3 {
+  .waffle-chart h3 {
     font-size: 1.2rem;
     border-bottom-width: 1px;
     margin-bottom: 1rem;
+    text-align: center;
   }
   
   /* Story Section Styling */
   .story-section {
-    margin: 3rem 0;
+    margin: 2rem 0;
     padding: 2rem;
     background-color: var(--parchment);
     border: 1px solid var(--border-color);
@@ -56,51 +57,52 @@
     border-radius: 4px;
   }
   
-  /* Sticky visualization */
-  .sticky-header {
+  /* Chart container - this holds the visualization */
+  .chart-container {
     position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: white;
+    top: 20px; /* Distance from top of viewport when fixed */
+    z-index: 100;
     padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
-    text-align: center;
+    margin-bottom: 2rem;
+    border-radius: 4px;
+    /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
   }
   
-  .waffle-chart {
-    position: sticky;
-    top: 120px; /* Positioned below the sticky header */
-    height: 600px;
-    width: 100%;
-    z-index: 5;
-    padding: 20px;
-    overflow: visible;
+  .chart-header {
+    padding-bottom: 1rem;
   }
   
-  /* Scrolling triggers */
-  .scroll-triggers {
+  /* Steps container - this contains the scroll steps */
+  .steps-container {
     position: relative;
-    z-index: 1;
+    /* Add enough height to allow scrolling through steps */
+    /* min-height:00vh; */
   }
   
-  .step {
-    height: 80vh; /* Each step takes up most of the viewport height */
-    opacity: 0.3;
-    padding: 1rem;
-    margin: 2rem 0;
-    border-left: 4px solid var(--accent);
+  /* Each step */
+  .step-0 {
+    height: 10vh; /* Full viewport height */
+  }
+  .step-1 {
+    height: 60vh; /* Full viewport height */
   }
   
   .step-content {
-    margin-top: 650px; /* Push content below the visualization */
-    background-color: var(--parchment);
+    max-width: 600px;
+    margin: 0 auto;
     padding: 1rem;
-    border-radius: 4px;
+    margin-top: 30px; /* Push content below the fixed visualization */
   }
   
-  .step-description {
-    font-size: 1.1rem;
+  .step-content p {
+    font-size: 1.2rem;
     line-height: 1.6;
+  }
+  
+  /* SVG for the waffle chart */
+  .waffle-svg {
+    width: 100%;
+    height: 600px;
   }
   
   /* Labels for the visualization */
@@ -108,11 +110,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10px auto;
+    margin: 0 auto;
     padding: 5px 15px;
-    background-color: var(--parchment);
+    background-color: var(--aged-paper);
     border-radius: 20px;
-    display: inline-flex;
+    width: fit-content;
   }
   
   .square {
@@ -144,11 +146,11 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     font-size: 0.85rem;
     max-width: 250px;
-    z-index: 100;
+    z-index: 200;
   }
   
   .passenger-tooltip div {
-    margin-bottom: 3px;
+    margin-bottom:.3rem;
   }
   
   /* Animation for transitions */
@@ -165,20 +167,4 @@
     stroke: #000;
     stroke-width: 1px;
     cursor: pointer;
-  }
-  
-  /* For small screens */
-  @media (max-width: 768px) {
-    .sticky-header {
-      padding: 0.5rem;
-    }
-    
-    .waffle-chart {
-      top: 100px;
-      height: 500px;
-    }
-    
-    .step-content {
-      margin-top: 550px;
-    }
   }

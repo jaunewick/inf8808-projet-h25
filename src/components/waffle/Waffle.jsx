@@ -47,8 +47,6 @@ export function Waffle({ data }) {
   const [passengers, setPassengers] = useState([]);
   const waffleRef = useRef(null);
   const svgRef = useRef(null);
-  const scrollerRef = useRef(null);
-  const stepRefs = useRef([]);
   const scroller = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -58,33 +56,33 @@ export function Waffle({ data }) {
   }, [data]);
 
   useEffect(() => {
-    if (!passengers.length || svgRef.current) return;
-
-    const width = Math.min(window.innerWidth * 0.9, 1200);
-    const height = 600;
-
-    const svg = d3.select(waffleRef.current)
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("class", "waffle-svg");
-
-    svg.append("g").attr("class", "passengers-group");
-    svgRef.current = svg.node();
-
-    renderWaffle(0);
-  }, [passengers]);
-
-  useEffect(() => {
     if (!passengers.length) return;
 
+    // Create SVG only once
+    if (!svgRef.current) {
+      const width = Math.min(window.innerWidth * 0.9, 1200);
+      const height = 600;
+
+      const svg = d3.select(waffleRef.current)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .attr("class", "waffle-svg");
+
+      svg.append("g").attr("class", "passengers-group");
+      svgRef.current = svg.node();
+      
+      // Initial render of the visualization
+      renderWaffle(0);
+    }
+
+    // Setup scrollama
     scroller.current = scrollama();
     scroller.current
       .setup({
         step: ".step",
         offset: 0.5,
-        progress: true,
         debug: false
       })
       .onStepEnter(({ index }) => {
@@ -159,6 +157,7 @@ export function Waffle({ data }) {
       .selectAll(".passenger-square")
       .data(sortedPassengers, d => d.id);
 
+    // Enter new squares
     squares.enter()
       .append("rect")
       .attr("class", "passenger-square")
@@ -174,8 +173,8 @@ export function Waffle({ data }) {
           .append("div")
           .attr("class", "passenger-tooltip")
           .style("position", "absolute")
-          .style("left", `${event.pageX + 10}px`)
-          .style("top", `${event.pageY + 10}px`);
+          .style("left", `${event.layerX + 10}px`)
+          .style("top", `${event.layerY + 10}px`);
         for (const [key, value] of Object.entries(d)) {
           if (key !== "id") tooltip.append("div").text(`${key}: ${value}`);
         }
@@ -187,12 +186,14 @@ export function Waffle({ data }) {
       .duration(300)
       .style("opacity", 1);
 
+    // Update existing squares
     squares.transition()
       .duration(TRANSITION_DURATION)
       .attr("x", d => posMap.get(d.id).x)
       .attr("y", d => posMap.get(d.id).y)
       .attr("fill", d => posMap.get(d.id).fill);
 
+    // Remove region labels and add new ones if needed
     svg.selectAll(".region-label").remove();
 
     if (step === 1) {
@@ -212,7 +213,7 @@ export function Waffle({ data }) {
   };
 
   return (
-    <div className="waffle-chart-container">
+    <div className="waffle-chart">
       {/* Introduction Section */}
       <section className="story-section">
         <h2>Qui étaient à bord du Titanic ?</h2>
@@ -223,32 +224,33 @@ export function Waffle({ data }) {
         </p>
       </section>
       
-      {/* Visualization Title */}
-      <div className="sticky-header">
-        <h3>
-          {currentStep === 0 ? "Répartition mondiale" : "Répartition par région d'origine"}
-        </h3>
-        <div className="waffle-labels">
-          <div className="survived-label square"></div>
-          <span>Survivant</span>
-          <div className="deceased-label square"></div>
-          <span>Naufragé</span>
+      {/* The visualization container - fixed */}
+      <div className="chart-container" ref={waffleRef}>
+        {/* SVG will be appended here */}
+        
+        {/* Visualization title and legend */}
+        <div className="chart-header">
+          <h3>{currentStep === 0 ? "Répartition mondiale" : "Répartition par région d'origine"}</h3>
+          <div className="waffle-labels">
+            <div className="survived-label square"></div>
+            <span>Survivant</span>
+            <div className="deceased-label square"></div>
+            <span>Naufragé</span>
+          </div>
         </div>
       </div>
       
-      {/* Main visualization - fixed position */}
-      <div className="waffle-chart" ref={waffleRef}>
-        {/* The SVG will be appended here */}
-      </div>
-      
-      {/* Scrolling trigger elements - these are hidden but control the visualization state */}
-      <div className="scroll-triggers" ref={scrollerRef}>
-        {[0, 1].map((_, i) => (
-          <div className="step" key={i} ref={el => stepRefs.current[i] = el}>
-            <div className="step-content">
-            </div>
+      {/* Scrolling steps - these control the visualization but are transparent */}
+      <div className="steps-container">
+        <div className="step step-0" data-scrollama-index="0">
+          <div className="step-content">
           </div>
-        ))}
+        </div>
+        
+        <div className="step step-1" data-scrollama-index="1">
+          <div className="step-content">
+          </div>
+        </div>
       </div>
     </div>
   );
