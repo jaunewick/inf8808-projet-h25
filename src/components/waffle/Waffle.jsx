@@ -82,6 +82,17 @@ export function Waffle({ data }) {
   }, [data]);
 
   useEffect(() => {
+    const handleScroll = () => {
+      d3.selectAll(".passenger-tooltip").remove();
+    };
+  
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  
+  useEffect(() => {
     if (!passengers.length) return;
 
     // Create SVG only once
