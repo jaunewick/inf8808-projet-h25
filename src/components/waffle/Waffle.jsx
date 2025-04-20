@@ -187,7 +187,7 @@ export function Waffle({ data }) {
         return {
           id: d.id,
           x: (i % cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
-          y: Math.floor(i / cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
+          y: Math.floor(i / cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING) + 25,
           fill: d.survived === "yes" ? "#344C65" : "transparent",
           stroke: d.survived === "no" ? "#344C65" : "none",
           strokeWidth: d.survived === "no" ? 1.2 : 0
@@ -217,7 +217,6 @@ export function Waffle({ data }) {
             : "none",
           strokeWidth: d.survived === "no" ? 1.2 : 0
         };
-        
       }
     });
 
@@ -270,7 +269,16 @@ export function Waffle({ data }) {
 
     svg.selectAll(".region-label").remove();
 
-    if (step === 1) {
+    if ( step === 0) {
+      svg.append("text")
+        .attr("class", "region-label")
+        .attr("x", 50)
+        .attr("y", 5 )
+        .attr("text-anchor", "middle")
+        .attr("font-weight", "bold")
+        .attr("font-size", "16px")
+        .text("Globalement");
+    } else if (step === 1) {
       Object.entries(REGION_POSITIONS).forEach(([region, position]) => {
         const regionX = position.column * (width / 3) + (width / 6);
         const regionY = position.row * (height / 3) + 30;
