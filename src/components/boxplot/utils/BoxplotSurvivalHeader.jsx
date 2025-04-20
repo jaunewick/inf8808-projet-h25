@@ -5,7 +5,7 @@ function BoxplotSurvivalHeader() {
     return (
         <div className="boxplot-container">
             <p className="chart-analysis">
-                Les boîtes à moustaches ci-dessous sont interactives : survolez les éléments pour afficher des informations supplémentaires.
+                Les boîtes à moustaches ci-dessous sont interactives: survolez les éléments pour afficher des informations supplémentaires.
             </p>
             <h3 className="boxplot-title">Étape 1: Distribution des prix des billets par survie</h3>
             <p className="chart-description">

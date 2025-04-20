@@ -39,7 +39,7 @@ function App() {
 
       <div className="telegraph-box">
         <span>
-          DERNIER TÉLÉGRAMME : FEMMES ET ENFANTS D'ABORD DANS LES CANOTS DE
+          DERNIER TÉLÉGRAMME: FEMMES ET ENFANTS D'ABORD DANS LES CANOTS DE
           SAUVETAGE - LE CARPATHIA SE PRÉCIPITE SUR LES LIEUX
         </span>
       </div>
