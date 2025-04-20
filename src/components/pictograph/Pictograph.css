@@ -45,32 +45,33 @@ select {
   
 
 .pictograph-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    justify-content: space-evenly;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-evenly;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  margin-top: 1.5rem;
 }
 
 .sub-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    justify-content: space-evenly;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
 .section-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--navy);
-    text-align: center;
-    margin: 0;
-    width: ma-content;
-    display: flex;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: center;
+  margin: 0;
+  width: ma-content;
+  display: flex;
 }
 
   .scrollytelling {
