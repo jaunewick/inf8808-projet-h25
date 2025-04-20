@@ -1,22 +1,85 @@
-.waffle-bars {
+.waffle-chart {
+    position: relative;
+    width: 100vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: fit-content;
+    --parchment: #f5f1e4;
+    --ink: #2b2518;
+    --accent: #8b2e16;
+    --gold: #d4a951;
+    --navy: #1a3a5a;
+    --aged-paper: #e8e0cc;
+    --border-color: #c9b38c;
+  
+    /* Headings */
+    h2,
+    h3 {
+      font-family: "Playfair Display", Georgia, serif;
+      color: var(--accent);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  
+    h2 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+      position: relative;
+    }
+  
+    h2:after {
+      content: "⚓";
+      display: block;
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      color: var(--navy);
+    }
+  
+    h3 {
+      font-size: 1.2rem;
+      border-bottom-width: 1px;
+    }
+  }
+  .section-description {
+    font-size: 1.1rem !important;
+    padding: 0 2rem;
+    margin: 0 !important;
+  }
+  
+  /* Chart sections */
+  .chart-section {
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    overflow: auto;
-    margin-bottom: 20px;
-}
-
-.waffle-bars div svg {
-    overflow: visible;
-}
-
-.waffle-bars .waffle-bar {
-    margin-right: 20px;
-    margin-top: 15px;
-}
-
-.waffle-bar div {
-    font-weight: bold;
-}
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .chart-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .chart-section p {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  
+  /* Story Section Styling */
+  .story-section {
+    position: relative;
+    margin: 3rem 0;
+    padding: 2rem;
+    background-color: var(--parchment);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
 
 .waffle-labels {
     display: flex;
@@ -25,6 +88,7 @@
     height: 40px;
     width: 300px;
     border: 2px solid #5a4a42;
+    margin: 20px auto;
 }
 
 .square {
@@ -40,11 +104,6 @@
     background-color: #C2C9D1;
 }
 
-.waffle-labels {
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .waffle-labels span {
     margin-right: 20px;
 }
@@ -53,17 +112,14 @@
     margin-right: 5px;
 }
 
-select {
-    border: 2px solid #5a4a42;
-}
-
 .passenger-unit-info {
     background-color: #e6d8c0;
     white-space: pre-line;
     pointer-events: none;
     user-select: none;
     border: 2px solid #5a4a42;
-    overflow: visible;
+    padding: 8px;
+    max-width: 250px;
 }
 
 .passenger-unit-info div {
@@ -73,4 +129,68 @@ select {
 
 .waffle-chart {
     overflow: visible;
+    padding: 20px;
 }
+
+.current-region-indicator {
+    position: sticky;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    z-index: 10;
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #5a4a42;
+}
+
+.waffle-navigation {
+    position: sticky;
+    top: 60px;
+    z-index: 10;
+    background-color: white;
+    padding: 10px;
+    border: 2px solid #5a4a42;
+    margin-bottom: 20px;
+}
+
+.region-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.region-buttons button {
+    padding: 8px 15px;
+    background-color: #e6d8c0;
+    border: 1px solid #5a4a42;
+    cursor: pointer;
+    transition: all;
+}
+
+.region-buttons button:hover {
+    background-color: #5a4a42;
+    color: white;
+}
+
+.region-buttons button.active {
+    background-color: #5a4a42;
+    color: white;
+    font-weight: bold;
+}
+
+/* Animation pour les transitions */
+@keyframes fadeIn {
+    from { opacity: 0.2; }
+    to { opacity: 1; }
+  }
+  
+  .passenger-square {
+    transition: fill 0.5s;
+  }
+  
+  .passenger-square:hover {
+    stroke: #000;
+    stroke-width: 1px;
+    cursor: pointer;
+  }
+
