@@ -164,13 +164,13 @@ export function Waffle({ data }) {
     Object.keys(REGION_POSITIONS).forEach(region => {
       const regionPassengers = passengers.filter(p => getRegion(p.country) === region);
       const sortedRegionPassengers = regionPassengers.sort((a, b) => {
-        return a.survived === "yes" && b.survived !== "yes" ? -1 : 0;
+        return (b.survived === "yes") - (a.survived === "yes");
       });
       regionMap.set(region, sortedRegionPassengers);
     });
 
     const sortedPassengers = [...passengers].sort((a, b) => {
-      return a.survived === "yes" && b.survived !== "yes" ? -1 : 0;
+      return (b.survived === "yes") - (a.survived === "yes");
     });
     
     const positions = sortedPassengers.map((d, i) => {
