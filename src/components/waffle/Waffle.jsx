@@ -36,11 +36,36 @@ const REGION_COLORS = {
   "Amérique": "#457B9D",
   "Scandinavie": "#1D3557",
   "Asie": "#F1C453",
-  "Europe de l'Ouest et Centrale": "#2A9D8F"
+  "Europe de l'Ouest et Centrale": "#2A9D8F",
+  "Autre": "#777777" // Couleur pour la catégorie "Autre"
+};
+
+// Définir la position personnalisée pour chaque région
+const REGION_POSITIONS = {
+  "Îles britanniques": { column: 0, row: 0 },
+  "Amérique": { column: 1, row: 0 },
+  "Scandinavie": { column: 2, row: 0 },
+  "Asie": { column: 2, row: 1 },
+  "Europe de l'Ouest et Centrale": { column: 1, row: 1 },
+  "Autre": { column: 1, row: 2 } // Position pour la catégorie "Autre"
+};
+
+const PORTS = {
+  S: "Southampton",
+  C: "Cherbourg",
+  Q: "Queenstown"
+};
+
+const CLASS_LABELS = {
+  "1st": "Première classe",
+  "2nd": "Deuxième classe",
+  "3rd": "Troisième classe",
+  "crew": "Équipage",
+  "unknown": "Inconnu"
 };
 
 const UNIT_SIDE_LENGTH = 7;
-const UNIT_SPACING = 2;
+const UNIT_SPACING = 4;
 const TRANSITION_DURATION = 1500;
 
 export function Waffle({ data }) {
@@ -51,7 +76,8 @@ export function Waffle({ data }) {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    const enhancedData = data.map((p, i) => ({ ...p, id: `passenger-${i}` }));
+    // if "crew" in i.class, set it to "crew" and remove "unknown"
+    const enhancedData = data.map((p, i) => ({ ...p, id: `passenger-${i}`, class: p.class.includes("crew") ? "crew" : p.class}));
     setPassengers(enhancedData);
   }, [data]);
 
@@ -96,6 +122,31 @@ export function Waffle({ data }) {
     };
   }, [passengers]);
 
+  // Tooltip function
+  const showTooltip = (event, passenger) => {
+    d3.select(".waffle-chart").selectAll(".passenger-tooltip").remove();
+  
+    const container = d3.select(".waffle-chart").node().getBoundingClientRect();
+  
+    const tooltip = d3.select(".waffle-chart")
+      .append("div")
+      .attr("class", "passenger-tooltip")
+      .style("position", "absolute")
+      .style("left", `${event.clientX - container.left + 10}px`)
+      .style("top", `${event.clientY - container.top + 10}px`);
+  
+    tooltip.append("div").text(`Nom: ${passenger.name || "Inconnu"}`);
+    tooltip.append("div").text(`Pays: ${COUNTRIES[passenger.country] || "Inconnu"}`);
+    tooltip.append("div").text(`Classe: ${CLASS_LABELS[passenger.class] || "Inconnue"}`);
+    tooltip.append("div").text(`Âge: ${passenger.age ? `${parseFloat(passenger.age).toFixed(0)} ans` : "?"}`);
+    tooltip.append("div").text(`Genre: ${passenger.sex === "male" ? "Homme" : "Femme"}`);
+    tooltip.append("div").text(`Survie: ${passenger.survived === "yes" ? "Oui" : "Non"}`);
+    passenger.ticketno != "NA" && tooltip.append("div").text(`# de ticket: ${passenger.ticketno || "?"}`);
+    passenger.fare != "NA" && tooltip.append("div").text(`$ du billet: ${passenger.fare ? `${parseFloat(passenger.fare).toFixed(2)} $` : "?"}`);
+    passenger.embarked != "?" && tooltip.append("div").text(`Port d'embarquement: ${PORTS[passenger.embarked] || "?"}`);
+  };
+  
+
   const renderWaffle = (step) => {
     if (!svgRef.current || !passengers.length) return;
 
@@ -111,7 +162,7 @@ export function Waffle({ data }) {
     };
 
     const regionMap = new Map();
-    REGION_COLORS && Object.keys(REGION_COLORS).forEach(region => {
+    Object.keys(REGION_POSITIONS).forEach(region => {
       const regionPassengers = passengers.filter(p => getRegion(p.country) === region);
       const sortedRegionPassengers = regionPassengers.sort((a, b) => {
         return a.survived === "yes" && b.survived !== "yes" ? -1 : 0;
@@ -130,24 +181,37 @@ export function Waffle({ data }) {
           id: d.id,
           x: (i % cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
           y: Math.floor(i / cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
-          fill: d.survived === "no" ? "#C2C9D1" : "#344C65"
+          fill: d.survived === "yes" ? "#344C65" : "transparent",
+          stroke: d.survived === "no" ? "#344C65" : "none",
+          strokeWidth: d.survived === "no" ? 1.2 : 0
         };
+        
       } else {
         const region = getRegion(d.country);
         const regionPassengers = regionMap.get(region) || [];
-        const regionIndex = Object.keys(REGION_COLORS).indexOf(region);
-        const regionX = (regionIndex % 3) * (width / 3) + 20;
-        const regionY = Math.floor(regionIndex / 3) * (height / 2) + 50;
+        
+        // Utiliser les positions personnalisées
+        const position = REGION_POSITIONS[region] || REGION_POSITIONS["Autre"];
+        
+        // Calculer les coordonnées en fonction de la colonne et de la ligne
+        const regionX = position.column * (width / 3) + 20;
+        const regionY = position.row * (height / 3) + 30;
+        
         const regionIdx = regionPassengers.findIndex(p => p.id === d.id);
         const cols = Math.floor((width / 3 - 40) / (UNIT_SIDE_LENGTH + UNIT_SPACING));
         return {
           id: d.id,
           x: regionX + (regionIdx % cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
           y: regionY + Math.floor(regionIdx / cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
-          fill: d.survived === "no"
-            ? d3.color(REGION_COLORS[region] || "#777").darker(0.5).toString()
-            : REGION_COLORS[region] || "#777"
+          fill: d.survived === "yes"
+            ? REGION_COLORS[region] || REGION_COLORS["Autre"]
+            : "transparent",
+          stroke: d.survived === "no"
+            ? d3.color(REGION_COLORS[region] || REGION_COLORS["Autre"]).darker(0.2).toString()
+            : "none",
+          strokeWidth: d.survived === "no" ? 1.2 : 0
         };
+        
       }
     });
 
@@ -167,17 +231,11 @@ export function Waffle({ data }) {
       .attr("x", d => posMap.get(d.id).x)
       .attr("y", d => posMap.get(d.id).y)
       .attr("fill", d => posMap.get(d.id).fill)
+      .attr("stroke", d => posMap.get(d.id).stroke)
+      .attr("stroke-width", d => posMap.get(d.id).strokeWidth)
       .style("opacity", 0)
       .on("mouseenter", (event, d) => {
-        const tooltip = d3.select(".waffle-chart")
-          .append("div")
-          .attr("class", "passenger-tooltip")
-          .style("position", "absolute")
-          .style("left", `${event.layerX + 10}px`)
-          .style("top", `${event.layerY + 10}px`);
-        for (const [key, value] of Object.entries(d)) {
-          if (key !== "id") tooltip.append("div").text(`${key}: ${value}`);
-        }
+        showTooltip(event, d);
       })
       .on("mouseleave", () => {
         d3.selectAll(".passenger-tooltip").remove();
@@ -191,15 +249,26 @@ export function Waffle({ data }) {
       .duration(TRANSITION_DURATION)
       .attr("x", d => posMap.get(d.id).x)
       .attr("y", d => posMap.get(d.id).y)
-      .attr("fill", d => posMap.get(d.id).fill);
+      .attr("fill", d => posMap.get(d.id).fill)
+      .attr("stroke", d => posMap.get(d.id).stroke)
+      .attr("stroke-width", d => posMap.get(d.id).strokeWidth)
+      
+      squares
+      .on("mouseenter", (event, d) => {
+        showTooltip(event, d);
+      })
+      .on("mouseleave", () => {
+        d3.selectAll(".passenger-tooltip").remove();
+      });
+    
 
-    // Remove region labels and add new ones if needed
     svg.selectAll(".region-label").remove();
 
     if (step === 1) {
-      Object.keys(REGION_COLORS).forEach((region, i) => {
-        const regionX = (i % 3) * (width / 3) + (width / 6);
-        const regionY = Math.floor(i / 3) * (height / 2) + 30;
+      Object.entries(REGION_POSITIONS).forEach(([region, position]) => {
+        const regionX = position.column * (width / 3) + (width / 6);
+        const regionY = position.row * (height / 3) + 30;
+        
         svg.append("text")
           .attr("class", "region-label")
           .attr("x", regionX)
@@ -224,11 +293,7 @@ export function Waffle({ data }) {
         </p>
       </section>
       
-      {/* The visualization container - fixed */}
       <div className="chart-container" ref={waffleRef}>
-        {/* SVG will be appended here */}
-        
-        {/* Visualization title and legend */}
         <div className="chart-header">
           <h3>{currentStep === 0 ? "Répartition mondiale" : "Répartition par région d'origine"}</h3>
           <div className="waffle-labels">
@@ -240,7 +305,6 @@ export function Waffle({ data }) {
         </div>
       </div>
       
-      {/* Scrolling steps - these control the visualization but are transparent */}
       <div className="steps-container">
         <div className="step step-0" data-scrollama-index="0">
           <div className="step-content">

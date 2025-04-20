@@ -129,7 +129,8 @@
   }
   
   .deceased-label {
-    background-color: #C2C9D1;
+    background-color: "transparent";
+    border: 1px solid #344C65;
   }
   
   .waffle-labels span {
