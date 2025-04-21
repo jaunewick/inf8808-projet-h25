@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-function BoxplotSurvival({ data }) {
+function BoxplotSurvival({ data, active }) {
     const svgRef = useRef();
     const tooltipRef = useRef();
     const margin = { top: 40, right: 30, bottom: 80, left: 60 };
@@ -9,7 +9,7 @@ function BoxplotSurvival({ data }) {
     const height = 500 - margin.top - margin.bottom;
 
     useEffect(() => {
-        if (!data) return;
+        if (!data || !active) return;
 
         const processedData = preprocessData(data);
         const sumstat = calculateStatistics(processedData);
@@ -24,7 +24,7 @@ function BoxplotSurvival({ data }) {
         drawAnnotations(chart, sumstat, processedData, xScale);
         drawLegend(svg);
 
-    }, [data, height, margin.left, margin.right, margin.top, width]);
+    }, [data, active]);
 
     const preprocessData = (data) => {
         const excludedClasses = ['engineering crew', 'victualling crew', 'restaurant staff', 'deck crew'];
@@ -136,9 +136,10 @@ function BoxplotSurvival({ data }) {
             .enter()
             .append("rect")
             .attr("x", d => xScale(d[0]) + xScale.bandwidth() / 2 - boxWidth / 2)
-            .attr("y", d => yScale(d[1].q3))
             .attr("width", boxWidth)
-            .attr("height", d => yScale(d[1].q1) - yScale(d[1].q3))
+            .attr("y", yScale(0)) // départ en bas
+            .attr("height", 0)    // départ sans hauteur
+            .attr("stroke-width", 1.5)
             .attr("fill", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
             .attr("fill-opacity", 0.7)
             .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
@@ -155,7 +156,11 @@ function BoxplotSurvival({ data }) {
             })
             .on("mouseout", () => {
                 tooltip.style("opacity", 0);
-            });
+            })
+            .transition()
+            .duration(1000)
+            .attr("y", d => yScale(d[1].q3))
+            .attr("height", d => yScale(d[1].q1) - yScale(d[1].q3));
 
         chart.selectAll("upperWhiskers")
             .data(sumstat)
@@ -257,16 +262,22 @@ function BoxplotSurvival({ data }) {
     const drawMedianLines = (chart, sumstat, xScale, yScale) => {
         const boxWidth = 180;
         chart.selectAll("medianLines")
-            .data(sumstat)
-            .enter()
-            .append("line")
-            .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2 - boxWidth / 2)
-            .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 2)
-            .attr("y1", d => yScale(d[1].median))
-            .attr("y2", d => yScale(d[1].median))
-            .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
-            .attr("stroke-opacity", 1)
-            .attr("stroke-width", 2);
+        .data(sumstat)
+        .enter()
+        .append("line")
+        .attr("x1", d => xScale(d[0]) + xScale.bandwidth() / 2 - boxWidth / 2)
+        .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 2)
+        .attr("y1", height) // départ en bas
+        .attr("y2", height)
+        .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
+        .attr("stroke-width", 2)
+        .attr("stroke-opacity", 0)
+        .transition()
+        .duration(800)
+        .attr("y1", d => yScale(d[1].median))
+        .attr("y2", d => yScale(d[1].median))
+        .attr("stroke-opacity", 1);
+    
     };
 
     const drawJitterPoints = (chart, processedData, xScale, yScale) => {
@@ -278,10 +289,10 @@ function BoxplotSurvival({ data }) {
             .enter()
             .append("circle")
             .attr("cx", d => xScale(d.survived) + xScale.bandwidth() / 2 - jitterWidth / 2 + Math.random() * jitterWidth - 150)
-            .attr("cy", d => yScale(d.fare))
+            .attr("cy", height)  // départ en bas
             .attr("r", 2.5)
             .attr("fill", d => d.survived === 'oui' ? '#1D3557' : '#E63946')
-            .attr("opacity", 0.4)
+            .attr("opacity", 0)
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(`
@@ -297,7 +308,12 @@ function BoxplotSurvival({ data }) {
             })
             .on("mouseout", () => {
                 tooltip.style("opacity", 0);
-            });
+            })
+            .transition()
+            .delay((_, i) => i * 2)
+            .duration(600)
+            .attr("cy", d => yScale(d.fare))
+            .attr("opacity", 0.4);
     };
 
     const drawAnnotations = (chart, sumstat, processedData, xScale) => {
