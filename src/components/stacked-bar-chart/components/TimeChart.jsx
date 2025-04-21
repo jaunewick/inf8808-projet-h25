@@ -94,10 +94,7 @@ const TimeChart = ({ svgRef, data, scales }) => {
       .data(stackedData)
       .join("g")
       .attr("fill", (d) => color(d.key))
-      .attr("fill-opacity", 0.7)
-      .attr("stroke", (d) => color(d.key))
-      .attr("stroke-width", 1.5)
-      .attr("stroke-opacity", 1)
+      .attr("fill-opacity", 0.9)
       .selectAll("rect")
       .data((d) => d.map((value, i) => ({ key: d.key, value, index: i })))
       .join("rect")
@@ -123,7 +120,7 @@ const TimeChart = ({ svgRef, data, scales }) => {
           .transition()
           .duration(200)
           .attr("opacity", 0.8)
-          .attr("filter", "brightness(1.1)");
+          .attr("filter", "brightness(2)");
 
         const boatData = data[d.index];
         const tooltip = timeChartGroup

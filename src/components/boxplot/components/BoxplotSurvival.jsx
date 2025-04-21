@@ -118,7 +118,7 @@ function BoxplotSurvival({ data }) {
         const tooltip = d3.select(tooltipRef.current);
 
         const tooltipContent = (d) => `
-            <strong>Survie :</strong> <span style="color: ${d[0] === 'oui' ? 'teal' : 'tomato'};">${d[0] === 'oui' ? 'Oui' : 'Non'}</span><br>
+            <strong>Survie :</strong> <span style="color: ${d[0] === 'oui' ? '#1D3557' : '#E63946'};">${d[0] === 'oui' ? 'Oui' : 'Non'}</span><br>
             <strong>Valeurs principales :</strong><br>
             - 3e quartile (Q3) : $${d[1].q3.toFixed(2)}<br>
             - Médiane : $${d[1].median.toFixed(2)}<br>
@@ -139,9 +139,9 @@ function BoxplotSurvival({ data }) {
             .attr("y", d => yScale(d[1].q3))
             .attr("width", boxWidth)
             .attr("height", d => yScale(d[1].q1) - yScale(d[1].q3))
-            .attr("fill", d => d[0] === 'oui' ? 'teal' : 'tomato')
+            .attr("fill", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
             .attr("fill-opacity", 0.7)
-            .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
+            .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
             .attr("stroke-width", 1.5)
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
@@ -165,7 +165,7 @@ function BoxplotSurvival({ data }) {
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("y1", d => yScale(d[1].q3))
             .attr("y2", d => yScale(d[1].upperFence))
-            .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
+            .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
             .attr("stroke-width", 1.5)
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
@@ -189,7 +189,7 @@ function BoxplotSurvival({ data }) {
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2)
             .attr("y1", d => yScale(d[1].q1))
             .attr("y2", d => yScale(d[1].lowerFence))
-            .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
+            .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
             .attr("stroke-width", 1.5)
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
@@ -213,7 +213,7 @@ function BoxplotSurvival({ data }) {
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 4)
             .attr("y1", d => yScale(d[1].upperFence))
             .attr("y2", d => yScale(d[1].upperFence))
-            .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
+            .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
             .attr("stroke-width", 1.5)
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
@@ -237,7 +237,7 @@ function BoxplotSurvival({ data }) {
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 4)
             .attr("y1", d => yScale(d[1].lowerFence))
             .attr("y2", d => yScale(d[1].lowerFence))
-            .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
+            .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
             .attr("stroke-width", 1.5)
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
@@ -264,7 +264,7 @@ function BoxplotSurvival({ data }) {
             .attr("x2", d => xScale(d[0]) + xScale.bandwidth() / 2 + boxWidth / 2)
             .attr("y1", d => yScale(d[1].median))
             .attr("y2", d => yScale(d[1].median))
-            .attr("stroke", d => d[0] === 'oui' ? 'teal' : 'tomato')
+            .attr("stroke", d => d[0] === 'oui' ? '#1D3557' : '#E63946')
             .attr("stroke-opacity", 1)
             .attr("stroke-width", 2);
     };
@@ -280,12 +280,12 @@ function BoxplotSurvival({ data }) {
             .attr("cx", d => xScale(d.survived) + xScale.bandwidth() / 2 - jitterWidth / 2 + Math.random() * jitterWidth - 150)
             .attr("cy", d => yScale(d.fare))
             .attr("r", 2.5)
-            .attr("fill", d => d.survived === 'oui' ? 'teal' : 'tomato')
+            .attr("fill", d => d.survived === 'oui' ? '#1D3557' : '#E63946')
             .attr("opacity", 0.4)
             .on("mouseover", (event, d) => {
                 tooltip.style("opacity", 1)
                     .html(`
-                        <strong>Survie :</strong> <span style="color: ${d.survived === 'oui' ? 'teal' : 'tomato'};">${d.survived === 'oui' ? 'Oui' : 'Non'}</span><br>
+                        <strong>Survie :</strong> <span style="color: ${d.survived === 'oui' ? '#1D3557' : '#E63946'};">${d.survived === 'oui' ? 'Oui' : 'Non'}</span><br>
                         <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
                     `)
                     .style("left", `${event.pageX - 185}px`)
@@ -313,7 +313,7 @@ function BoxplotSurvival({ data }) {
             .attr("x", d => xScale(d.survived) + xScale.bandwidth() / 2)
             .attr("y", height + 40)
             .attr("text-anchor", "middle")
-            .style("fill", d => d.survived === 'oui' ? 'teal' : 'tomato')
+            .style("fill", d => d.survived === 'oui' ? '#1D3557' : '#E63946')
             .text(d => `${d.survived === 'oui' ? 'Survivants' : 'Naufragés'} : ${d.count}`);
     };
 
@@ -342,9 +342,9 @@ function BoxplotSurvival({ data }) {
             .attr("y", 25)
             .attr("width", 12)
             .attr("height", 12)
-            .attr("fill", "teal")
+            .attr("fill", "#1D3557")
             .attr("fill-opacity", 0.7)
-            .attr("stroke", "teal")
+            .attr("stroke", "#1D3557")
             .attr("stroke-width", 1.5)
             .attr("stroke-opacity", 1);
 
@@ -360,9 +360,9 @@ function BoxplotSurvival({ data }) {
             .attr("y", 45)
             .attr("width", 12)
             .attr("height", 12)
-            .attr("fill", "tomato")
+            .attr("fill", "#E63946")
             .attr("fill-opacity", 0.7)
-            .attr("stroke", "tomato")
+            .attr("stroke", "#E63946")
             .attr("stroke-width", 1.5)
             .attr("stroke-opacity", 1);
 

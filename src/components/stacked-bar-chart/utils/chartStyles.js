@@ -11,16 +11,16 @@ export const COLORS = {
   grid: "#374151",
   capacity: "#d0021b",
   utilization: {
-    under80: "teal",
-    over80: "orange",
-    over100: "tomato",
+    under80: "#1D3557",
+    over80: "#d4a951",
+    over100: "#E63946",
   },
   categories: {
-    crew: "#3b82f6",
-    men: "#f59e0b",
-    women: "#10b981",
-    overload: "#ef4444",
-    remaining: "#f5f5f5",
+    crew: "#",
+    men: "#1D3557",
+    women: "#2A9D8F",
+    overload: "#E63946",
+    remaining: "#c8c8c8",
   },
 };
 
@@ -56,7 +56,7 @@ export const STYLES = {
   },
   grid: {
     strokeDasharray: "3,3",
-    opacity: 0.1,
+    opacity: 0,
   },
   capacity: {
     strokeWidth: 1.5,
