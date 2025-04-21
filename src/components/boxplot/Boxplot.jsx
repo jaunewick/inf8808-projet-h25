@@ -9,15 +9,15 @@ import BoxplotFooter from './utils/BoxplotFooter'
 
 function Boxplot({ data }) {
     return (
-        <>
-            <BoxplotSurvivalHeader />
-            <BoxplotSurvival data={data} />
-            <BoxplotClassSurvivalHeader />
-            <BoxplotClassSurvival data={data} />
-            <BoxplotPortClassSurvivalHeader />
-            <BoxplotPortClassSurvival data={data} />
-            <BoxplotFooter />
-        </>
+      <>
+        <BoxplotSurvivalHeader />
+        <BoxplotSurvival data={data} />
+        <BoxplotClassSurvivalHeader />
+        <BoxplotClassSurvival data={data} />
+        <BoxplotPortClassSurvivalHeader />
+        <BoxplotPortClassSurvival data={data} />
+        <BoxplotFooter />
+      </>
     )
 }
 

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-// import { createTransition } from "../utils/animations";
 import { COLORS, FONTS, STYLES } from "../utils/chartStyles";
 import "./UtilizationChart.css";
 

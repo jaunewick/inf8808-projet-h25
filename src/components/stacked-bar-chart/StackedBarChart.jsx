@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import scrollama from "scrollama";
 import TimeChart from "./components/TimeChart";
 import UtilizationChart from "./components/UtilizationChart";
 import { createScales } from "./utils/scales";
@@ -9,26 +10,31 @@ import "./StackedBarChart.css";
 const StackedBarChart = ({ data }) => {
   const timeChartRef = useRef();
   const utilizationChartRef = useRef();
-  const [currentSort, setCurrentSort] = useState("time");
+  const [currentSort, setCurrentSort] = useState(null);
   const [scales, setScales] = useState(null);
-
+  const scroller = useRef(null);
+  
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const ratio = scrollTop / (documentHeight - windowHeight);
-      // Update sort based on scroll position
-      if (ratio < 0.3) {
-        setCurrentSort("time");
-      } else if (ratio > 0.4) {
-        setCurrentSort("fillRate");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    if (!scales) return;
+  
+    scroller.current = scrollama();
+  
+    scroller.current
+      .setup({
+        step: ".step-bar",
+        offset: 0.8,
+        progress: false,
+      })
+      .onStepEnter((response) => {
+        const step = response.element.getAttribute("data-step");
+        console.log("Step entered:", step);
+        if (step === "time") setCurrentSort("time");
+        if (step === "fillRate") setCurrentSort("fillRate");
+      });
+  
+    return () => scroller.current.destroy();
+  }, [scales]); // setup quand scales est prêt
+  
 
   useEffect(() => {
     if (!data) return;
@@ -38,7 +44,7 @@ const StackedBarChart = ({ data }) => {
     setScales(newScales);
 
     // Create gradient definition for time chart
-    if (timeChartRef.current) {
+    if (timeChartRef.current && currentSort === "time") {
       const svg = d3.select(timeChartRef.current);
       // Clear existing defs to prevent duplication
       svg.select("defs").remove();
@@ -64,7 +70,7 @@ const StackedBarChart = ({ data }) => {
     }
 
     // Create gradient definition for utilization chart
-    if (utilizationChartRef.current) {
+    if (utilizationChartRef.current && currentSort === "fillRate") {
       const svg = d3.select(utilizationChartRef.current);
       // Clear existing defs to prevent duplication
       svg.select("defs").remove();
@@ -93,7 +99,7 @@ const StackedBarChart = ({ data }) => {
   if (!scales) return null;
 
   return (
-    <div className="container">
+    <div className="container" >
     {/* Introduction Section */}
     <section className="story-section">
       <h2>Le Naufrage du Titanic : Une Analyse des Canots de Sauvetage</h2>
@@ -107,7 +113,7 @@ const StackedBarChart = ({ data }) => {
     </section>
 
     {/* Time Chart Section */}
-    <section className="chart-section">
+    <section className="chart-section step-bar" data-step="time">
       <h3>Distribution Temporelle des Départs des Canots</h3>
       <p className="chart-description">
         Ce graphique montre la chronologie des départs des canots de sauvetage, 
@@ -150,7 +156,7 @@ const StackedBarChart = ({ data }) => {
     </section>
 
     {/* Utilization Chart Section */}
-    <section className="chart-section">
+    <section className="chart-section step-bar" data-step="fillRate">
       <h3>Taux de Remplissage des Canots</h3>
       <p className="chart-description">
         Cette visualisation présente le taux de remplissage de chaque canot de 

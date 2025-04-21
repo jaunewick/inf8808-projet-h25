@@ -66,7 +66,7 @@ export const createScales = (data, sortBy) => {
   const color = d3
     .scaleOrdinal()
     .domain(keys)
-    .range(["#0056ab", "#f59e0b", "teal", "tomato", "#c8c8c8"]);
+    .range(["#d4a951", "#1D3557", "#2A9D8F", "#E63946", "#c8c8c8"]);
 
   return {
     margin,

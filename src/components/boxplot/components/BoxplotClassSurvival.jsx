@@ -79,7 +79,7 @@ const BoxplotClassSurvival = ({ data }) => {
 
         const colorScale = d3.scaleOrdinal()
             .domain(['oui', 'non'])
-            .range(['teal', 'tomato']);
+            .range(['#1D3557', '#E63946']);
 
         return { xScale, yScale, colorScale };
     };
@@ -129,7 +129,7 @@ const BoxplotClassSurvival = ({ data }) => {
                 const boxWidth = xScale.bandwidth() * boxWidthFactor;
 
                 const whiskerTooltipContent = `
-                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
+                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? '#1D3557' : '#E63946'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
                     <strong>Classe :</strong> ${className}<br>
                     <strong>Valeurs principales :</strong><br>
                     - 3e quartile (Q3) : $${q3.toFixed(2)}<br>
@@ -281,7 +281,7 @@ const BoxplotClassSurvival = ({ data }) => {
                         .on("mouseover", (event) => {
                             tooltip.style("opacity", 1)
                                 .html(`
-                                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
+                                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? '#1D3557' : '#E63946'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
                                     <strong>Classe :</strong> ${d.classed}<br>
                                     <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
                                 `)
@@ -309,14 +309,14 @@ const BoxplotClassSurvival = ({ data }) => {
                 .attr("x", xScale(className) + xScale.bandwidth() / 2)
                 .attr("y", height + 40)
                 .attr("text-anchor", "middle")
-                .style("fill", "teal")
+                .style("fill", "#1D3557")
                 .text(`Survivants: ${totalSurvivors}`);
 
             chart.append("text")
                 .attr("x", xScale(className) + xScale.bandwidth() / 2)
                 .attr("y", height + 60)
                 .attr("text-anchor", "middle")
-                .style("fill", "tomato")
+                .style("fill", "#E63946")
                 .text(`Naufragés: ${totalNonSurvivors}`);
         });
     };
@@ -346,9 +346,9 @@ const BoxplotClassSurvival = ({ data }) => {
             .attr("y", 25)
             .attr("width", 12)
             .attr("height", 12)
-            .attr("fill", "teal")
+            .attr("fill", "#1D3557")
             .attr("fill-opacity", 0.7)
-            .attr("stroke", "teal")
+            .attr("stroke", "#1D3557")
             .attr("stroke-width", 1.5)
             .attr("stroke-opacity", 1);
 
@@ -364,9 +364,9 @@ const BoxplotClassSurvival = ({ data }) => {
             .attr("y", 45)
             .attr("width", 12)
             .attr("height", 12)
-            .attr("fill", "tomato")
+            .attr("fill", "#E63946")
             .attr("fill-opacity", 0.7)
-            .attr("stroke", "tomato")
+            .attr("stroke", "#E63946")
             .attr("stroke-width", 1.5)
             .attr("stroke-opacity", 1);
 

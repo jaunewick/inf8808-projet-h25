@@ -109,7 +109,7 @@ function BoxplotPortClassSurvival({ data }) {
 
         const colorScale = d3.scaleOrdinal()
             .domain(['oui', 'non'])
-            .range(['teal', 'tomato']);
+            .range(['#1D3557', '#E63946']);
 
         return { xScale, yScale, colorScale };
     };
@@ -156,7 +156,7 @@ function BoxplotPortClassSurvival({ data }) {
                 const boxY = yScale(q3) - (boxHeight - (yScale(q1) - yScale(q3))) / 2;
 
                 const whiskerTooltipContent = `
-                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
+                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? '#1D3557' : '#E63946'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
                     <strong>Port :</strong> ${port}<br>
                     <strong>Classe :</strong> ${className}<br>
                     <strong>Valeurs principales :</strong><br>
@@ -311,7 +311,7 @@ function BoxplotPortClassSurvival({ data }) {
                         .on("mouseover", (event) => {
                             tooltip.style("opacity", 1)
                                 .html(`
-                                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? 'teal' : 'tomato'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
+                                    <strong>Survie :</strong> <span style="color: ${status === 'oui' ? '#1D3557' : '#E63946'};">${status === 'oui' ? 'Oui' : 'Non'}</span><br>
                                     <strong>Port :</strong> ${port}<br>
                                     <strong>Classe :</strong> ${className}<br>
                                     <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
@@ -341,8 +341,8 @@ function BoxplotPortClassSurvival({ data }) {
             .attr("text-anchor", "middle")
             .style("font-size", "12px")
             .html(`
-                <tspan style="fill: teal;">Survivants: ${totalSurvivors}</tspan>, 
-                <tspan style="fill: tomato;">Naufragés: ${totalNonSurvivors}</tspan>
+                <tspan style="fill: #1D3557;">Survivants: ${totalSurvivors}</tspan>, 
+                <tspan style="fill: #E63946;">Naufragés: ${totalNonSurvivors}</tspan>
             `);
     };
 
@@ -371,9 +371,9 @@ function BoxplotPortClassSurvival({ data }) {
             .attr("y", 25)
             .attr("width", 12)
             .attr("height", 12)
-            .attr("fill", "teal")
+            .attr("fill", "#1D3557")
             .attr("fill-opacity", 0.7)
-            .attr("stroke", "teal")
+            .attr("stroke", "#1D3557")
             .attr("stroke-width", 1.5)
             .attr("stroke-opacity", 1);
 
@@ -389,9 +389,9 @@ function BoxplotPortClassSurvival({ data }) {
             .attr("y", 45)
             .attr("width", 12)
             .attr("height", 12)
-            .attr("fill", "tomato")
+            .attr("fill", "#E63946")
             .attr("fill-opacity", 0.7)
-            .attr("stroke", "tomato")
+            .attr("stroke", "#E63946")
             .attr("stroke-width", 1.5)
             .attr("stroke-opacity", 1);
 
