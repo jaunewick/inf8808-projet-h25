@@ -16,7 +16,7 @@ export const COLORS = {
     over100: "#E63946",
   },
   categories: {
-    crew: "#",
+    crew: "#d4a951",
     men: "#1D3557",
     women: "#2A9D8F",
     overload: "#E63946",
