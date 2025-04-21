@@ -27,13 +27,12 @@ const StackedBarChart = ({ data }) => {
       })
       .onStepEnter((response) => {
         const step = response.element.getAttribute("data-step");
-        console.log("Step entered:", step);
         if (step === "time") setCurrentSort("time");
         if (step === "fillRate") setCurrentSort("fillRate");
       });
   
     return () => scroller.current.destroy();
-  }, [scales]); // setup quand scales est prêt
+  }, [scales]); // setup when scales is ready
   
 
   useEffect(() => {
@@ -173,6 +172,19 @@ const StackedBarChart = ({ data }) => {
               scales={scales}
             />
           </svg>
+          <div 
+      id="tooltip" 
+      style={{
+        position: 'absolute',
+        visibility: 'hidden',
+        background: 'rgba(0,0,0,0.8)',
+        color: 'white',
+        borderRadius: '5px',
+        padding: '10px',
+        pointerEvents: 'none',
+        zIndex: 1000
+      }}
+    ></div>
     </div>
       </div>
       <div className="chart-analysis">

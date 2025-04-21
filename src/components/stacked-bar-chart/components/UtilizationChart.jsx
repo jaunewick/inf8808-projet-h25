@@ -252,7 +252,19 @@ const UtilizationChart = ({ svgRef, data, scales }) => {
       // Cleanup function
       utilizationChartGroup.remove();
     };
-  }, [svgRef, data, scales]);
+  }, [
+    svgRef,
+    data,
+    scales,
+    margin.left,
+    margin.top,
+    margin.right,
+    margin.bottom,
+    height,
+    width,
+    x,
+    y2,
+  ]);
 
   return null;
 };
