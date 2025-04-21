@@ -102,6 +102,16 @@ function App() {
       <div className="maritime-bulletin">
         <PictographSection />
       </div>
+
+      <footer className="newspaper-footer">
+        <p className="footer-text">
+          Conception et développement réalisé par l'équipe 6.
+        </p>
+        <p className="footer-text">
+          Dans le cadre du cours de Visualisation de données INF8808, Hiver 2025.
+        </p>
+        </footer>
+
     </div>
   );
 }

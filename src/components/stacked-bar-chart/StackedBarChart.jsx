@@ -27,7 +27,6 @@ const StackedBarChart = ({ data }) => {
       })
       .onStepEnter((response) => {
         const step = response.element.getAttribute("data-step");
-        console.log("Step entered:", step);
         if (step === "time") setCurrentSort("time");
         if (step === "fillRate") setCurrentSort("fillRate");
       });
