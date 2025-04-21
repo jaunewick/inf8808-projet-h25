@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const BoxplotClassSurvival = ({ data }) => {
+const BoxplotClassSurvival = ({ data, active }) => {
     const svgRef = useRef();
     const tooltipRef = useRef();
     const margin = { top: 40, right: 30, bottom: 120, left: 60 };
@@ -9,7 +9,7 @@ const BoxplotClassSurvival = ({ data }) => {
     const height = 500 - margin.top - margin.bottom;
 
     useEffect(() => {
-        if (!data) return;
+        if (!data || !active) return;
 
         const tooltip = d3.select(tooltipRef.current)
             .style("position", "absolute")
@@ -31,11 +31,12 @@ const BoxplotClassSurvival = ({ data }) => {
 
         drawAxes(chart, xScale, yScale);
         drawBoxplots(chart, sumstat, xScale, yScale, colorScale, survivalStatus, tooltip);
+        drawMedianLines(chart, sumstat, xScale, yScale, colorScale, survivalStatus);
         drawJitterPoints(chart, sumstat, xScale, yScale, colorScale, survivalStatus, tooltip);
         drawAnnotations(chart, sumstat, classNames, xScale, height);
         drawLegend(svg);
 
-    }, [data, height, margin.left, margin.top, width]);
+    }, [data, active]);
 
     const preprocessData = (data) => {
         const excludedClasses = ['engineering crew', 'victualling crew', 'restaurant staff', 'deck crew'];
@@ -143,10 +144,11 @@ const BoxplotClassSurvival = ({ data }) => {
                     - Min : $${min.toFixed(2)}
                 `;
 
+                // Lower whisker with animation
                 chart.append("line")
                     .attr("x1", xPos)
                     .attr("x2", xPos)
-                    .attr("y1", yScale(lowerFence))
+                    .attr("y1", yScale(q1))
                     .attr("y2", yScale(q1))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
@@ -162,13 +164,17 @@ const BoxplotClassSurvival = ({ data }) => {
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
-                    });
+                    })
+                    .transition()
+                    .duration(800)
+                    .attr("y2", yScale(lowerFence));
 
+                // Upper whisker with animation
                 chart.append("line")
                     .attr("x1", xPos)
                     .attr("x2", xPos)
                     .attr("y1", yScale(q3))
-                    .attr("y2", yScale(upperFence))
+                    .attr("y2", yScale(q3))
                     .attr("stroke", colorScale(status))
                     .attr("stroke-opacity", 0.7)
                     .attr("stroke-width", 1.5)
@@ -183,15 +189,19 @@ const BoxplotClassSurvival = ({ data }) => {
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
-                    });
+                    })
+                    .transition()
+                    .duration(800)
+                    .attr("y2", yScale(upperFence));
 
+                // Lower cap
                 chart.append("line")
                     .attr("x1", xPos - capWidth / 2)
                     .attr("x2", xPos + capWidth / 2)
                     .attr("y1", yScale(lowerFence))
                     .attr("y2", yScale(lowerFence))
                     .attr("stroke", colorScale(status))
-                    .attr("stroke-opacity", 0.7)
+                    .attr("stroke-opacity", 0)
                     .attr("stroke-width", 1.5)
                     .on("mouseover", (event) => {
                         tooltip.style("opacity", 1).html(whiskerTooltipContent)
@@ -204,15 +214,19 @@ const BoxplotClassSurvival = ({ data }) => {
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
-                    });
+                    })
+                    .transition()
+                    .duration(1000)
+                    .attr("stroke-opacity", 0.7);
 
+                // Upper cap
                 chart.append("line")
                     .attr("x1", xPos - capWidth / 2)
                     .attr("x2", xPos + capWidth / 2)
                     .attr("y1", yScale(upperFence))
                     .attr("y2", yScale(upperFence))
                     .attr("stroke", colorScale(status))
-                    .attr("stroke-opacity", 0.7)
+                    .attr("stroke-opacity", 0)
                     .attr("stroke-width", 1.5)
                     .on("mouseover", (event) => {
                         tooltip.style("opacity", 1).html(whiskerTooltipContent)
@@ -225,13 +239,17 @@ const BoxplotClassSurvival = ({ data }) => {
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
-                    });
+                    })
+                    .transition()
+                    .duration(1000)
+                    .attr("stroke-opacity", 0.7);
 
+                // Box with animation
                 chart.append("rect")
                     .attr("x", xPos - boxWidth / 2)
-                    .attr("y", yScale(q3))
+                    .attr("y", yScale(0))  // Start from the bottom
                     .attr("width", boxWidth)
-                    .attr("height", yScale(q1) - yScale(q3))
+                    .attr("height", 0)     // Start with no height
                     .attr("fill", colorScale(status))
                     .attr("fill-opacity", 0.7)
                     .attr("stroke", colorScale(status))
@@ -247,15 +265,44 @@ const BoxplotClassSurvival = ({ data }) => {
                     })
                     .on("mouseout", () => {
                         tooltip.style("opacity", 0);
-                    });
+                    })
+                    .transition()
+                    .duration(1000)
+                    .attr("y", yScale(q3))
+                    .attr("height", yScale(q1) - yScale(q3));
+            });
+        });
+    };
 
+    // New separate function for drawing median lines
+    const drawMedianLines = (chart, sumstat, xScale, yScale, colorScale, survivalStatus) => {
+        const boxWidthFactor = 0.25;
+        
+        Array.from(sumstat).forEach(([className, survivalData]) => {
+            survivalStatus.forEach(status => {
+                const groupData = survivalData.get(status);
+                if (!groupData) return;
+                
+                const values = groupData.map(d => d.fare).sort(d3.ascending);
+                const median = d3.quantile(values, 0.5);
+                
+                const xPos = xScale(className) + xScale.bandwidth() * (status === 'oui' ? 0.25 : 0.75);
+                const boxWidth = xScale.bandwidth() * boxWidthFactor;
+                
+                // Median line with animation
                 chart.append("line")
                     .attr("x1", xPos - boxWidth / 2)
                     .attr("x2", xPos + boxWidth / 2)
+                    .attr("y1", height)  // Start from bottom
+                    .attr("y2", height)
+                    .attr("stroke", colorScale(status))
+                    .attr("stroke-width", 2)
+                    .attr("stroke-opacity", 0)
+                    .transition()
+                    .duration(800)
                     .attr("y1", yScale(median))
                     .attr("y2", yScale(median))
-                    .attr("stroke", colorScale(status))
-                    .attr("stroke-width", 2);
+                    .attr("stroke-opacity", 1);
             });
         });
     };
@@ -271,13 +318,13 @@ const BoxplotClassSurvival = ({ data }) => {
                 const xPos = xScale(className) + xScale.bandwidth() * (status === 'oui' ? 0.25 : 0.75);
                 const jitterWidth = xScale.bandwidth() * jitterWidthFactor;
 
-                groupData.forEach(d => {
+                groupData.forEach((d, i) => {
                     chart.append("circle")
                         .attr("cx", xPos - jitterWidth / 2 + Math.random() * jitterWidth - 53)
-                        .attr("cy", yScale(d.fare))
+                        .attr("cy", height)  // Start from bottom
                         .attr("r", 2.5)
                         .attr("fill", colorScale(status))
-                        .attr("opacity", 0.4)
+                        .attr("opacity", 0)
                         .on("mouseover", (event) => {
                             tooltip.style("opacity", 1)
                                 .html(`
@@ -294,7 +341,12 @@ const BoxplotClassSurvival = ({ data }) => {
                         })
                         .on("mouseout", () => {
                             tooltip.style("opacity", 0);
-                        });
+                        })
+                        .transition()
+                        .delay(i * 2)  // Staggered delay for each point
+                        .duration(600)
+                        .attr("cy", yScale(d.fare))
+                        .attr("opacity", 0.4);
                 });
             });
         });
