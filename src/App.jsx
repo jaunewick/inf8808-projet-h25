@@ -84,7 +84,7 @@ function App() {
       </div>
 
       <div className="maritime-bulletin">
-       {titanicData && <Waffle data={titanicData} />}
+        {titanicData && <Waffle data={titanicData} />}
       </div>
 
       <div className="maritime-bulletin">
@@ -104,13 +104,39 @@ function App() {
       </div>
 
       <footer className="newspaper-footer">
-        <p className="footer-text">
-          Conception et développement réalisé par l'équipe 6.
-        </p>
-        <p className="footer-text">
-          Dans le cadre du cours de Visualisation de données INF8808, Hiver 2025.
-        </p>
-        </footer>
+        <div className="footer-content">
+          <div className="authors-section">
+            <h3 className="authors-title">Les Autheurs</h3>
+            <div className="authors-grid">
+              {[
+                { name: "Laurie Bédard-Côté", img: "src/assets/laurie.png" },
+                { name: "Daniel Giao", img: "src/assets/daniel.png" },
+                { name: "Huy Viet Nguyen", img: "src/assets/huyviet.png" },
+                { name: "Jacob Taylor", img: "src/assets/jacob.png" },
+                { name: "Melvice Junior Guimfack", img: "src/assets/melvice.jpeg" },
+                { name: "Thomas Thiboutot", img: "src/assets/thomas.jpeg" },
+              ].map((author, index) => (
+                <div key={index} className="author">
+                  <img
+                    src={author.img}
+                    alt={author.name}
+                    className="author-img"
+                  />
+                  <p className="author-name">{author.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="footer-text-section">
+            <p className="footer-text">
+              Conception et développement réalisé par l'équipe 6.
+            </p>
+            <p className="footer-text">
+              Dans le cadre du cours de Visualisation de données INF8808, Hiver 2025.
+            </p>
+          </div>
+        </div>
+      </footer>
 
     </div>
   );
