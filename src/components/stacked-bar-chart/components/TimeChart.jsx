@@ -113,84 +113,88 @@ const TimeChart = ({ svgRef, data, scales }) => {
       .attr("height", (d) => y(d.value[0]) - y(d.value[1]))
       .delay((d, i) => i * 100);
 
-    // Add hover effects
-    barsGroup
-      .on("mouseover", function (event, d) {
-        d3.select(this)
-          .transition()
-          .duration(200)
-          .attr("opacity", 0.8)
-          .attr("filter", "brightness(2)");
+    const hoverAreas = timeChartGroup
+      .append("g")
+      .attr("class", "hover-areas")
+      .selectAll("rect")
+      .data(data)
+      .join("rect")
+      .attr("x", (d, i) => xTime(i))
+      .attr("y", 0)
+      .attr("width", xTime.bandwidth())
+      .attr("height", height)
+      .attr("fill", "transparent")
+      .attr("cursor", "pointer");
 
-        const boatData = data[d.index];
+    hoverAreas
+      .on("mouseover", function (event, d) {
+        const i = data.indexOf(d);
+
+        barsGroup
+          .filter((barData) => barData.index === i)
+          .attr("opacity", 0.8)
+          .attr("filter", "brightness(-2)");
+
         const tooltip = timeChartGroup
           .append("g")
           .attr("class", "tooltip")
           .attr(
             "transform",
-            `translate(${xTime(d.index) + xTime.bandwidth() / 2}, ${
-              y(d.value[1]) - 10
-            })`
+            `translate(${xTime(i) + xTime.bandwidth() / 2}, ${y(d.total) - 20})`
           );
 
-        // Create tooltip background first
+        tooltip
+          .append("rect")
+          .attr("width", 200)
+          .attr("height", 120)
+          .attr("x", -185)
+          .attr("y", -50)
+          .attr("fill", COLORS.text.primary)
+          .attr("rx", STYLES.tooltip.rx)
+          .attr("ry", STYLES.tooltip.ry)
+          .attr("opacity", STYLES.tooltip.opacity);
+
+        // create the tooltip group
         const tooltipGroup = tooltip.append("g");
 
-        // Add each line of text separately
+        // prepare the text lines
         const lines = [
-          `Bateau #${boatData.boat}`,
-          `Total: ${boatData.total}/${boatData.capacity}`,
-          `Hommes: ${boatData.men}`,
-          `Femmes: ${boatData.women}`,
-          `Equipage: ${boatData.crew}`,
+          `Bateau #${d.boat}`,
+          `Total: ${d.total}/${d.capacity}`,
+          `Hommes: ${d.men}`,
+          `Femmes: ${d.women}`,
+          `Equipage: ${d.crew}`,
           `Surcharge: ${
-            boatData.total > boatData.capacity
-              ? `+${boatData.total - boatData.capacity}`
-              : "0"
+            d.total > d.capacity ? `+${d.total - d.capacity}` : "0"
           }`,
-          `Heure de départ: ${boatData.time.toLocaleTimeString("fr-FR", {
+          `Heure de départ: ${d.time.toLocaleTimeString("fr-FR", {
             hour: "2-digit",
             minute: "2-digit",
           })}`,
         ];
 
-        // Add each line of text
-        lines.forEach((line, i) => {
+        // add each text line
+        lines.forEach((line, j) => {
           tooltipGroup
             .append("text")
-            .attr("text-anchor", "right")
-            .attr("x", 0)
-            .attr("y", i * 20) // 20px spacing between lines
+            .attr("text-anchor", "start")
+            .attr("x", -170)
+            .attr("y", -20 + j * 20)
             .style("font-size", FONTS.tooltip.size)
             .style("fill", COLORS.text.primary)
             .style("font-weight", FONTS.tooltip.weight)
             .text(line);
         });
-
-        // Get the bounding box of all text elements
-        const bbox = tooltipGroup.node().getBBox();
-
-        // Add background rectangle
-        tooltip
-          .insert("rect", "g")
-          .attr("width", bbox.width + STYLES.tooltip.padding)
-          .attr("height", bbox.height + STYLES.tooltip.padding)
-          .attr("x", -bbox.width + 130)
-          .attr("y", -bbox.height + 105)
-          .attr("fill", COLORS.text.primary)
-          .attr("rx", STYLES.tooltip.rx)
-          .attr("ry", STYLES.tooltip.ry)
-          .attr("opacity", STYLES.tooltip.opacity)
-          .attr("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.2))");
       })
       .on("mouseout", function () {
-        d3.select(this)
-          .transition()
-          .duration(200)
-          .attr("opacity", 1)
-          .attr("filter", "none");
+        // reset all bars
+        barsGroup.attr("opacity", 1).attr("filter", "none");
+
+        // remove the tooltip
         timeChartGroup.selectAll(".tooltip").remove();
       });
+
+    barsGroup.on("mouseover", null).on("mouseout", null);
 
     // Add capacity lines with smooth transitions
     const capacityLines = timeChartGroup
@@ -295,7 +299,21 @@ const TimeChart = ({ svgRef, data, scales }) => {
       // Cleanup function
       timeChartGroup.remove();
     };
-  }, [svgRef, data, scales]);
+  }, [
+    svgRef,
+    data,
+    scales,
+    margin.left,
+    margin.top,
+    margin.right,
+    margin.bottom,
+    width,
+    height,
+    xTime,
+    y,
+    keys,
+    color,
+  ]);
   return null;
 };
 

@@ -6,6 +6,12 @@ import Waffle from './components/waffle/Waffle';
 import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
 import Boxplot from "./components/boxplot/Boxplot";
 import PictographSection from "./components/pictograph/PictographSection";
+import laurieImg from './assets/laurie.png';
+import danielImg from './assets/daniel.png';
+import huyvietImg from './assets/huyviet.png';
+import jacobImg from './assets/jacob.png';
+import melviceImg from './assets/melvice.jpeg';
+import thomasImg from './assets/thomas.jpeg';
 
 function App() {
   const [titanicData, setData] = useState(null);
@@ -84,7 +90,7 @@ function App() {
       </div>
 
       <div className="maritime-bulletin">
-       {titanicData && <Waffle data={titanicData} />}
+        {titanicData && <Waffle data={titanicData} />}
       </div>
 
       <div className="maritime-bulletin">
@@ -104,13 +110,39 @@ function App() {
       </div>
 
       <footer className="newspaper-footer">
-        <p className="footer-text">
-          Conception et développement réalisé par l'équipe 6.
-        </p>
-        <p className="footer-text">
-          Dans le cadre du cours de Visualisation de données INF8808, Hiver 2025.
-        </p>
-        </footer>
+        <div className="footer-content">
+          <div className="authors-section">
+            <h3 className="authors-title">Les Auteurs</h3>
+            <div className="authors-grid">
+              {[
+                { name: "Laurie Bédard-Côté", img: laurieImg },
+                { name: "Daniel Giao", img: danielImg },
+                { name: "Huy Viet Nguyen", img: huyvietImg },
+                { name: "Jacob Taylor", img: jacobImg },
+                { name: "Melvice Junior Guimfack", img: melviceImg },
+                { name: "Thomas Thiboutot", img: thomasImg },
+              ].map((author, index) => (
+                <div key={index} className="author">
+                  <img
+                    src={author.img}
+                    alt={author.name}
+                    className="author-img"
+                  />
+                  <p className="author-name">{author.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="footer-text-section">
+            <p className="footer-text">
+              Conception et développement réalisé par l'équipe 6.
+            </p>
+            <p className="footer-text">
+              Dans le cadre du cours de Visualisation de données INF8808, Hiver 2025.
+            </p>
+          </div>
+        </div>
+      </footer>
 
     </div>
   );

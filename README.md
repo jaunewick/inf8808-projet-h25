@@ -1,6 +1,6 @@
 # inf8808-projet-h25
 
-## Server Startup
+## Local Server Startup
 
 1. Install all the dependencies listed in the `package.json`
 ```
@@ -10,3 +10,10 @@ npm install
 ```
 npm run dev
 ```
+## GitHub-Pages Link
+
+https://jaunewick.github.io/inf8808-projet-h25/
+
+## Preview
+
+![site_preview](.img/site_preview.png)
