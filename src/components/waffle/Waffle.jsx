@@ -96,7 +96,7 @@ export function Waffle({ data }) {
     // Create SVG only once
     if (!svgRef.current) {
       const width = Math.min(window.innerWidth * 0.9, 1200);
-      const height = 600;
+      const height = 550;
 
       const svg = d3.select(waffleRef.current)
         .append("svg")
@@ -148,8 +148,8 @@ export function Waffle({ data }) {
     tooltip.append("div").text(`Âge: ${passenger.age ? `${parseFloat(passenger.age).toFixed(0)} ans` : "?"}`);
     tooltip.append("div").text(`Genre: ${passenger.sex === "male" ? "Homme" : "Femme"}`);
     tooltip.append("div").text(`Survie: ${passenger.survived === "yes" ? "Oui" : "Non"}`);
-    passenger.ticketno != "NA" && tooltip.append("div").text(`# de ticket: ${passenger.ticketno || "?"}`);
-    passenger.fare != "NA" && tooltip.append("div").text(`$ du billet: ${passenger.fare ? `${parseFloat(passenger.fare).toFixed(2)} $` : "?"}`);
+    passenger.ticketno != "NA" && tooltip.append("div").text(`Numéro de ticket: ${passenger.ticketno || "?"}`);
+    passenger.fare != "NA" && tooltip.append("div").text(`Prix du billet: ${passenger.fare ? `${parseFloat(passenger.fare).toFixed(2)} $` : "?"}`);
     passenger.embarked != "?" && tooltip.append("div").text(`Port d'embarquement: ${PORTS[passenger.embarked] || "?"}`);
   };
   
@@ -256,7 +256,7 @@ export function Waffle({ data }) {
       .attr("y", d => posMap.get(d.id).y)
       .attr("fill", d => posMap.get(d.id).fill)
       .attr("stroke", d => posMap.get(d.id).stroke)
-      .attr("stroke-width", d => posMap.get(d.id).strokeWidth)
+      .attr("stroke-width", d => posMap.get(d.id).strokeWidth);
       
       squares
       .on("mouseenter", (event, d) => {
@@ -265,19 +265,18 @@ export function Waffle({ data }) {
       .on("mouseleave", () => {
         d3.selectAll(".passenger-tooltip").remove();
       });
-    
 
     svg.selectAll(".region-label").remove();
 
-    if ( step === 0) {
+    if (step === 0) {
       svg.append("text")
         .attr("class", "region-label")
-        .attr("x", 50)
-        .attr("y", 5 )
+        .attr("x", width / 2)
+        .attr("y", 5)
         .attr("text-anchor", "middle")
         .attr("font-weight", "bold")
         .attr("font-size", "16px")
-        .text("Globalement");
+        .text("Mondialement");
     } else if (step === 1) {
       Object.entries(REGION_POSITIONS).forEach(([region, position]) => {
         const regionX = position.column * (width / 3) + (width / 6);
@@ -285,7 +284,7 @@ export function Waffle({ data }) {
         
         svg.append("text")
           .attr("class", "region-label")
-          .attr("x", regionX)
+          .attr("x", regionX - 6)
           .attr("y", regionY - 10)
           .attr("text-anchor", "middle")
           .attr("font-weight", "bold")

@@ -144,6 +144,7 @@
   font-size: 0.85rem;
   max-width: 250px;
   z-index: 200;
+  width: 400px;
 }
 
 .passenger-tooltip div {
