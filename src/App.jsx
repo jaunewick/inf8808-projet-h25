@@ -106,7 +106,7 @@ function App() {
       <footer className="newspaper-footer">
         <div className="footer-content">
           <div className="authors-section">
-            <h3 className="authors-title">Les Autheurs</h3>
+            <h3 className="authors-title">Les Auteurs</h3>
             <div className="authors-grid">
               {[
                 { name: "Laurie Bédard-Côté", img: "src/assets/laurie.png" },
