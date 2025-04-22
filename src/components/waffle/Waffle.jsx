@@ -1,34 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import scrollama from "scrollama";
-import "./Waffle.css";
 
-const COUNTRIES = {
-  "Argentina": "Argentine", "Australia": "Australie", "Austria": "Autriche",
-  "Belgium": "Belgique", "Canada": "Canada", "Channel Islands": "Îles Anglo-Normandes",
-  "China/Hong Kong": "Hong Kong", "Croatia": "Croatie", "Croatia (Modern)": "Croatie (Moderne)",
-  "Cuba": "Cuba", "Egypt": "Égypte", "England": "Angleterre",
-  "Finland": "Finlande", "France": "France", "Germany": "Allemagne",
-  "Greece": "Grèce", "Guyana": "Guyanne", "Hungary": "Hongrie",
-  "India": "Inde", "Ireland": "Irelande", "Italy": "Italie",
-  "Japan": "Japon", "Latvia": "Lettonie", "Lebanon": "Liban",
-  "Mexico": "Mexique", "NA": "Origine inconnue", "Netherlands": "Pays-Bas",
-  "Northern Ireland": "Irlande du Nord", "Peru": "Pérou", "Poland": "Pologne",
-  "Russia": "Russie", "Scotland": "Écosse", "Siam": "Thaïlande",
-  "Slovakia (Modern day)": "Slovaquie (actuelle)", "Slovenia": "Slovenie", "South Africa": "Affrique du Sud",
-  "Spain": "Espagne", "Sweden": "Suède", "Switzerland": "Suisse",
-  "Syria": "Syrie", "Turkey": "Turquie", "United States": "États-Unis",
-  "Uruguay": "Uruguay", "Wales": "Pays de Galles", "Yugoslavia": "Yugoslavie",
-  "Norway": "Norvège"
-};
+import { COUNTRY_NAMES_MAP } from "../../assets/countries";
+import "./Waffle.css";
 
 const REGIONS = {
   "Îles britanniques": ["England", "Channel Islands", "Wales", "Northern Ireland", "Ireland", "Scotland"],
   "Amérique": ["United States", "Argentina", "Canada", "Peru", "Cuba", "Guyana", "Uruguay", "Mexico"],
   "Scandinavie": ["Norway", "Sweden", "Finland", "Denmark"],
   "Asie": ["China/Hong Kong", "India", "Japan", "Lebanon", "Siam", "Syria", "Turkey", "Egypt"],
-  "Europe de l'Ouest et Centrale": ["Belgium", "Austria", "France", "Germany", "Slovakia (Modern day)", "Slovenia", "Switzerland", "Poland", "Hungary", "Latvia", "Italy", "Spain", "Greece", "Russia", "Yugoslavia"],
-  "Monde": Object.keys(COUNTRIES)
+  "Europe continentale hors Scandinavie": [
+    "Belgium", "Austria", "France", "Germany", "Slovakia (Modern day)", "Slovenia",
+    "Switzerland", "Poland", "Hungary", "Latvia", "Italy", "Spain", "Greece",
+    "Russia", "Yugoslavia", "Croatia (Modern)", "Bulgaria", "Bosnia", "Croatia",
+    "Netherlands"
+  ],
+  "Monde": Object.keys(COUNTRY_NAMES_MAP)
 };
 
 const REGION_COLORS = {
@@ -36,7 +24,7 @@ const REGION_COLORS = {
   "Amérique": "#457B9D",
   "Scandinavie": "#1D3557",
   "Asie": "#F1C453",
-  "Europe de l'Ouest et Centrale": "#2A9D8F",
+  "Europe continentale hors Scandinavie": "#2A9D8F",
   "Autre": "#777777"
 };
 
@@ -45,7 +33,7 @@ const REGION_POSITIONS = {
   "Amérique": { column: 1, row: 0 },
   "Scandinavie": { column: 2, row: 0 },
   "Asie": { column: 2, row: 1 },
-  "Europe de l'Ouest et Centrale": { column: 1, row: 1 },
+  "Europe continentale hors Scandinavie": { column: 1, row: 1 },
   "Autre": { column: 1, row: 2 } 
 };
 
@@ -143,7 +131,7 @@ export function Waffle({ data }) {
       .style("top", `${event.clientY - container.top + 10}px`);
   
     tooltip.append("div").text(`Nom: ${passenger.name || "Inconnu"}`);
-    tooltip.append("div").text(`Pays: ${COUNTRIES[passenger.country] || "Inconnu"}`);
+    tooltip.append("div").text(`Pays: ${COUNTRY_NAMES_MAP[passenger.country] || "Inconnu"}`);
     tooltip.append("div").text(`Classe: ${CLASS_LABELS[passenger.class] || "Inconnue"}`);
     tooltip.append("div").text(`Âge: ${passenger.age ? `${parseFloat(passenger.age).toFixed(0)} ans` : "?"}`);
     tooltip.append("div").text(`Genre: ${passenger.sex === "male" ? "Homme" : "Femme"}`);
@@ -152,7 +140,6 @@ export function Waffle({ data }) {
     passenger.fare != "NA" && tooltip.append("div").text(`Prix du billet: ${passenger.fare ? `${parseFloat(passenger.fare).toFixed(2)} $` : "?"}`);
     passenger.embarked != "?" && tooltip.append("div").text(`Port d'embarquement: ${PORTS[passenger.embarked] || "?"}`);
   };
-  
 
   const renderWaffle = (step) => {
     if (!svgRef.current || !passengers.length) return;
@@ -257,8 +244,8 @@ export function Waffle({ data }) {
       .attr("fill", d => posMap.get(d.id).fill)
       .attr("stroke", d => posMap.get(d.id).stroke)
       .attr("stroke-width", d => posMap.get(d.id).strokeWidth);
-      
-      squares
+    
+    squares
       .on("mouseenter", (event, d) => {
         showTooltip(event, d);
       })
@@ -295,40 +282,55 @@ export function Waffle({ data }) {
   };
 
   return (
-    <div className="waffle-chart">
-      {/* Introduction Section */}
-      <section className="story-section">
-        <h2>Qui était à bord du Titanic ?</h2>
-        <p>
-        Le Titanic transportait des passagers venus d'Europe, d'Amérique, d'Asie et d'autres régions du monde.
-        Cette diversité d'origines montre à quel point le voyage dépassait les frontières nationales.
-        Des personnes de différents pays se retrouvaient à bord, réunies pour traverser l'Atlantique.
-        </p>
+    <div className="container">
+      <div className="waffle-chart">
+        {/* Introduction Section */}
+        <section className="story-section">
+          <h2>Qui était à bord du Titanic ?</h2>
+          <p>
+          Le Titanic transportait des passagers venus d'Europe, d'Amérique, d'Asie et d'autres régions du monde.
+          Cette diversité d'origines montre à quel point le voyage dépassait les frontières nationales.
+          Des personnes de différents pays se retrouvaient à bord, réunies pour traverser l'Atlantique.
+          </p>
+        </section>
+                  
+        <div className="chart-container" ref={waffleRef}>
+          <div className="chart-header">
+            <h3>{currentStep === 0 ? "Répartition mondiale" : "Répartition par région d'origine"}</h3>
+            <div className="waffle-labels">
+              <div className="survived-label square"></div>
+              <span>Survivant</span>
+              <div className="deceased-label square"></div>
+              <span>Naufragé</span>
+            </div>
+          </div>
+        </div>
+      
+        <div className="steps-container">
+          <div className="step-waffle step-0" data-scrollama-index="0">
+            <div className="step-content"></div>
+          </div>
+          <div className="step-waffle step-1" data-scrollama-index="1">
+            <div className="step-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <section className="chart-section">      
+        <div className="chart-analysis">
+          <p>L'analyse de la répartition des passagers en fonction de leur origine indique plusieurs points importants: </p>
+          <ul>
+            <li>Près du deux tiers des passagers n'ont pas survécu au naufrage</li>
+            <li>La majorité des passagers étaient d'origine européenne</li>
+            <li>La majorité des passagers européens sont issus des îles britanniques</li>
+            <li>
+              Contrairement à la tendance globale, près de la moitié 
+              des passagers issus d'Amérique et d'Asie ont 
+              survécu au naufrage
+            </li>
+          </ul>
+        </div>
       </section>
-      
-      <div className="chart-container" ref={waffleRef}>
-        <div className="chart-header">
-          <h3>{currentStep === 0 ? "Répartition mondiale" : "Répartition par région d'origine"}</h3>
-          <div className="waffle-labels">
-            <div className="survived-label square"></div>
-            <span>Survivant</span>
-            <div className="deceased-label square"></div>
-            <span>Naufragé</span>
-          </div>
-        </div>
-      </div>
-      
-      <div className="steps-container">
-        <div className="step-waffle step-0" data-scrollama-index="0">
-          <div className="step-content">
-          </div>
-        </div>
-        
-        <div className="step-waffle step-1" data-scrollama-index="1">
-          <div className="step-content">
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
