@@ -6,6 +6,12 @@ import Waffle from './components/waffle/Waffle';
 import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
 import Boxplot from "./components/boxplot/Boxplot";
 import PictographSection from "./components/pictograph/PictographSection";
+import laurieImg from './assets/laurie.png';
+import danielImg from './assets/daniel.png';
+import huyvietImg from './assets/huyviet.png';
+import jacobImg from './assets/jacob.png';
+import melviceImg from './assets/melvice.jpeg';
+import thomasImg from './assets/thomas.jpeg';
 
 function App() {
   const [titanicData, setData] = useState(null);
@@ -109,12 +115,12 @@ function App() {
             <h3 className="authors-title">Les Auteurs</h3>
             <div className="authors-grid">
               {[
-                { name: "Laurie Bédard-Côté", img: "src/assets/laurie.png" },
-                { name: "Daniel Giao", img: "src/assets/daniel.png" },
-                { name: "Huy Viet Nguyen", img: "src/assets/huyviet.png" },
-                { name: "Jacob Taylor", img: "src/assets/jacob.png" },
-                { name: "Melvice Junior Guimfack", img: "src/assets/melvice.jpeg" },
-                { name: "Thomas Thiboutot", img: "src/assets/thomas.jpeg" },
+                { name: "Laurie Bédard-Côté", img: laurieImg },
+                { name: "Daniel Giao", img: danielImg },
+                { name: "Huy Viet Nguyen", img: huyvietImg },
+                { name: "Jacob Taylor", img: jacobImg },
+                { name: "Melvice Junior Guimfack", img: melviceImg },
+                { name: "Thomas Thiboutot", img: thomasImg },
               ].map((author, index) => (
                 <div key={index} className="author">
                   <img
