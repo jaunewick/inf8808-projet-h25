@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import * as d3 from "d3";
+
 import { COLORS, FONTS, STYLES } from "../utils/chartStyles";
 import "./TimeChart.css";
 
@@ -39,7 +40,7 @@ const TimeChart = ({ svgRef, data, scales }) => {
             });
           }
           return "";
-        })
+        }),
       )
       .selectAll("text")
       .style("text-anchor", "end")
@@ -140,7 +141,7 @@ const TimeChart = ({ svgRef, data, scales }) => {
           .attr("class", "tooltip")
           .attr(
             "transform",
-            `translate(${xTime(i) + xTime.bandwidth() / 2}, ${y(d.total) - 20})`
+            `translate(${xTime(i) + xTime.bandwidth() / 2}, ${y(d.total) - 20})`,
           );
 
         tooltip

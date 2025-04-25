@@ -17,29 +17,29 @@ class DBReader {
 
   async loadTitanicData() {
     try {
-      const titanicResponse = await fetch("data/titanic_with_crew.csv");
+      const titanicResponse = await fetch("data/titanicWithCrew.csv");
       const titanicText = await titanicResponse.text();
       this.#titanicData = Papa.parse(titanicText, {
         header: true,
         skipEmptyLines: true,
       }).data;
     } catch (error) {
-      console.error('Error loading CSV:', error);
+      console.error("Error loading CSV:", error);
       this.#titanicData = [];
     }
   }
 
   async loadLifeboatsData() {
     try {
-      const response = await fetch('data/Lifeboats.csv');
+      const response = await fetch("data/lifeboats.csv");
       const text = await response.text();
 
       this.#lifeboatsData = Papa.parse(text, {
         header: true,
-        skipEmptyLines: true
+        skipEmptyLines: true,
       }).data;
     } catch (error) {
-      console.error('Error loading CSV:', error);
+      console.error("Error loading CSV:", error);
       this.#lifeboatsData = [];
     }
   }

@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import React, { useEffect, useRef } from "react";
+
 import classes from "./PieChart.module.css";
 
 /**
@@ -70,7 +71,11 @@ export const PieChart = ({
 
   return (
     <div className={classes.container}>
-      {title && <p><b>{title} </b></p>}
+      {title && (
+        <p>
+          <b>{title} </b>
+        </p>
+      )}
       <svg ref={ref}></svg>
     </div>
   );
