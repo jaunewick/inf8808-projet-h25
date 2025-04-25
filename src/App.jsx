@@ -6,6 +6,7 @@ import Waffle from "./components/Waffle/Waffle";
 import StackedBarChart from "./components/StackedBarChart/StackedBarChart";
 import Boxplot from "./components/Boxplot/Boxplot";
 import PictographSection from "./components/Pictograph/PictographSection";
+
 import laurieImg from "./assets/laurie.png";
 import danielImg from "./assets/daniel.png";
 import huyvietImg from "./assets/huyviet.png";

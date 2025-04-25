@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import * as d3 from "d3";
-import d3Tip from "d3-tip";
-
-import { sankey, sankeyCenter, sankeyLinkHorizontal } from "d3-sankey";
 import {
   GENDER,
   AGE,
@@ -14,10 +11,10 @@ import {
 import Translate from "../../util/getTranslation";
 import "./Sankey.css";
 
-const MARGIN_X = 20;
-const MARGIN_Y = 20;
-const WIDTH = 500;
-const HEIGHT = 500;
+const MARGIN_X = 30;
+const MARGIN_Y = 30;
+const WIDTH = 600;
+const HEIGHT = 600;
 const DEMOGRAPHIC_VARIABLES = [GENDER, CLASS, AGE, EMBARKED, SIBSP, SURVIVED];
 
 const SOURCE_NODE_COLOR = "#E9BA24";
@@ -26,7 +23,6 @@ const TARGET_NODE_COLOR = "#344C65";
 export default function SankeyDiagram({ data }) {
   const [source, setSource] = useState(CLASS);
   const [target, setTarget] = useState(SURVIVED);
-
   const [processedData, setProcessedData] = useState({});
   const [availableSource, setAvailableSource] = useState(
     DEMOGRAPHIC_VARIABLES.filter((v) => v !== target),
@@ -35,16 +31,6 @@ export default function SankeyDiagram({ data }) {
     DEMOGRAPHIC_VARIABLES.filter((v) => v !== source),
   );
   const translator = new Translate();
-
-  const sankeyGenerator = sankey()
-    .nodeWidth(32)
-    .nodePadding(29)
-    .extent([
-      [MARGIN_X, MARGIN_Y],
-      [WIDTH - MARGIN_X, HEIGHT - MARGIN_Y],
-    ])
-    .nodeId((node) => node.id)
-    .nodeAlign(sankeyCenter);
 
   function createNodes(nodeName) {
     let uniqueNodes;
@@ -60,6 +46,26 @@ export default function SankeyDiagram({ data }) {
 
   function isChild(age) {
     return age < 18 ? "enfant" : "adulte";
+  }
+
+  function displayTooltip(event, d) {
+    d3.selectAll(".tooltip").remove();
+    const container = d3.select(".sankey-container").node().getBoundingClientRect();
+    d3.select(".sankey-container")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("background-color", "white")
+      .style("border", "1px solid gray")
+      .style("border-radius", "4px")
+      .style("padding", "5px")
+      .style("width", "10rem")
+      .style("pointer-events", "none")
+      .style("opacity", 1)
+      .style("z-index", 1000)
+      .style("left", event.clientX - container.left + 10 + "px")
+      .style("top", event.clientY - container.top - 28 + "px")
+      .html(`Passagers: ${d.value}`);
   }
 
   function processData() {
@@ -89,120 +95,215 @@ export default function SankeyDiagram({ data }) {
     }
   }
 
+  function computeNodeDepths(nodes, links) {
+    const nodeMap = new Map(nodes.map(node => [node.id, { ...node, depth: 0 }]));
+    
+    links.forEach(link => {
+      const sourceNode = nodeMap.get(link.source);
+      const targetNode = nodeMap.get(link.target);
+      if (targetNode.depth <= sourceNode.depth) {
+        targetNode.depth = sourceNode.depth + 1;
+      }
+    });
+    
+    return Array.from(nodeMap.values());
+  }
+
+  function computeNodeValues(nodes, links) {
+    const nodeMap = new Map(nodes.map(node => [node.id, { ...node, value: 0 }]));
+    
+    links.forEach(link => {
+      const sourceNode = nodeMap.get(link.source);
+      const targetNode = nodeMap.get(link.target);
+      sourceNode.value += link.value;
+      targetNode.value += link.value;
+    });
+    
+    return Array.from(nodeMap.values());
+  }
+
+  function computeNodePositions(nodes) {
+    // Sort nodes by depth
+    const nodesByDepth = d3.group(nodes, d => d.depth);
+    const maxDepth = d3.max(nodes, d => d.depth);
+    
+    // Increase horizontal spacing by adjusting this range
+    const xScale = d3.scaleLinear()
+      .domain([0, maxDepth])
+      .range([MARGIN_X, WIDTH - MARGIN_X]);
+    
+    nodesByDepth.forEach((depthNodes, depth) => {
+      const totalValue = d3.sum(depthNodes, d => d.value);
+      let yPos = MARGIN_Y;
+      
+      depthNodes.sort((a, b) => b.value - a.value);
+      
+      depthNodes.forEach(node => {
+        // Increase vertical spacing by adjusting the multiplier (from 10 to 20)
+        const height = (HEIGHT - 2 * MARGIN_Y - 20 * (depthNodes.length - 1)) * (node.value / totalValue);
+      
+        node.x0 = xScale(depth);
+        // Increase horizontal width of nodes if desired
+        node.x1 = xScale(depth) + 32;
+        node.y0 = yPos;
+        node.y1 = yPos + height + 10;
+        // Increase vertical gap between nodes (from 10 to 20)
+        yPos += height + 20;
+      });
+    });
+    
+    return nodes;
+  }
+
+  function computeLinkPaths(links, nodes) {
+    const nodeMap = new Map(nodes.map(node => [node.id, { ...node, sourceOffset: 0, targetOffset: 0 }]));
+  
+    const sourceGroups = d3.group(links, d => d.source);
+    const targetGroups = d3.group(links, d => d.target);
+  
+    return links.map(link => {
+      const sourceNode = nodeMap.get(link.source);
+      const targetNode = nodeMap.get(link.target);
+  
+      const totalSource = d3.sum(sourceGroups.get(link.source), d => d.value);
+      const totalTarget = d3.sum(targetGroups.get(link.target), d => d.value);
+  
+      const linkHeight = (sourceNode.y1 - sourceNode.y0) * (link.value / totalSource);
+      const linkTargetHeight = (targetNode.y1 - targetNode.y0) * (link.value / totalTarget);
+  
+      const y0 = sourceNode.y0 + sourceNode.sourceOffset + linkHeight / 2;
+      const y1 = targetNode.y0 + targetNode.targetOffset + linkTargetHeight / 2;
+  
+      sourceNode.sourceOffset += linkHeight;
+      targetNode.targetOffset += linkTargetHeight;
+  
+      return {
+        ...link,
+        sourceNode,
+        targetNode,
+        width: Math.max(1, link.value / 5),
+        points: [
+          { x: sourceNode.x1, y: y0 },
+          { x: targetNode.x0, y: y1 }
+        ]
+      };
+    });
+  }
+  
+
+  function drawDiagram() {
+    if (Object.keys(processedData).length === 0) return;
+
+    let nodes = computeNodeDepths(processedData.nodes, processedData.links);
+    nodes = computeNodeValues(nodes, processedData.links);
+    nodes = computeNodePositions(nodes);
+    const links = computeLinkPaths(processedData.links, nodes);
+
+    d3.select(".sankey-diagram").selectAll("*").remove();
+
+    const linkGroup = d3.select(".sankey-diagram")
+      .append("g")
+      .attr("class", "sankey-links");
+
+    linkGroup.selectAll(".link")
+      .data(links)
+      .enter()
+      .append("path")
+      .attr("class", "link")
+      .attr("d", d => {
+        const curvature = 0.5;
+        const x0 = d.points[0].x;
+        const x1 = d.points[1].x;
+        const y0 = d.points[0].y;
+        const y1 = d.points[1].y;
+        const xi = d3.interpolateNumber(x0, x1);
+        const x2 = xi(curvature);
+        const x3 = xi(1 - curvature);
+        return `M${x0},${y0}C${x2},${y0} ${x3},${y1} ${x1},${y1}`;
+      })
+      .attr("fill", "none")
+      .style("stroke-opacity", 0.6)
+      .style("stroke-width", d => d.width)
+      .attr("stroke", SOURCE_NODE_COLOR)
+      .on("mouseover", (event, d) => {
+          displayTooltip(event, d);
+      })
+      .on("mousemove", (event, d) => {
+          displayTooltip(event, d);
+      })
+      .on("mouseout", () => {
+          d3.selectAll(".tooltip").remove();
+      });
+
+    const nodeGroup = d3.select(".sankey-diagram")
+      .append("g")
+      .attr("class", "sankey-nodes");
+
+    nodeGroup.selectAll(".node")
+      .data(nodes)
+      .enter()
+      .append("rect")
+      .attr("class", "node")
+      .attr("x", d => d.x0)
+      .attr("y", d => d.y0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("width", d => d.x1 - d.x0)
+      .attr("stroke", "black")
+      .attr("fill", d => d.x0 < WIDTH / 2 ? SOURCE_NODE_COLOR : TARGET_NODE_COLOR)
+      .attr("opacity", 1.0)
+      .attr("rx", 0.9)
+      .on("mouseenter", (event, d) => {
+        displayTooltip(event, d);
+      })
+      .on("mousemove", (event, d) => {
+        displayTooltip(event, d);
+      })
+      .on("mouseout", () => {
+        d3.selectAll(".tooltip").remove();
+      });
+
+    // Draw labels
+    const labelGroup = d3.select(".sankey-diagram")
+      .append("g")
+      .attr("class", "sankey-labels");
+
+    labelGroup.selectAll(".label")
+      .data(nodes)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("x", d => (d.x0 < WIDTH / 2 ? d.x1 + MARGIN_X : d.x0 - MARGIN_X))
+      .attr("y", d => (d.y1 + d.y0) / 2)
+      .attr("dy", "0.34rem")
+      .attr("font-size", 16)
+      .attr("font-weight", 600)
+      .attr("text-anchor", d => (d.x0 < WIDTH / 2 ? "start" : "end"))
+      .attr("user-select", "none")
+      .attr("pointer-events", "none")
+      .text(d =>
+        translator.getTranslation(source, d.id) === d.id
+          ? translator.getTranslation(target, d.id)
+          : translator.getTranslation(source, d.id)
+      )
+      .on("mouseenter", (event, d) => {
+        console.log(d);
+        displayTooltip(event, d);
+      })
+      .on("mousemove", (event, d) => {
+        displayTooltip(event, d);
+      })
+      .on("mouseout", () => {
+        d3.selectAll(".tooltip").remove();
+      });
+  }
+
   useEffect(() => {
     processData();
   }, [data]);
 
-  function drawNodes(data, tip) {
-    d3.selectAll(".sankey-node").remove();
-    d3.select(".sankey-diagram")
-      .selectAll(".sankey-node")
-      .data(data)
-      .join("g")
-      .attr("class", "sankey-node")
-      .append("rect")
-      .on("mouseover", (e, n) => {
-        tip.show({ value: n.value }, e.currentTarget);
-      })
-      .on("mouseout", tip.hide);
-  }
-
-  function updateNodes() {
-    d3.selectAll(".sankey-node")
-      .select("rect")
-      .attr("height", (n) => n.y1 - n.y0)
-      .attr("width", () => sankeyGenerator.nodeWidth())
-      .attr("x", (n) => n.x0)
-      .attr("y", (n) => n.y0)
-      .attr("stroke", "black")
-      .attr("fill", (n) =>
-        n.x0 < WIDTH / 2 ? SOURCE_NODE_COLOR : TARGET_NODE_COLOR,
-      )
-      .attr("opacity", 1.0)
-      .attr("rx", 0.9);
-  }
-
-  function drawLinks(data, tip) {
-    d3.selectAll(".sankey-links").remove();
-    d3.select(".sankey-diagram")
-      .selectAll(".sankey-links")
-      .data(data)
-      .join("g")
-      .attr("class", "sankey-links")
-      .append("path")
-      .on("mouseover", (e, n) => {
-        tip.show({ value: n.value }, e.currentTarget);
-      })
-      .on("mouseout", tip.hide);
-  }
-
-  function updateLinks() {
-    const linkGenerator = sankeyLinkHorizontal();
-
-    d3.selectAll(".sankey-links")
-      .select("path")
-      .attr("d", (l) => linkGenerator(l))
-      .attr("fill", "none")
-      .style("stroke-opacity", 0.6)
-      .style("stroke-width", (l) => l.width)
-      .attr("stroke", SOURCE_NODE_COLOR);
-  }
-
-  function drawLabels(data) {
-    d3.selectAll(".sankey-labels").remove();
-    d3.select(".sankey-diagram")
-      .selectAll(".sankey-labels")
-      .data(data)
-      .join("g")
-      .attr("class", "sankey-labels")
-      .append("text");
-  }
-
-  function updateLabels() {
-    d3.selectAll(".sankey-labels")
-      .select("text")
-      .attr("x", (n) => (n.x0 < WIDTH / 2 ? n.x1 + MARGIN_X : n.x0 - MARGIN_X))
-      .attr("y", (n) => (n.y1 + n.y0) / 2)
-      .attr("dy", "0.34rem")
-      .attr("font-size", 16)
-      .attr("font-weight", 600)
-      .attr("text-anchor", (n) => (n.x0 < WIDTH / 2 ? "start" : "end"))
-      .text((n) =>
-        translator.getTranslation(source, n.id) === n.id
-          ? translator.getTranslation(target, n.id)
-          : translator.getTranslation(source, n.id),
-      );
-  }
-
-  function getContents(n) {
-    const tooltip = d3.create("div");
-
-    tooltip
-      .append("div")
-      .attr("id", "tooltip-content")
-      .text(`Passager(s): ${n.value}`);
-
-    return tooltip.html();
-  }
-
   useEffect(() => {
     if (Object.keys(processedData).length !== 0) {
-      const { nodes, links } = sankeyGenerator(processedData);
-      const tip = d3Tip()
-        .attr("class", "d3-tip")
-        .html(function (node) {
-          return getContents(node);
-        });
-      d3.select(".sankey-diagram").call(tip);
-
-      drawLinks(links, tip);
-      updateLinks();
-
-      drawNodes(nodes, tip);
-      updateNodes();
-
-      drawLabels(nodes);
-      updateLabels();
+      drawDiagram();
     }
   }, [processedData]);
 
@@ -245,7 +346,7 @@ export default function SankeyDiagram({ data }) {
           qui les unissaient.
         </p>
         <div className="sankey">
-          <div className={"sankey-container "}>
+          <div className={"sankey-container"} style={{ position: "relative"}}>
             <svg
               className="sankey-diagram maritime-bulletin"
               width={WIDTH}
