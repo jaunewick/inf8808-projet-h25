@@ -429,18 +429,16 @@ function BoxplotPortClassSurvival({ data, active }) {
     port
   ) => {
     const jitterWidthFactor = 0.1;
-    const container = d3.select(".boxplot-port-class-survival").node().getBoundingClientRect();
-
+    
     Array.from(portData).forEach(([className, survivalData]) => {
       survivalStatus.forEach((status) => {
         const groupData = survivalData.get(status);
         if (!groupData) return;
-
+        
         const xPos =
-          xScale(className) +
-          xScale.bandwidth() * (status === "oui" ? 0.15 : 0.65);
+        xScale(className) +
+        xScale.bandwidth() * (status === "oui" ? 0.15 : 0.65);
         const jitterWidth = xScale.bandwidth() * jitterWidthFactor;
-
         
         groupData.forEach((d, i) => {
           chart
@@ -449,11 +447,12 @@ function BoxplotPortClassSurvival({ data, active }) {
             "cx",
             xPos - jitterWidth / 2 + Math.random() * jitterWidth - 15
           )
-          .attr("cy", height) // Start from bottom
+          .attr("cy", height)
           .attr("r", 2.5)
           .attr("fill", colorScale(status))
           .attr("opacity", 0)
           .on("mouseover", (event) => {
+            const container = d3.select(".boxplot-port-class-survival").node().getBoundingClientRect();
             d3.select(".boxplot-port-class-survival")
               .append("div")
               .attr("id", "tooltip_port_class_box")
