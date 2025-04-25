@@ -5,7 +5,7 @@ import { StarboardPortPieChart } from "./components/StarboardPortPieChart/Starbo
 import Waffle from './components/waffle/Waffle';
 import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
 import Boxplot from "./components/boxplot/Boxplot";
-import PictographSection from "./components/pictograph/PictographSection";
+import PictographSection from "./components/Pictograph/PictographSection";
 import laurieImg from './assets/laurie.png';
 import danielImg from './assets/daniel.png';
 import huyvietImg from './assets/huyviet.png';
