@@ -70,7 +70,11 @@ export const PieChart = ({
 
   return (
     <div className={classes.container}>
-      {title && <p><b>{title} </b></p>}
+      {title && (
+        <p>
+          <b>{title} </b>
+        </p>
+      )}
       <svg ref={ref}></svg>
     </div>
   );

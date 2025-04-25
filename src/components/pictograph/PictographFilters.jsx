@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import React, { useEffect, useState } from "react";
-import { standingPerson } from '../../assets/standingPerson';
+
+import { standingPerson } from "../../assets/standingPerson";
 import SurvivalCalculator from "../../services/probabilityCalculator";
 import "./Pictograph.css";
 
@@ -21,10 +22,10 @@ const PictographFilters = () => {
       .append("g")
       .attr("id", `iconCustom${text}`)
       .append("path")
-      .attr('d', standingPerson);
+      .attr("d", standingPerson);
 
     const numCols = 10;
-    const numRows = 1 ;
+    const numRows = 1;
     const xPadding = 0;
     const yPadding = 5;
     const hBuffer = 0;
@@ -48,7 +49,9 @@ const PictographFilters = () => {
         const whole = Math.floor(d / numCols);
         return yPadding + whole * hBuffer;
       })
-      .attr("class", (d) => (d < Math.round(value) ? "iconSelected" : "iconPlain"));
+      .attr("class", (d) =>
+        d < Math.round(value) ? "iconSelected" : "iconPlain",
+      );
   };
 
   const updateVisualization = React.useCallback(async () => {
@@ -57,24 +60,25 @@ const PictographFilters = () => {
       isMale: genderFilter === "all" ? null : genderFilter === "male",
       passengerClass: classFilter === "all" ? null : parseInt(classFilter),
       ageRange:
-        ageFilter === "all" ? null : 
-        ageFilter === "child" ? [0, 17] :
-        ageFilter === "youngadult" ? [18, 24] :
-        ageFilter === "adult" ? [25, 64] :
-        ageFilter === "elderly" ? [65, 100] : null
+        ageFilter === "all"
+          ? null
+          : ageFilter === "child"
+            ? [0, 17]
+            : ageFilter === "youngadult"
+              ? [18, 24]
+              : ageFilter === "adult"
+                ? [25, 64]
+                : ageFilter === "elderly"
+                  ? [65, 100]
+                  : null,
     });
-    
+
     createVisualization("user", result || 0);
   }, [genderFilter, ageFilter, classFilter]);
 
   useEffect(() => {
-      updateVisualization();
-  }, [
-    genderFilter,
-    ageFilter,
-    classFilter,
-    updateVisualization,
-  ]);
+    updateVisualization();
+  }, [genderFilter, ageFilter, classFilter, updateVisualization]);
 
   return (
     <div>

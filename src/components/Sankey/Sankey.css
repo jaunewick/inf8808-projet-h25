@@ -1,16 +1,16 @@
 .sankey {
-    display: flex;
-    flex-direction: column;
-    width: fit-content;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
 }
 
 .sankey-controls {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .disable-pointer-events {
-    pointer-events: none;
+  pointer-events: none;
 }

@@ -6,49 +6,90 @@ import { COUNTRY_NAMES_MAP } from "../../constants/countries";
 import "./Waffle.css";
 
 const REGIONS = {
-  "Îles britanniques": ["England", "Channel Islands", "Wales", "Northern Ireland", "Ireland", "Scotland"],
-  "Amérique": ["United States", "Argentina", "Canada", "Peru", "Cuba", "Guyana", "Uruguay", "Mexico"],
-  "Scandinavie": ["Norway", "Sweden", "Finland", "Denmark"],
-  "Asie": ["China/Hong Kong", "India", "Japan", "Lebanon", "Siam", "Syria", "Turkey", "Egypt"],
-  "Europe continentale hors Scandinavie": [
-    "Belgium", "Austria", "France", "Germany", "Slovakia (Modern day)", "Slovenia",
-    "Switzerland", "Poland", "Hungary", "Latvia", "Italy", "Spain", "Greece",
-    "Russia", "Yugoslavia", "Croatia (Modern)", "Bulgaria", "Bosnia", "Croatia",
-    "Netherlands"
+  "Îles britanniques": [
+    "England",
+    "Channel Islands",
+    "Wales",
+    "Northern Ireland",
+    "Ireland",
+    "Scotland",
   ],
-  "Monde": Object.keys(COUNTRY_NAMES_MAP)
+  Amérique: [
+    "United States",
+    "Argentina",
+    "Canada",
+    "Peru",
+    "Cuba",
+    "Guyana",
+    "Uruguay",
+    "Mexico",
+  ],
+  Scandinavie: ["Norway", "Sweden", "Finland", "Denmark"],
+  Asie: [
+    "China/Hong Kong",
+    "India",
+    "Japan",
+    "Lebanon",
+    "Siam",
+    "Syria",
+    "Turkey",
+    "Egypt",
+  ],
+  "Europe continentale hors Scandinavie": [
+    "Belgium",
+    "Austria",
+    "France",
+    "Germany",
+    "Slovakia (Modern day)",
+    "Slovenia",
+    "Switzerland",
+    "Poland",
+    "Hungary",
+    "Latvia",
+    "Italy",
+    "Spain",
+    "Greece",
+    "Russia",
+    "Yugoslavia",
+    "Croatia (Modern)",
+    "Bulgaria",
+    "Bosnia",
+    "Croatia",
+    "Netherlands",
+  ],
+  Monde: Object.keys(COUNTRY_NAMES_MAP),
 };
 
 const REGION_COLORS = {
   "Îles britanniques": "#E63946",
-  "Amérique": "#457B9D",
-  "Scandinavie": "#1D3557",
-  "Asie": "#F1C453",
+  Amérique: "#457B9D",
+  Scandinavie: "#1D3557",
+  Asie: "#F1C453",
   "Europe continentale hors Scandinavie": "#2A9D8F",
-  "Autre": "#777777"
+  Autre: "#777777",
 };
 
 const REGION_POSITIONS = {
   "Îles britanniques": { column: 0, row: 0 },
-  "Amérique": { column: 1, row: 0 },
-  "Scandinavie": { column: 2, row: 0 },
-  "Asie": { column: 2, row: 1 },
+  Amérique: { column: 1, row: 0 },
+  Scandinavie: { column: 2, row: 0 },
+  Asie: { column: 2, row: 1 },
   "Europe continentale hors Scandinavie": { column: 1, row: 1 },
-  "Autre": { column: 1, row: 2 } 
+  Autre: { column: 1, row: 2 },
 };
 
 const PORTS = {
   S: "Southampton",
   C: "Cherbourg",
-  Q: "Queenstown"
+  Q: "Queenstown",
 };
 
 const CLASS_LABELS = {
   "1st": "Première classe",
   "2nd": "Deuxième classe",
   "3rd": "Troisième classe",
-  "crew": "Équipage",
-  "unknown": "Inconnu"
+  crew: "Équipage",
+  unknown: "Inconnu",
 };
 
 const UNIT_SIDE_LENGTH = 7;
@@ -63,7 +104,11 @@ export function Waffle({ data }) {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    const enhancedData = data.map((p, i) => ({ ...p, id: `passenger-${i}`, class: p.class.includes("crew") ? "crew" : p.class}));
+    const enhancedData = data.map((p, i) => ({
+      ...p,
+      id: `passenger-${i}`,
+      class: p.class.includes("crew") ? "crew" : p.class,
+    }));
     setPassengers(enhancedData);
   }, [data]);
 
@@ -71,13 +116,13 @@ export function Waffle({ data }) {
     const handleScroll = () => {
       d3.selectAll(".passenger-tooltip").remove();
     };
-  
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  
+
   useEffect(() => {
     if (!passengers.length) return;
 
@@ -86,7 +131,8 @@ export function Waffle({ data }) {
       const width = Math.min(window.innerWidth * 0.9, 1200);
       const height = 550;
 
-      const svg = d3.select(waffleRef.current)
+      const svg = d3
+        .select(waffleRef.current)
         .append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -95,7 +141,7 @@ export function Waffle({ data }) {
 
       svg.append("g").attr("class", "passengers-group");
       svgRef.current = svg.node();
-      
+
       renderWaffle(0);
     }
 
@@ -105,7 +151,7 @@ export function Waffle({ data }) {
       .setup({
         step: ".step-waffle",
         offset: 0.5,
-        debug: false
+        debug: false,
       })
       .onStepEnter(({ index }) => {
         setCurrentStep(index);
@@ -120,25 +166,49 @@ export function Waffle({ data }) {
   // Tooltip function
   const showTooltip = (event, passenger) => {
     d3.select(".waffle-chart").selectAll(".passenger-tooltip").remove();
-  
+
     const container = d3.select(".waffle-chart").node().getBoundingClientRect();
-  
-    const tooltip = d3.select(".waffle-chart")
+
+    const tooltip = d3
+      .select(".waffle-chart")
       .append("div")
       .attr("class", "passenger-tooltip")
       .style("position", "absolute")
       .style("left", `${event.clientX - container.left + 10}px`)
       .style("top", `${event.clientY - container.top + 10}px`);
-  
+
     tooltip.append("div").text(`Nom: ${passenger.name || "Inconnu"}`);
-    tooltip.append("div").text(`Pays: ${COUNTRY_NAMES_MAP[passenger.country] || "Inconnu"}`);
-    tooltip.append("div").text(`Classe: ${CLASS_LABELS[passenger.class] || "Inconnue"}`);
-    tooltip.append("div").text(`Âge: ${passenger.age ? `${parseFloat(passenger.age).toFixed(0)} ans` : "?"}`);
-    tooltip.append("div").text(`Genre: ${passenger.sex === "male" ? "Homme" : "Femme"}`);
-    tooltip.append("div").text(`Survie: ${passenger.survived === "yes" ? "Oui" : "Non"}`);
-    passenger.ticketno != "NA" && tooltip.append("div").text(`Numéro de ticket: ${passenger.ticketno || "?"}`);
-    passenger.fare != "NA" && tooltip.append("div").text(`Prix du billet: ${passenger.fare ? `${parseFloat(passenger.fare).toFixed(2)} $` : "?"}`);
-    passenger.embarked != "?" && tooltip.append("div").text(`Port d'embarquement: ${PORTS[passenger.embarked] || "?"}`);
+    tooltip
+      .append("div")
+      .text(`Pays: ${COUNTRY_NAMES_MAP[passenger.country] || "Inconnu"}`);
+    tooltip
+      .append("div")
+      .text(`Classe: ${CLASS_LABELS[passenger.class] || "Inconnue"}`);
+    tooltip
+      .append("div")
+      .text(
+        `Âge: ${passenger.age ? `${parseFloat(passenger.age).toFixed(0)} ans` : "?"}`,
+      );
+    tooltip
+      .append("div")
+      .text(`Genre: ${passenger.sex === "male" ? "Homme" : "Femme"}`);
+    tooltip
+      .append("div")
+      .text(`Survie: ${passenger.survived === "yes" ? "Oui" : "Non"}`);
+    passenger.ticketno != "NA" &&
+      tooltip
+        .append("div")
+        .text(`Numéro de ticket: ${passenger.ticketno || "?"}`);
+    passenger.fare != "NA" &&
+      tooltip
+        .append("div")
+        .text(
+          `Prix du billet: ${passenger.fare ? `${parseFloat(passenger.fare).toFixed(2)} $` : "?"}`,
+        );
+    passenger.embarked != "?" &&
+      tooltip
+        .append("div")
+        .text(`Port d'embarquement: ${PORTS[passenger.embarked] || "?"}`);
   };
 
   const renderWaffle = (step) => {
@@ -156,8 +226,10 @@ export function Waffle({ data }) {
     };
 
     const regionMap = new Map();
-    Object.keys(REGION_POSITIONS).forEach(region => {
-      const regionPassengers = passengers.filter(p => getRegion(p.country) === region);
+    Object.keys(REGION_POSITIONS).forEach((region) => {
+      const regionPassengers = passengers.filter(
+        (p) => getRegion(p.country) === region,
+      );
       const sortedRegionPassengers = regionPassengers.sort((a, b) => {
         return (b.survived === "yes") - (a.survived === "yes");
       });
@@ -167,7 +239,7 @@ export function Waffle({ data }) {
     const sortedPassengers = [...passengers].sort((a, b) => {
       return (b.survived === "yes") - (a.survived === "yes");
     });
-    
+
     const positions = sortedPassengers.map((d, i) => {
       if (step === 0) {
         const cols = Math.floor(width / (UNIT_SIDE_LENGTH + UNIT_SPACING));
@@ -177,54 +249,64 @@ export function Waffle({ data }) {
           y: Math.floor(i / cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING) + 25,
           fill: d.survived === "yes" ? "#344C65" : "transparent",
           stroke: d.survived === "no" ? "#344C65" : "none",
-          strokeWidth: d.survived === "no" ? 1.2 : 0
+          strokeWidth: d.survived === "no" ? 1.2 : 0,
         };
-        
       } else {
         const region = getRegion(d.country);
         const regionPassengers = regionMap.get(region) || [];
-        
+
         const position = REGION_POSITIONS[region] || REGION_POSITIONS["Autre"];
-        
+
         // Calculer les coordonnées en fonction de la colonne et de la ligne
         const regionX = position.column * (width / 3) + 20;
         const regionY = position.row * (height / 3) + 30;
-        
-        const regionIdx = regionPassengers.findIndex(p => p.id === d.id);
-        const cols = Math.floor((width / 3 - 40) / (UNIT_SIDE_LENGTH + UNIT_SPACING));
+
+        const regionIdx = regionPassengers.findIndex((p) => p.id === d.id);
+        const cols = Math.floor(
+          (width / 3 - 40) / (UNIT_SIDE_LENGTH + UNIT_SPACING),
+        );
         return {
           id: d.id,
           x: regionX + (regionIdx % cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
-          y: regionY + Math.floor(regionIdx / cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
-          fill: d.survived === "yes"
-            ? REGION_COLORS[region] || REGION_COLORS["Autre"]
-            : "transparent",
-          stroke: d.survived === "no"
-            ? d3.color(REGION_COLORS[region] || REGION_COLORS["Autre"]).darker(0.2).toString()
-            : "none",
-          strokeWidth: d.survived === "no" ? 1.2 : 0
+          y:
+            regionY +
+            Math.floor(regionIdx / cols) * (UNIT_SIDE_LENGTH + UNIT_SPACING),
+          fill:
+            d.survived === "yes"
+              ? REGION_COLORS[region] || REGION_COLORS["Autre"]
+              : "transparent",
+          stroke:
+            d.survived === "no"
+              ? d3
+                  .color(REGION_COLORS[region] || REGION_COLORS["Autre"])
+                  .darker(0.2)
+                  .toString()
+              : "none",
+          strokeWidth: d.survived === "no" ? 1.2 : 0,
         };
       }
     });
 
-    const posMap = new Map(positions.map(p => [p.id, p]));
+    const posMap = new Map(positions.map((p) => [p.id, p]));
 
-    const squares = svg.select(".passengers-group")
+    const squares = svg
+      .select(".passengers-group")
       .selectAll(".passenger-square")
-      .data(sortedPassengers, d => d.id);
+      .data(sortedPassengers, (d) => d.id);
 
     // Enter new squares
-    squares.enter()
+    squares
+      .enter()
       .append("rect")
       .attr("class", "passenger-square")
       .attr("width", UNIT_SIDE_LENGTH)
       .attr("height", UNIT_SIDE_LENGTH)
       .attr("rx", 1)
-      .attr("x", d => posMap.get(d.id).x)
-      .attr("y", d => posMap.get(d.id).y)
-      .attr("fill", d => posMap.get(d.id).fill)
-      .attr("stroke", d => posMap.get(d.id).stroke)
-      .attr("stroke-width", d => posMap.get(d.id).strokeWidth)
+      .attr("x", (d) => posMap.get(d.id).x)
+      .attr("y", (d) => posMap.get(d.id).y)
+      .attr("fill", (d) => posMap.get(d.id).fill)
+      .attr("stroke", (d) => posMap.get(d.id).stroke)
+      .attr("stroke-width", (d) => posMap.get(d.id).strokeWidth)
       .style("opacity", 0)
       .on("mouseenter", (event, d) => {
         showTooltip(event, d);
@@ -237,14 +319,15 @@ export function Waffle({ data }) {
       .style("opacity", 1);
 
     // Update existing squares
-    squares.transition()
+    squares
+      .transition()
       .duration(TRANSITION_DURATION)
-      .attr("x", d => posMap.get(d.id).x)
-      .attr("y", d => posMap.get(d.id).y)
-      .attr("fill", d => posMap.get(d.id).fill)
-      .attr("stroke", d => posMap.get(d.id).stroke)
-      .attr("stroke-width", d => posMap.get(d.id).strokeWidth);
-    
+      .attr("x", (d) => posMap.get(d.id).x)
+      .attr("y", (d) => posMap.get(d.id).y)
+      .attr("fill", (d) => posMap.get(d.id).fill)
+      .attr("stroke", (d) => posMap.get(d.id).stroke)
+      .attr("stroke-width", (d) => posMap.get(d.id).strokeWidth);
+
     squares
       .on("mouseenter", (event, d) => {
         showTooltip(event, d);
@@ -256,7 +339,8 @@ export function Waffle({ data }) {
     svg.selectAll(".region-label").remove();
 
     if (step === 0) {
-      svg.append("text")
+      svg
+        .append("text")
         .attr("class", "region-label")
         .attr("x", width / 2)
         .attr("y", 5)
@@ -266,10 +350,11 @@ export function Waffle({ data }) {
         .text("Mondialement");
     } else if (step === 1) {
       Object.entries(REGION_POSITIONS).forEach(([region, position]) => {
-        const regionX = position.column * (width / 3) + (width / 6);
+        const regionX = position.column * (width / 3) + width / 6;
         const regionY = position.row * (height / 3) + 30;
-        
-        svg.append("text")
+
+        svg
+          .append("text")
           .attr("class", "region-label")
           .attr("x", regionX - 6)
           .attr("y", regionY - 10)
@@ -288,15 +373,21 @@ export function Waffle({ data }) {
         <section className="story-section">
           <h2>Qui était à bord du Titanic ?</h2>
           <p>
-          Le Titanic transportait des passagers venus d'Europe, d'Amérique, d'Asie et d'autres régions du monde.
-          Cette diversité d'origines montre à quel point le voyage dépassait les frontières nationales.
-          Des personnes de différents pays se retrouvaient à bord, réunies pour traverser l'Atlantique.
+            Le Titanic transportait des passagers venus d'Europe, d'Amérique,
+            d'Asie et d'autres régions du monde. Cette diversité d'origines
+            montre à quel point le voyage dépassait les frontières nationales.
+            Des personnes de différents pays se retrouvaient à bord, réunies
+            pour traverser l'Atlantique.
           </p>
         </section>
-                  
+
         <div className="chart-container" ref={waffleRef}>
           <div className="chart-header">
-            <h3>{currentStep === 0 ? "Répartition mondiale" : "Répartition par région d'origine"}</h3>
+            <h3>
+              {currentStep === 0
+                ? "Répartition mondiale"
+                : "Répartition par région d'origine"}
+            </h3>
             <div className="waffle-labels">
               <div className="survived-label square"></div>
               <span>Survivant</span>
@@ -305,7 +396,7 @@ export function Waffle({ data }) {
             </div>
           </div>
         </div>
-      
+
         <div className="steps-container">
           <div className="step-waffle step-0" data-scrollama-index="0">
             <div className="step-content"></div>
@@ -316,17 +407,24 @@ export function Waffle({ data }) {
         </div>
       </div>
 
-      <section className="chart-section">      
+      <section className="chart-section">
         <div className="chart-analysis">
-          <p>L'analyse de la répartition des passagers en fonction de leur origine indique plusieurs points importants: </p>
+          <p>
+            L'analyse de la répartition des passagers en fonction de leur
+            origine indique plusieurs points importants:{" "}
+          </p>
           <ul>
-            <li>Près du deux tiers des passagers n'ont pas survécu au naufrage</li>
-            <li>La majorité des passagers étaient d'origine européenne</li>
-            <li>La majorité des passagers européens sont issus des îles britanniques</li>
             <li>
-              Contrairement à la tendance globale, près de la moitié 
-              des passagers issus d'Amérique et d'Asie ont 
-              survécu au naufrage
+              Près du deux tiers des passagers n'ont pas survécu au naufrage
+            </li>
+            <li>La majorité des passagers étaient d'origine européenne</li>
+            <li>
+              La majorité des passagers européens sont issus des îles
+              britanniques
+            </li>
+            <li>
+              Contrairement à la tendance globale, près de la moitié des
+              passagers issus d'Amérique et d'Asie ont survécu au naufrage
             </li>
           </ul>
         </div>

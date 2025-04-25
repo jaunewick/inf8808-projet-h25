@@ -1,13 +1,13 @@
 svg {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .iconPlain {
-    fill: #777777;
+  fill: #777777;
 }
 
 .iconSelected {
-    fill: #E9BA24;
+  fill: #e9ba24;
 }
 
 .filters {
@@ -42,7 +42,6 @@ select {
   font-family: inherit;
   transition: border-color 0.3s;
 }
-  
 
 .pictograph-section {
   display: flex;
@@ -74,18 +73,17 @@ select {
   display: flex;
 }
 
-  .scrollytelling {
-    width: 100%;
-    margin: 0 auto;
-  }
-  
-  .step-picto {
-    text-align: center;
-    opacity: 0.2;
-    transition: opacity 0.3s ease;
-  }
-  
-  .step-picto.is-active {
-    opacity: 1;
-  }
-  
+.scrollytelling {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.step-picto {
+  text-align: center;
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.step-picto.is-active {
+  opacity: 1;
+}

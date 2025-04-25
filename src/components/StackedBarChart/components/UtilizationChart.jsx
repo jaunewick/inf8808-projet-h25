@@ -56,7 +56,7 @@ const UtilizationChart = ({ svgRef, data, scales }) => {
         d3
           .axisLeft(y2)
           .ticks(5)
-          .tickFormat((d) => `${d}%`)
+          .tickFormat((d) => `${d}%`),
       )
       .selectAll("text")
       .style("font-size", FONTS.axis.size)
@@ -163,7 +163,7 @@ const UtilizationChart = ({ svgRef, data, scales }) => {
             .ease(d3.easeBounceOut)
             .attr("y", height)
             .attr("height", 0)
-            .remove()
+            .remove(),
       );
 
     // Add utilization values
@@ -202,7 +202,7 @@ const UtilizationChart = ({ svgRef, data, scales }) => {
             .duration(1000)
             .ease(d3.easeBounceOut)
             .attr("y", height)
-            .remove()
+            .remove(),
       );
 
     // Add legend

@@ -39,7 +39,7 @@ const TimeChart = ({ svgRef, data, scales }) => {
             });
           }
           return "";
-        })
+        }),
       )
       .selectAll("text")
       .style("text-anchor", "end")
@@ -140,7 +140,7 @@ const TimeChart = ({ svgRef, data, scales }) => {
           .attr("class", "tooltip")
           .attr(
             "transform",
-            `translate(${xTime(i) + xTime.bandwidth() / 2}, ${y(d.total) - 20})`
+            `translate(${xTime(i) + xTime.bandwidth() / 2}, ${y(d.total) - 20})`,
           );
 
         tooltip

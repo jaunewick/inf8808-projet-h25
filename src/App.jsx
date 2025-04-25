@@ -1,17 +1,17 @@
 import SankeyDiagram from "./components/Sankey/Sankey";
-import { useState, useEffect } from 'react'
-import DBReader from './services/dbReader'
+import { useState, useEffect } from "react";
+import DBReader from "./services/dbReader";
 import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
-import Waffle from './components/waffle/Waffle';
+import Waffle from "./components/waffle/Waffle";
 import StackedBarChart from "./components/StackedBarChart/StackedBarChart";
 import Boxplot from "./components/boxplot/Boxplot";
 import PictographSection from "./components/Pictograph/PictographSection";
-import laurieImg from './assets/laurie.png';
-import danielImg from './assets/daniel.png';
-import huyvietImg from './assets/huyviet.png';
-import jacobImg from './assets/jacob.png';
-import melviceImg from './assets/melvice.jpeg';
-import thomasImg from './assets/thomas.jpeg';
+import laurieImg from "./assets/laurie.png";
+import danielImg from "./assets/daniel.png";
+import huyvietImg from "./assets/huyviet.png";
+import jacobImg from "./assets/jacob.png";
+import melviceImg from "./assets/melvice.jpeg";
+import thomasImg from "./assets/thomas.jpeg";
 
 function App() {
   const [titanicData, setData] = useState(null);
@@ -69,14 +69,22 @@ function App() {
             seuls 498 rescapés ont pu être comptabilisés à ce jour.
           </p>
 
-          <p>Notre rédaction a recueilli le témoignage bouleversant d'une rescapée, Mme Louise Laroche : "Le choc fut si brutal que les passagers de troisième classe crurent à une avarie de machine. Quand l'ordre d'évacuation fut donné, les premières-classes avaient déjà pris possession des canots. La scène des violonistes jouant Nearer, My God, to Thee tandis que l'arrière du navire se dressait vers les cieux reste gravée à jamais dans ma mémoire."</p>
+          <p>
+            Notre rédaction a recueilli le témoignage bouleversant d'une
+            rescapée, Mme Louise Laroche : "Le choc fut si brutal que les
+            passagers de troisième classe crurent à une avarie de machine. Quand
+            l'ordre d'évacuation fut donné, les premières-classes avaient déjà
+            pris possession des canots. La scène des violonistes jouant Nearer,
+            My God, to Thee tandis que l'arrière du navire se dressait vers les
+            cieux reste gravée à jamais dans ma mémoire."
+          </p>
         </div>
 
         <div className="newspaper-image">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/RMS_Titanic_3.jpg/1200px-RMS_Titanic_3.jpg"
             alt="Le Titanic quittant le port de Southampton"
-            style={{ width: '100%', height: 'auto' }}
+            style={{ width: "100%", height: "auto" }}
           />
           <div className="image-caption">
             "Le colosse des mers" appareillant de Southampton le 10 avril 1912,
@@ -102,7 +110,7 @@ function App() {
       </div>
 
       <div className="maritime-bulletin">
-        {lifeboatsData && (<StarboardPortPieChart data={lifeboatsData} />)}
+        {lifeboatsData && <StarboardPortPieChart data={lifeboatsData} />}
       </div>
 
       <div className="maritime-bulletin">
@@ -138,12 +146,12 @@ function App() {
               Conception et développement réalisé par l'équipe 6.
             </p>
             <p className="footer-text">
-              Dans le cadre du cours de Visualisation de données INF8808, Hiver 2025.
+              Dans le cadre du cours de Visualisation de données INF8808, Hiver
+              2025.
             </p>
           </div>
         </div>
       </footer>
-
     </div>
   );
 }

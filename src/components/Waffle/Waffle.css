@@ -121,12 +121,12 @@
 }
 
 .survived-label {
-  background-color: #344C65;
+  background-color: #344c65;
 }
 
 .deceased-label {
   background-color: "transparent";
-  border: 1px solid #344C65;
+  border: 1px solid #344c65;
 }
 
 .waffle-labels span:first-of-type {
@@ -140,7 +140,7 @@
   border: 1px solid var(--border-color);
   padding: 10px;
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-size: 0.85rem;
   max-width: 250px;
   z-index: 200;
@@ -148,13 +148,17 @@
 }
 
 .passenger-tooltip div {
-  margin-bottom:.3rem;
+  margin-bottom: 0.3rem;
 }
 
 /* Animation for transitions */
 @keyframes fadeIn {
-  from { opacity: 0.2; }
-  to { opacity: 1; }
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .passenger-square {
