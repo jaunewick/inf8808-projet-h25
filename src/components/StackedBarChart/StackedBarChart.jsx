@@ -4,7 +4,7 @@ import scrollama from "scrollama";
 import TimeChart from "./components/TimeChart";
 import UtilizationChart from "./components/UtilizationChart";
 import { createScales } from "./utils/scales";
-import { COLORS, FONTS, STYLES } from "./utils/chartStyles";
+import { COLORS } from "./utils/chartStyles";
 import "./StackedBarChart.css";
 
 const StackedBarChart = ({ data }) => {
