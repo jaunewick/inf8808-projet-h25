@@ -59,8 +59,8 @@ export default function SankeyDiagram({ data }) {
       .style("border", "1px solid gray")
       .style("border-radius", "4px")
       .style("padding", "5px")
-      .style("width", "10rem")
       .style("pointer-events", "none")
+      .style("font-weight", "bold")
       .style("opacity", 1)
       .style("z-index", 1000)
       .style("left", event.clientX - container.left + 10 + "px")
@@ -123,65 +123,70 @@ export default function SankeyDiagram({ data }) {
   }
 
   function computeNodePositions(nodes) {
-    // Sort nodes by depth
     const nodesByDepth = d3.group(nodes, d => d.depth);
     const maxDepth = d3.max(nodes, d => d.depth);
-    
-    // Increase horizontal spacing by adjusting this range
+  
     const xScale = d3.scaleLinear()
       .domain([0, maxDepth])
-      .range([MARGIN_X, WIDTH - MARGIN_X]);
-    
+      .range([MARGIN_X, WIDTH - MARGIN_X - 30]);
+  
     nodesByDepth.forEach((depthNodes, depth) => {
-      const totalValue = d3.sum(depthNodes, d => d.value);
-      let yPos = MARGIN_Y;
-      
-      depthNodes.sort((a, b) => b.value - a.value);
-      
+      let totalValue = d3.sum(depthNodes, d => d.value);
+      const availableHeight = HEIGHT - 2 * MARGIN_Y;
+      const k = availableHeight / totalValue;
+  
+      let y = MARGIN_Y;
+  
       depthNodes.forEach(node => {
-        // Increase vertical spacing by adjusting the multiplier (from 10 to 20)
-        const height = (HEIGHT - 2 * MARGIN_Y - 20 * (depthNodes.length - 1)) * (node.value / totalValue);
-      
         node.x0 = xScale(depth);
-        // Increase horizontal width of nodes if desired
-        node.x1 = xScale(depth) + 32;
-        node.y0 = yPos;
-        node.y1 = yPos + height + 10;
-        // Increase vertical gap between nodes (from 10 to 20)
-        yPos += height + 20;
+        node.x1 = node.x0 + 20;
+        node.y0 = y;
+        node.y1 = y + node.value * k;
+        y = node.y1 + 10;
       });
     });
-    
+  
     return nodes;
   }
-
+  
   function computeLinkPaths(links, nodes) {
     const nodeMap = new Map(nodes.map(node => [node.id, { ...node, sourceOffset: 0, targetOffset: 0 }]));
-  
-    const sourceGroups = d3.group(links, d => d.source);
-    const targetGroups = d3.group(links, d => d.target);
   
     return links.map(link => {
       const sourceNode = nodeMap.get(link.source);
       const targetNode = nodeMap.get(link.target);
   
-      const totalSource = d3.sum(sourceGroups.get(link.source), d => d.value);
-      const totalTarget = d3.sum(targetGroups.get(link.target), d => d.value);
+      const sourceHeight = sourceNode.y1 - sourceNode.y0;
+      const targetHeight = targetNode.y1 - targetNode.y0;
   
-      const linkHeight = (sourceNode.y1 - sourceNode.y0) * (link.value / totalSource);
-      const linkTargetHeight = (targetNode.y1 - targetNode.y0) * (link.value / totalTarget);
+      const totalSourceLinks = d3.sum(
+        links.filter(l => l.source === link.source),
+        l => l.value
+      );
+      const totalTargetLinks = d3.sum(
+        links.filter(l => l.target === link.target),
+        l => l.value
+      );
   
-      const y0 = sourceNode.y0 + sourceNode.sourceOffset + linkHeight / 2;
-      const y1 = targetNode.y0 + targetNode.targetOffset + linkTargetHeight / 2;
+      const sy0 = sourceNode.y0 + sourceNode.sourceOffset;
+      const ty0 = targetNode.y0 + targetNode.targetOffset;
+  
+      const ksy = sourceHeight / totalSourceLinks;
+      const kty = targetHeight / totalTargetLinks;
+  
+      const linkHeight = link.value * Math.min(ksy, kty);
+  
+      const y0 = sy0 + linkHeight / 2;
+      const y1 = ty0 + linkHeight / 2;
   
       sourceNode.sourceOffset += linkHeight;
-      targetNode.targetOffset += linkTargetHeight;
+      targetNode.targetOffset += linkHeight;
   
       return {
         ...link,
         sourceNode,
         targetNode,
-        width: Math.max(1, link.value / 5),
+        width: linkHeight,
         points: [
           { x: sourceNode.x1, y: y0 },
           { x: targetNode.x0, y: y1 }
@@ -190,7 +195,6 @@ export default function SankeyDiagram({ data }) {
     });
   }
   
-
   function drawDiagram() {
     if (Object.keys(processedData).length === 0) return;
 
@@ -223,7 +227,7 @@ export default function SankeyDiagram({ data }) {
       })
       .attr("fill", "none")
       .style("stroke-opacity", 0.6)
-      .style("stroke-width", d => d.width)
+      .style("stroke-width", d => Math.max(1, d.width))
       .attr("stroke", SOURCE_NODE_COLOR)
       .on("mouseover", (event, d) => {
           displayTooltip(event, d);
@@ -276,7 +280,7 @@ export default function SankeyDiagram({ data }) {
       .attr("y", d => (d.y1 + d.y0) / 2)
       .attr("dy", "0.34rem")
       .attr("font-size", 16)
-      .attr("font-weight", 600)
+      .attr("font-weight", 800)
       .attr("text-anchor", d => (d.x0 < WIDTH / 2 ? "start" : "end"))
       .attr("user-select", "none")
       .attr("pointer-events", "none")
@@ -286,7 +290,6 @@ export default function SankeyDiagram({ data }) {
           : translator.getTranslation(source, d.id)
       )
       .on("mouseenter", (event, d) => {
-        console.log(d);
         displayTooltip(event, d);
       })
       .on("mousemove", (event, d) => {
@@ -350,7 +353,7 @@ export default function SankeyDiagram({ data }) {
             <svg
               className="sankey-diagram maritime-bulletin"
               width={WIDTH}
-              height={HEIGHT}
+              height={HEIGHT + 50}
             ></svg>
           </div>
           <div className="sankey-controls">

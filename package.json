@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "d3": "^7.9.0",
-    "d3-sankey": "^0.12.3",
-    "d3-tip": "^0.9.1",
     "papaparse": "^5.5.2",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
