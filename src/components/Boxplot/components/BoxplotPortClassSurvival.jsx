@@ -429,6 +429,7 @@ function BoxplotPortClassSurvival({ data, active }) {
     port
   ) => {
     const jitterWidthFactor = 0.1;
+    const container = d3.select(".boxplot-port-class-survival").node().getBoundingClientRect();
 
     Array.from(portData).forEach(([className, survivalData]) => {
       survivalStatus.forEach((status) => {
@@ -440,44 +441,50 @@ function BoxplotPortClassSurvival({ data, active }) {
           xScale.bandwidth() * (status === "oui" ? 0.15 : 0.65);
         const jitterWidth = xScale.bandwidth() * jitterWidthFactor;
 
+        
         groupData.forEach((d, i) => {
           chart
-            .append("circle")
-            .attr(
-              "cx",
-              xPos - jitterWidth / 2 + Math.random() * jitterWidth - 15
-            )
-            .attr("cy", height) // Start from bottom
-            .attr("r", 2.5)
-            .attr("fill", colorScale(status))
-            .attr("opacity", 0)
-            // .on("mouseover", (event) => {
-            //   tooltip
-            //     .style("opacity", 1)
-            //     .html(
-            //       `
-            //         <strong>Survie :</strong> <span style="color: ${status === "oui" ? "#1D3557" : "#E63946"};">${status === "oui" ? "Oui" : "Non"}</span><br>
-            //         <strong>Port :</strong> ${port}<br>
-            //         <strong>Classe :</strong> ${className}<br>
-            //         <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
-            //       `
-            //     )
-            //     .style("left", `${event.pageX - 185}px`)
-            //     .style("top", `${event.pageY - 20}px`);
-            // })
-            // .on("mousemove", (event) => {
-            //   tooltip
-            //     .style("left", `${event.pageX - 185}px`)
-            //     .style("top", `${event.pageY - 20}px`);
-            // })
-            // .on("mouseout", () => {
-            //   d3.select("#tooltip_port_class_box").remove()"
-            // })
-            .transition()
-            .delay(i * 2 + 1200) // Staggered delay for each point, after boxes
-            .duration(600)
-            .attr("cy", yScale(d.fare))
-            .attr("opacity", 0.4);
+          .append("circle")
+          .attr(
+            "cx",
+            xPos - jitterWidth / 2 + Math.random() * jitterWidth - 15
+          )
+          .attr("cy", height) // Start from bottom
+          .attr("r", 2.5)
+          .attr("fill", colorScale(status))
+          .attr("opacity", 0)
+          .on("mouseover", (event) => {
+            d3.select(".boxplot-port-class-survival")
+              .append("div")
+              .attr("id", "tooltip_port_class_box")
+              .style("position", "absolute")
+              .style("background-color", "white")
+              .style("border", "1px solid gray")
+              .style("border-radius", "4px")
+              .style("padding", "5px")
+              .style("width", "12rem")
+              .style("pointer-events", "none")
+              .style("opacity", 1)
+              .html(
+                `
+                  <strong>Survie :</strong> <span style="color: ${status === "oui" ? "#1D3557" : "#E63946"};">${status === "oui" ? "Oui" : "Non"}</span><br>
+                  <strong>Port :</strong> ${port}<br>
+                  <strong>Classe :</strong> ${className}<br>
+                  <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
+                `
+              )
+              .style("left", `${event.clientX - container.left + 10}px`)
+              .style("top", `${event.clientY - container.top - 85}px`)
+              
+          })
+          .on("mouseout", () => {
+            d3.select("#tooltip_port_class_box").remove();
+          })
+          .transition()
+          .delay(i * 2 + 1200) // Staggered delay for each point, after boxes
+          .duration(600)
+          .attr("cy", yScale(d.fare))
+          .attr("opacity", 0.4)
         });
       });
     });
