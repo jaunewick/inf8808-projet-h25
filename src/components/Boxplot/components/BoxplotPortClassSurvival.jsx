@@ -265,7 +265,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke", colorScale(status))
           .attr("stroke-opacity", 0.7)
           .attr("stroke-width", 1.5)
-          .on("mouseover", (event, d) => {
+          .on("mouseover", (event) => {
            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
@@ -288,7 +288,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke", colorScale(status))
           .attr("stroke-opacity", 0.7)
           .attr("stroke-width", 1.5)
-          .on("mouseover", (event, d) => {
+          .on("mouseover", (event) => {
            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
@@ -311,7 +311,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke", colorScale(status))
           .attr("stroke-opacity", 0)
           .attr("stroke-width", 1.5)
-          .on("mouseover", (event, d) => {
+          .on("mouseover", (event) => {
            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
@@ -334,7 +334,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke", colorScale(status))
           .attr("stroke-opacity", 0)
           .attr("stroke-width", 1.5)
-          .on("mouseover", (event, d) => {
+          .on("mouseover", (event) => {
            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
@@ -358,7 +358,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("fill-opacity", 0.7)
           .attr("stroke", colorScale(status))
           .attr("stroke-width", 1.5)
-          .on("mouseover", (event, d) => {
+          .on("mouseover", (event) => {
            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
