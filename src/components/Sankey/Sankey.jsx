@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
-import { GENDER, AGE, EMBARKED, SIBSP, SURVIVED, CLASS } from '../../constants/column-titles'
+import { GENDER, AGE, EMBARKED, SIBSP, SURVIVED, CLASS } from '../../constants/columnTitles'
 import Translate from '../../util/getTranslation'
 import * as d3 from 'd3'
 import d3Tip from 'd3-tip'
-import './sankey.css'
+import './Sankey.css'
 
 const MARGIN_X  = 20
 const MARGIN_Y  = 20

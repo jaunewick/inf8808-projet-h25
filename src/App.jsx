@@ -1,9 +1,9 @@
-import SankeyDiagram from "./components/sankey/sankey";
+import SankeyDiagram from "./components/Sankey/Sankey";
 import { useState, useEffect } from 'react'
 import DBReader from './services/dbReader'
 import { StarboardPortPieChart } from "./components/StarboardPortPieChart/StarboardPortPieChart";
 import Waffle from './components/waffle/Waffle';
-import StackedBarChart from "./components/stacked-bar-chart/StackedBarChart";
+import StackedBarChart from "./components/StackedBarChart/StackedBarChart";
 import Boxplot from "./components/boxplot/Boxplot";
 import PictographSection from "./components/Pictograph/PictographSection";
 import laurieImg from './assets/laurie.png';

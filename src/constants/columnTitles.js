@@ -1,4 +1,3 @@
-
 export const NAME = 'name';
 export const GENDER = 'gender';
 export const AGE = 'age';
