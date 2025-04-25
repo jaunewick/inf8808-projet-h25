@@ -3,23 +3,12 @@ import * as d3 from "d3";
 
 const BoxplotClassSurvival = ({ data, active }) => {
   const svgRef = useRef();
-  const tooltipRef = useRef();
   const margin = { top: 40, right: 30, bottom: 120, left: 60 };
   const width = 1150 - margin.left - margin.right;
   const height = 500 - margin.top - margin.bottom;
 
   useEffect(() => {
     if (!data || !active) return;
-
-    const tooltip = d3
-      .select(tooltipRef.current)
-      .style("position", "absolute")
-      .style("background-color", "white")
-      .style("border", "1px solid gray")
-      .style("border-radius", "4px")
-      .style("padding", "5px")
-      .style("pointer-events", "none")
-      .style("opacity", 0);
 
     const processedData = preprocessData(data);
     const sumstat = d3.group(
@@ -45,7 +34,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
       yScale,
       colorScale,
       survivalStatus,
-      tooltip,
     );
     drawMedianLines(chart, sumstat, xScale, yScale, colorScale, survivalStatus);
     drawJitterPoints(
@@ -55,7 +43,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
       yScale,
       colorScale,
       survivalStatus,
-      tooltip,
     );
     drawAnnotations(chart, sumstat, classNames, xScale, height);
     drawLegend(svg);
@@ -149,6 +136,30 @@ const BoxplotClassSurvival = ({ data, active }) => {
       .text("Prix du Billet (USD)");
   };
 
+  const showTooltipBox = (event, d) => {
+      d3.select("#tooltip_class_box").remove();
+      const container = d3
+        .select(".boxplot-port-class-survival")
+        .node()
+        .getBoundingClientRect();
+  
+      d3.select(".boxplot-port-class-survival")
+        .append("div")
+        .attr("id", "tooltip_class_box")
+        .style("position", "absolute")
+        .style("left", `${event.clientX - container.left + 10}px`)
+        .style("top", `${event.clientY - container.top - 240}px`)
+        .style("background-color", "white")
+        .style("border", "1px solid gray")
+        .style("border-radius", "4px")
+        .style("padding", "5px")
+        .style("width", "15rem")
+        .style("pointer-events", "none")
+        .style("opacity", 1)
+        .style("z-index", 1000)
+        .html(d);
+    };
+
   const drawBoxplots = (
     chart,
     portData,
@@ -156,7 +167,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
     yScale,
     colorScale,
     survivalStatus,
-    tooltip,
   ) => {
     const boxWidthFactor = 0.25;
     const capWidth = 15;
@@ -182,19 +192,19 @@ const BoxplotClassSurvival = ({ data, active }) => {
         const boxWidth = xScale.bandwidth() * boxWidthFactor;
 
         const whiskerTooltipContent = `
-                    <strong>Survie :</strong> <span style="color: ${status === "oui" ? "#1D3557" : "#E63946"};">${status === "oui" ? "Oui" : "Non"}</span><br>
-                    <strong>Classe :</strong> ${className}<br>
-                    <strong>Valeurs principales :</strong><br>
-                    - 3e quartile (Q3) : $${q3.toFixed(2)}<br>
-                    - Médiane : $${median.toFixed(2)}<br>
-                    - 1er quartile (Q1) : $${q1.toFixed(2)}<br>
-                    <strong>Limites :</strong><br>
-                    - Limite supérieure : $${upperFence.toFixed(2)}<br>
-                    - Limite inférieure : $${lowerFence.toFixed(2)}<br>
-                    <strong>Valeurs aberrantes :</strong><br>
-                    - Max : $${max.toFixed(2)}<br>
-                    - Min : $${min.toFixed(2)}
-                `;
+          <strong>Survie :</strong> <span style="color: ${status === "oui" ? "#1D3557" : "#E63946"};">${status === "oui" ? "Oui" : "Non"}</span><br>
+          <strong>Classe :</strong> ${className}<br>
+          <strong>Valeurs principales :</strong><br>
+          - 3e quartile (Q3) : $${q3.toFixed(2)}<br>
+          - Médiane : $${median.toFixed(2)}<br>
+          - 1er quartile (Q1) : $${q1.toFixed(2)}<br>
+          <strong>Limites :</strong><br>
+          - Limite supérieure : $${upperFence.toFixed(2)}<br>
+          - Limite inférieure : $${lowerFence.toFixed(2)}<br>
+          <strong>Valeurs aberrantes :</strong><br>
+          - Max : $${max.toFixed(2)}<br>
+          - Min : $${min.toFixed(2)}
+        `;
 
         // Lower whisker with animation
         chart
@@ -207,19 +217,13 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .attr("stroke-opacity", 0.7)
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-            tooltip
-              .style("opacity", 1)
-              .html(whiskerTooltipContent)
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mousemove", (event) => {
-            tooltip
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mouseout", () => {
-            tooltip.style("opacity", 0);
+            d3.select("#tooltip_class_box").remove();
           })
           .transition()
           .duration(800)
@@ -236,19 +240,13 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .attr("stroke-opacity", 0.7)
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-            tooltip
-              .style("opacity", 1)
-              .html(whiskerTooltipContent)
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mousemove", (event) => {
-            tooltip
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mouseout", () => {
-            tooltip.style("opacity", 0);
+            d3.select("#tooltip_class_box").remove();
           })
           .transition()
           .duration(800)
@@ -265,19 +263,13 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .attr("stroke-opacity", 0)
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-            tooltip
-              .style("opacity", 1)
-              .html(whiskerTooltipContent)
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mousemove", (event) => {
-            tooltip
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mouseout", () => {
-            tooltip.style("opacity", 0);
+            d3.select("#tooltip_class_box").remove();
           })
           .transition()
           .duration(1000)
@@ -294,19 +286,13 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .attr("stroke-opacity", 0)
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-            tooltip
-              .style("opacity", 1)
-              .html(whiskerTooltipContent)
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mousemove", (event) => {
-            tooltip
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mouseout", () => {
-            tooltip.style("opacity", 0);
+            d3.select("#tooltip_class_box").remove();
           })
           .transition()
           .duration(1000)
@@ -324,19 +310,13 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .attr("stroke", colorScale(status))
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-            tooltip
-              .style("opacity", 1)
-              .html(whiskerTooltipContent)
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mousemove", (event) => {
-            tooltip
-              .style("left", `${event.pageX - 200}px`)
-              .style("top", `${event.pageY - 290}px`);
+            showTooltipBox(event, whiskerTooltipContent);
           })
           .on("mouseout", () => {
-            tooltip.style("opacity", 0);
+            d3.select("#tooltip_class_box").remove();
           })
           .transition()
           .duration(1000)
@@ -396,9 +376,9 @@ const BoxplotClassSurvival = ({ data, active }) => {
     yScale,
     colorScale,
     survivalStatus,
-    tooltip,
   ) => {
     const jitterWidthFactor = 0.2;
+    const container = d3.select(".boxplot-class-survival").node().getBoundingClientRect();
 
     Array.from(sumstat).forEach(([className, survivalData]) => {
       survivalStatus.forEach((status) => {
@@ -422,25 +402,29 @@ const BoxplotClassSurvival = ({ data, active }) => {
             .attr("fill", colorScale(status))
             .attr("opacity", 0)
             .on("mouseover", (event) => {
-              tooltip
+              d3.select(".boxplot-class-survival")
+                .append("div")
+                .attr("id", "tooltip_class_box")
+                .style("position", "absolute")
+                .style("background-color", "white")
+                .style("border", "1px solid gray")
+                .style("border-radius", "4px")
+                .style("padding", "5px")
+                .style("width", "12rem")
+                .style("pointer-events", "none")
                 .style("opacity", 1)
                 .html(
                   `
-                                    <strong>Survie :</strong> <span style="color: ${status === "oui" ? "#1D3557" : "#E63946"};">${status === "oui" ? "Oui" : "Non"}</span><br>
-                                    <strong>Classe :</strong> ${d.classed}<br>
-                                    <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
-                                `,
+                    <strong>Survie :</strong> <span style="color: ${status === "oui" ? "#1D3557" : "#E63946"};">${status === "oui" ? "Oui" : "Non"}</span><br>
+                    <strong>Classe :</strong> ${d.classed}<br>
+                    <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
+                  `,
                 )
-                .style("left", `${event.pageX - 185}px`)
-                .style("top", `${event.pageY - 20}px`);
-            })
-            .on("mousemove", (event) => {
-              tooltip
-                .style("left", `${event.pageX - 185}px`)
-                .style("top", `${event.pageY - 20}px`);
+                .style("left", `${event.clientX - container.left + 10}px`)
+                .style("top", `${event.clientY - container.top - 85}px`)
             })
             .on("mouseout", () => {
-              tooltip.style("opacity", 0);
+              d3.select("#tooltip_class_box").remove();
             })
             .transition()
             .delay(i * 2) // Staggered delay for each point
@@ -544,12 +528,13 @@ const BoxplotClassSurvival = ({ data, active }) => {
 
   return (
     <div className="maritime-bulletin">
-      <svg
-        ref={svgRef}
-        width={width + margin.left + margin.right}
-        height={height + margin.top + margin.bottom}
-      />
-      <div ref={tooltipRef} />
+      <div className="boxplot-class-survival"  style={{ position: "relative" }}>
+        <svg
+          ref={svgRef}
+          width={width + margin.left + margin.right}
+          height={height + margin.top + margin.bottom}
+        />
+      </div>
     </div>
   );
 };
