@@ -332,24 +332,36 @@ function BoxplotSurvival({ data, active }) {
       .attr("fill", (d) => (d.survived === "oui" ? "#1D3557" : "#E63946"))
       .attr("opacity", 0)
       .on("mouseover", (event, d) => {
-        tooltip
-          .style("opacity", 1)
+        const container = d3.select(".boxplot-survival").node().getBoundingClientRect();
+        console.log(container.y, container.height);
+        console.log(event.clientY)
+        console.log(event.clientY - container.top + container.height, event.clientY - container.top + container.height - 330);
+       d3
+        .select(".boxplot-survival")
+        .append("div")
+        .attr("id", "tooltip_point")
+        .style("position", "absolute")  
+        .style("left", `${event.clientX - container.left + 10}px`)
+        .style("top", `${event.clientY - container.top - 50}px`)
+        .style("background-color", "white")
+        .style("border", "1px solid gray")
+        .style("border-radius", "4px")
+        .style("padding", "5px")
+        .style("pointer-events", "none")
+        .style("opacity", 1)
           .html(
             `
-                        <strong>Survie :</strong> <span style="color: ${d.survived === "oui" ? "#1D3557" : "#E63946"};">${d.survived === "oui" ? "Oui" : "Non"}</span><br>
-                        <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
-                    `,
+              <strong>Survie :</strong> <span style="color: ${d.survived === "oui" ? "#1D3557" : "#E63946"};">${d.survived === "oui" ? "Oui" : "Non"}</span><br>
+              <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
+            `,
           )
-          .style("left", `${event.pageX - 185}px`)
-          .style("top", `${event.pageY - 20}px`);
       })
       .on("mousemove", (event) => {
-        tooltip
-          .style("left", `${event.pageX - 185}px`)
-          .style("top", `${event.pageY - 20}px`);
+      
+
       })
       .on("mouseout", () => {
-        tooltip.style("opacity", 0);
+        d3.select("#tooltip_point").remove();
       })
       .transition()
       .delay((_, i) => i * 2)
@@ -448,13 +460,16 @@ function BoxplotSurvival({ data, active }) {
 
   return (
     <div className="maritime-bulletin">
-      <svg
-        ref={svgRef}
-        width={width + margin.left + margin.right}
-        height={height + margin.top + margin.bottom}
-      />
+      <div className="boxplot-survival" style={{ position: "relative" }}>
+        <svg
+          ref={svgRef}
+          width={width + margin.left + margin.right}
+          height={height + margin.top + margin.bottom}
+        />
+      </div>
       <div
         ref={tooltipRef}
+        id="tooltip"
         style={{
           position: "absolute",
           backgroundColor: "white",
