@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import * as d3 from "d3";
+
 import { COLORS, FONTS, STYLES } from "../utils/chartStyles";
 import "./TimeChart.css";
 

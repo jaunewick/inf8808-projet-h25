@@ -1,4 +1,5 @@
 import React from "react";
+
 import "./Boxplot.css";
 
 const BoxplotClassSurvivalHeader = () => {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import scrollama from "scrollama";
-import DBReader from "../../services/dbReader";
+
 import { PieChart } from "./PieChart";
 import classes from "./StarboardPortPieChart.module.css";
 
