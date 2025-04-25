@@ -1,13 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import scrollama from "scrollama";
 
-import BoxplotSurvivalHeader from "./utils/BoxplotSurvivalHeader";
-import BoxplotClassSurvivalHeader from "./utils/BoxplotClassSurvivalHeader";
-import BoxplotPortClassSurvivalHeader from "./utils/BoxplotPortClassSurvivalHeader";
+import BoxplotSurvivalHeader from "./utils/headersUtils/BoxplotSurvivalHeader";
+import BoxplotClassSurvivalHeader from "./utils/headersUtils/BoxplotClassSurvivalHeader";
+import BoxplotPortClassSurvivalHeader from "./utils/headersUtils/BoxplotPortClassSurvivalHeader";
+import BoxplotFooter from "./utils/headersUtils/BoxplotFooter";
 import BoxplotSurvival from "./components/BoxplotSurvival";
 import BoxplotClassSurvival from "./components/BoxplotClassSurvival";
 import BoxplotPortClassSurvival from "./components/BoxplotPortClassSurvival";
-import BoxplotFooter from "./utils/BoxplotFooter";
 
 function Boxplot({ data }) {
   const scroller = useRef(null);
@@ -34,7 +34,10 @@ function Boxplot({ data }) {
     <>
       <section className="step-boxplot" data-step="survival">
         <BoxplotSurvivalHeader />
-        <BoxplotSurvival data={data} active={currentStep === "survival"} />
+        <BoxplotSurvival
+          data={data}
+          active={currentStep === "survival"}
+        />
       </section>
       <section className="step-boxplot" data-step="classSurvival">
         <BoxplotClassSurvivalHeader />

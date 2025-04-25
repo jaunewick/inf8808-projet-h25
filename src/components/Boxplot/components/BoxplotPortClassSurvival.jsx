@@ -52,7 +52,6 @@ function BoxplotPortClassSurvival({ data, active }) {
         survivalStatus,
         port
       );
-      // Draw median lines separately for better animation control
       drawMedianLines(
         portGroup,
         portData,
@@ -195,7 +194,7 @@ function BoxplotPortClassSurvival({ data, active }) {
       .style("border", "1px solid gray")
       .style("border-radius", "4px")
       .style("padding", "5px")
-      .style("width", "15rem")
+      .style("width", "16rem")
       .style("pointer-events", "none")
       .style("opacity", 1)
       .style("z-index", 1000)
@@ -238,8 +237,8 @@ function BoxplotPortClassSurvival({ data, active }) {
         const boxHeight = Math.max(yScale(q1) - yScale(q3), minBoxHeight);
         const boxY = yScale(q3);
 
-        const whiskerTooltipContent = 
-        `
+        const whiskerTooltipContent =
+          `
           <strong>Survie :</strong> <span style="color: ${status === "oui" ? "#1D3557" : "#E63946"};">${status === "oui" ? "Oui" : "Non"}</span><br>
           <strong>Port :</strong> ${port}<br>
           <strong>Classe :</strong> ${className}<br>
@@ -255,7 +254,6 @@ function BoxplotPortClassSurvival({ data, active }) {
           - Min : $${min.toFixed(2)}
         `;
 
-        // Lower whisker with animation
         chart
           .append("line")
           .attr("x1", xPos)
@@ -266,7 +264,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke-opacity", 0.7)
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-           showTooltipBox(event, whiskerTooltipContent)
+            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
             showTooltipBox(event, whiskerTooltipContent)
@@ -278,7 +276,6 @@ function BoxplotPortClassSurvival({ data, active }) {
           .duration(800)
           .attr("y2", yScale(lowerFence));
 
-        // Upper whisker with animation
         chart
           .append("line")
           .attr("x1", xPos)
@@ -289,7 +286,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke-opacity", 0.7)
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-           showTooltipBox(event, whiskerTooltipContent)
+            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
             showTooltipBox(event, whiskerTooltipContent)
@@ -301,7 +298,6 @@ function BoxplotPortClassSurvival({ data, active }) {
           .duration(800)
           .attr("y2", yScale(upperFence));
 
-        // Lower cap with animation
         chart
           .append("line")
           .attr("x1", xPos - capWidth / 2)
@@ -312,7 +308,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke-opacity", 0)
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-           showTooltipBox(event, whiskerTooltipContent)
+            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
             showTooltipBox(event, whiskerTooltipContent)
@@ -324,7 +320,6 @@ function BoxplotPortClassSurvival({ data, active }) {
           .duration(1000)
           .attr("stroke-opacity", 0.7);
 
-        // Upper cap with animation
         chart
           .append("line")
           .attr("x1", xPos - capWidth / 2)
@@ -335,7 +330,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke-opacity", 0)
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-           showTooltipBox(event, whiskerTooltipContent)
+            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
             showTooltipBox(event, whiskerTooltipContent)
@@ -347,7 +342,6 @@ function BoxplotPortClassSurvival({ data, active }) {
           .duration(1000)
           .attr("stroke-opacity", 0.7);
 
-        // Box with animation
         chart
           .append("rect")
           .attr("x", xPos - boxWidth / 2)
@@ -359,7 +353,7 @@ function BoxplotPortClassSurvival({ data, active }) {
           .attr("stroke", colorScale(status))
           .attr("stroke-width", 1.5)
           .on("mouseover", (event) => {
-           showTooltipBox(event, whiskerTooltipContent)
+            showTooltipBox(event, whiskerTooltipContent)
           })
           .on("mousemove", (event) => {
             showTooltipBox(event, whiskerTooltipContent)
@@ -375,7 +369,6 @@ function BoxplotPortClassSurvival({ data, active }) {
     });
   };
 
-  // Added separate function for drawing median lines with animations
   const drawMedianLines = (
     chart,
     portData,
@@ -399,7 +392,6 @@ function BoxplotPortClassSurvival({ data, active }) {
           xScale.bandwidth() * (status === "oui" ? 0.25 : 0.75);
         const boxWidth = xScale.bandwidth() * boxWidthFactor;
 
-        // Median line with animation
         chart
           .append("line")
           .attr("x1", xPos - boxWidth / 2)
@@ -429,61 +421,60 @@ function BoxplotPortClassSurvival({ data, active }) {
     port
   ) => {
     const jitterWidthFactor = 0.1;
-    
+
     Array.from(portData).forEach(([className, survivalData]) => {
       survivalStatus.forEach((status) => {
         const groupData = survivalData.get(status);
         if (!groupData) return;
-        
+
         const xPos =
-        xScale(className) +
-        xScale.bandwidth() * (status === "oui" ? 0.15 : 0.65);
+          xScale(className) +
+          xScale.bandwidth() * (status === "oui" ? 0.15 : 0.65);
         const jitterWidth = xScale.bandwidth() * jitterWidthFactor;
-        
+
         groupData.forEach((d, i) => {
           chart
-          .append("circle")
-          .attr(
-            "cx",
-            xPos - jitterWidth / 2 + Math.random() * jitterWidth - 15
-          )
-          .attr("cy", height)
-          .attr("r", 2.5)
-          .attr("fill", colorScale(status))
-          .attr("opacity", 0)
-          .on("mouseover", (event) => {
-            const container = d3.select(".boxplot-port-class-survival").node().getBoundingClientRect();
-            d3.select(".boxplot-port-class-survival")
-              .append("div")
-              .attr("id", "tooltip_port_class_box")
-              .style("position", "absolute")
-              .style("background-color", "white")
-              .style("border", "1px solid gray")
-              .style("border-radius", "4px")
-              .style("padding", "5px")
-              .style("width", "12rem")
-              .style("pointer-events", "none")
-              .style("opacity", 1)
-              .html(
-                `
+            .append("circle")
+            .attr(
+              "cx",
+              xPos - jitterWidth / 2 + Math.random() * jitterWidth - 15
+            )
+            .attr("cy", height)
+            .attr("r", 2.5)
+            .attr("fill", colorScale(status))
+            .attr("opacity", 0)
+            .on("mouseover", (event) => {
+              const container = d3.select(".boxplot-port-class-survival").node().getBoundingClientRect();
+              d3.select(".boxplot-port-class-survival")
+                .append("div")
+                .attr("id", "tooltip_port_class_box")
+                .style("position", "absolute")
+                .style("background-color", "white")
+                .style("border", "1px solid gray")
+                .style("border-radius", "4px")
+                .style("padding", "5px")
+                .style("width", "14rem")
+                .style("pointer-events", "none")
+                .style("opacity", 1)
+                .html(
+                  `
                   <strong>Survie :</strong> <span style="color: ${status === "oui" ? "#1D3557" : "#E63946"};">${status === "oui" ? "Oui" : "Non"}</span><br>
                   <strong>Port :</strong> ${port}<br>
                   <strong>Classe :</strong> ${className}<br>
                   <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
                 `
-              )
-              .style("left", `${event.clientX - container.left + 10}px`)
-              .style("top", `${event.clientY - container.top - 85}px`)
-              
-          })
-          .on("mouseout", () => {
-            d3.select("#tooltip_port_class_box").remove();
-          })
-          .transition()
-          .delay(i * 2 + 1200) // Staggered delay for each point, after boxes
-          .duration(600)
-          .attr("cy", yScale(d.fare))
-          .attr("opacity", 0.4)
+                )
+                .style("left", `${event.clientX - container.left + 10}px`)
+                .style("top", `${event.clientY - container.top - 85}px`)
+            })
+            .on("mouseout", () => {
+              d3.select("#tooltip_port_class_box").remove();
+            })
+            .transition()
+            .delay(i * 2 + 1200) // Staggered delay for each point, after boxes
+            .duration(600)
+            .attr("cy", yScale(d.fare))
+            .attr("opacity", 0.4)
         });
       });
     });
@@ -611,12 +602,12 @@ function BoxplotPortClassSurvival({ data, active }) {
 
   return (
     <div className="maritime-bulletin">
-      <div className="boxplot-port-class-survival"  style={{ position: "relative" }}>
+      <div className="boxplot-port-class-survival" style={{ position: "relative" }}>
         <svg
           ref={svgRef}
           width={width + margin.left + margin.right}
           height={height + margin.top + margin.bottom}
-          />
+        />
       </div>
     </div>
   );

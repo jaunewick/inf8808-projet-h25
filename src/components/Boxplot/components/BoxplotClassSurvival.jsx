@@ -137,28 +137,28 @@ const BoxplotClassSurvival = ({ data, active }) => {
   };
 
   const showTooltipBox = (event, d) => {
-      d3.select("#tooltip_class_box").remove();
-      const container = d3
-        .select(".boxplot-port-class-survival")
-        .node()
-        .getBoundingClientRect();
-  
-      d3.select(".boxplot-port-class-survival")
-        .append("div")
-        .attr("id", "tooltip_class_box")
-        .style("position", "absolute")
-        .style("left", `${event.clientX - container.left + 10}px`)
-        .style("top", `${event.clientY - container.top - 240}px`)
-        .style("background-color", "white")
-        .style("border", "1px solid gray")
-        .style("border-radius", "4px")
-        .style("padding", "5px")
-        .style("width", "15rem")
-        .style("pointer-events", "none")
-        .style("opacity", 1)
-        .style("z-index", 1000)
-        .html(d);
-    };
+    d3.select("#tooltip_class_box").remove();
+    const container = d3
+      .select(".boxplot-port-class-survival")
+      .node()
+      .getBoundingClientRect();
+
+    d3.select(".boxplot-port-class-survival")
+      .append("div")
+      .attr("id", "tooltip_class_box")
+      .style("position", "absolute")
+      .style("left", `${event.clientX - container.left + 10}px`)
+      .style("top", `${event.clientY - container.top - 240}px`)
+      .style("background-color", "white")
+      .style("border", "1px solid gray")
+      .style("border-radius", "4px")
+      .style("padding", "5px")
+      .style("width", "16rem")
+      .style("pointer-events", "none")
+      .style("opacity", 1)
+      .style("z-index", 1000)
+      .html(d);
+  };
 
   const drawBoxplots = (
     chart,
@@ -206,7 +206,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
           - Min : $${min.toFixed(2)}
         `;
 
-        // Lower whisker with animation
         chart
           .append("line")
           .attr("x1", xPos)
@@ -229,7 +228,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .duration(800)
           .attr("y2", yScale(lowerFence));
 
-        // Upper whisker with animation
         chart
           .append("line")
           .attr("x1", xPos)
@@ -252,7 +250,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .duration(800)
           .attr("y2", yScale(upperFence));
 
-        // Lower cap
         chart
           .append("line")
           .attr("x1", xPos - capWidth / 2)
@@ -275,7 +272,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .duration(1000)
           .attr("stroke-opacity", 0.7);
 
-        // Upper cap
         chart
           .append("line")
           .attr("x1", xPos - capWidth / 2)
@@ -298,7 +294,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
           .duration(1000)
           .attr("stroke-opacity", 0.7);
 
-        // Box with animation
         chart
           .append("rect")
           .attr("x", xPos - boxWidth / 2)
@@ -326,7 +321,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
     });
   };
 
-  // New separate function for drawing median lines
   const drawMedianLines = (
     chart,
     sumstat,
@@ -350,7 +344,6 @@ const BoxplotClassSurvival = ({ data, active }) => {
           xScale.bandwidth() * (status === "oui" ? 0.25 : 0.75);
         const boxWidth = xScale.bandwidth() * boxWidthFactor;
 
-        // Median line with animation
         chart
           .append("line")
           .attr("x1", xPos - boxWidth / 2)
@@ -378,29 +371,29 @@ const BoxplotClassSurvival = ({ data, active }) => {
     survivalStatus,
   ) => {
     const jitterWidthFactor = 0.2;
-    
+
     Array.from(sumstat).forEach(([className, survivalData]) => {
       survivalStatus.forEach((status) => {
         const groupData = survivalData.get(status);
         if (!groupData) return;
-        
+
         const xPos =
-        xScale(className) +
-        xScale.bandwidth() * (status === "oui" ? 0.25 : 0.75);
+          xScale(className) +
+          xScale.bandwidth() * (status === "oui" ? 0.25 : 0.75);
         const jitterWidth = xScale.bandwidth() * jitterWidthFactor;
-        
+
         groupData.forEach((d, i) => {
           chart
-          .append("circle")
-          .attr(
-            "cx",
-            xPos - jitterWidth / 2 + Math.random() * jitterWidth - 53,
-          )
-          .attr("cy", height) // Start from bottom
-          .attr("r", 2.5)
-          .attr("fill", colorScale(status))
-          .attr("opacity", 0)
-          .on("mouseover", (event) => {
+            .append("circle")
+            .attr(
+              "cx",
+              xPos - jitterWidth / 2 + Math.random() * jitterWidth - 53,
+            )
+            .attr("cy", height) // Start from bottom
+            .attr("r", 2.5)
+            .attr("fill", colorScale(status))
+            .attr("opacity", 0)
+            .on("mouseover", (event) => {
               const container = d3.select(".boxplot-class-survival").node().getBoundingClientRect();
               d3.select(".boxplot-class-survival")
                 .append("div")
@@ -410,7 +403,7 @@ const BoxplotClassSurvival = ({ data, active }) => {
                 .style("border", "1px solid gray")
                 .style("border-radius", "4px")
                 .style("padding", "5px")
-                .style("width", "12rem")
+                .style("width", "14rem")
                 .style("pointer-events", "none")
                 .style("opacity", 1)
                 .html(
@@ -528,7 +521,7 @@ const BoxplotClassSurvival = ({ data, active }) => {
 
   return (
     <div className="maritime-bulletin">
-      <div className="boxplot-class-survival"  style={{ position: "relative" }}>
+      <div className="boxplot-class-survival" style={{ position: "relative" }}>
         <svg
           ref={svgRef}
           width={width + margin.left + margin.right}

@@ -1,6 +1,7 @@
 import React from "react";
 
-import "./Boxplot.css";
+import "./BoxplotHeaders.css";
+
 
 function BoxplotPortClassSurvivalHeader() {
   return (
