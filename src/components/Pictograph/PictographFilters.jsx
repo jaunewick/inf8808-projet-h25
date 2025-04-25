@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import React, { useEffect, useState } from "react";
 import { standingPerson } from '../../assets/standingPerson';
-import SurvivalCalculator from "../../services/ProbabilityCalculator";
+import SurvivalCalculator from "../../services/probabilityCalculator";
 import "./Pictograph.css";
 
 const PictographFilters = () => {

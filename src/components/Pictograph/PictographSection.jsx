@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import scrollama from "scrollama";
 import Pictograph from "./Pictograph";
-import SurvivalCalculator from "../../services/ProbabilityCalculator";
+import SurvivalCalculator from "../../services/probabilityCalculator";
 import PictographFilters from "./PictographFilters";
 import "./Pictograph.css";
 
