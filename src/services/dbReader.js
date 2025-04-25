@@ -17,7 +17,7 @@ class DBReader {
 
   async loadTitanicData() {
     try {
-      const titanicResponse = await fetch("data/titanic_with_crew.csv");
+      const titanicResponse = await fetch("data/titanicWithCrew.csv");
       const titanicText = await titanicResponse.text();
       this.#titanicData = Papa.parse(titanicText, {
         header: true,
