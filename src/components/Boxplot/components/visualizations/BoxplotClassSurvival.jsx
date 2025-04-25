@@ -8,7 +8,7 @@ import {
   drawJitterPoints,
   drawAnnotations,
   drawLegend
-} from "../utils/drawUtils/BoxplotClassSurvivalDraw";
+} from "../../utils/drawUtils/BoxplotClassSurvivalDraw";
 
 const BoxplotClassSurvival = ({ data, active }) => {
   const svgRef = useRef();

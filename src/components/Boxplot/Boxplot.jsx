@@ -1,13 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import scrollama from "scrollama";
 
-import BoxplotSurvivalHeader from "./utils/headersUtils/BoxplotSurvivalHeader";
-import BoxplotClassSurvivalHeader from "./utils/headersUtils/BoxplotClassSurvivalHeader";
-import BoxplotPortClassSurvivalHeader from "./utils/headersUtils/BoxplotPortClassSurvivalHeader";
-import BoxplotFooter from "./utils/headersUtils/BoxplotFooter";
-import BoxplotSurvival from "./components/BoxplotSurvival";
-import BoxplotClassSurvival from "./components/BoxplotClassSurvival";
-import BoxplotPortClassSurvival from "./components/BoxplotPortClassSurvival";
+import BoxplotSurvivalHeader from "./components/headers/BoxplotSurvivalHeader";
+import BoxplotClassSurvivalHeader from "./components/headers/BoxplotClassSurvivalHeader";
+import BoxplotPortClassSurvivalHeader from "./components/headers/BoxplotPortClassSurvivalHeader";
+import BoxplotFooter from "./components/headers/BoxplotFooter";
+import BoxplotSurvival from "./components/visualizations/BoxplotSurvival";
+import BoxplotClassSurvival from "./components/visualizations/BoxplotClassSurvival";
+import BoxplotPortClassSurvival from "./components/visualizations/BoxplotPortClassSurvival";
 
 function Boxplot({ data }) {
   const scroller = useRef(null);

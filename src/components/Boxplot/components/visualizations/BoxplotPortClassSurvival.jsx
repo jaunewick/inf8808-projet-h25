@@ -9,7 +9,7 @@ import {
   drawAnnotations,
   drawChartLabels,
   drawLegend
-} from "../utils/drawUtils/BoxplotPortClassSurvivalDraw";
+} from "../../utils/drawUtils/BoxplotPortClassSurvivalDraw";
 
 function BoxplotPortClassSurvival({ data, active }) {
   const svgRef = useRef();

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-import { drawAxes, drawBoxplots, drawMedianLines, drawJitterPoints, drawAnnotations, drawLegend } from "../utils/drawUtils/BoxplotSurvivalDraw";
+import { drawAxes, drawBoxplots, drawMedianLines, drawJitterPoints, drawAnnotations, drawLegend } from "../../utils/drawUtils/BoxplotSurvivalDraw";
 
 function BoxplotSurvival({ data, active }) {
   const svgRef = useRef();
