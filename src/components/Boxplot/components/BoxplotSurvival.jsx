@@ -447,19 +447,6 @@ function BoxplotSurvival({ data, active }) {
           height={height + margin.top + margin.bottom}
         />
       </div>
-      {/* <div
-        ref={tooltipRef}
-        id="tooltip"
-        style={{
-          position: "absolute",
-          backgroundColor: "white",
-          border: "1px solid gray",
-          borderRadius: "4px",
-          padding: "5px",
-          pointerEvents: "none",
-          opacity: 0,
-        }}
-      /> */}
     </div>
   );
 }
