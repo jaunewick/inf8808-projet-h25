@@ -378,30 +378,30 @@ const BoxplotClassSurvival = ({ data, active }) => {
     survivalStatus,
   ) => {
     const jitterWidthFactor = 0.2;
-    const container = d3.select(".boxplot-class-survival").node().getBoundingClientRect();
-
+    
     Array.from(sumstat).forEach(([className, survivalData]) => {
       survivalStatus.forEach((status) => {
         const groupData = survivalData.get(status);
         if (!groupData) return;
-
+        
         const xPos =
-          xScale(className) +
-          xScale.bandwidth() * (status === "oui" ? 0.25 : 0.75);
+        xScale(className) +
+        xScale.bandwidth() * (status === "oui" ? 0.25 : 0.75);
         const jitterWidth = xScale.bandwidth() * jitterWidthFactor;
-
+        
         groupData.forEach((d, i) => {
           chart
-            .append("circle")
-            .attr(
-              "cx",
-              xPos - jitterWidth / 2 + Math.random() * jitterWidth - 53,
-            )
-            .attr("cy", height) // Start from bottom
-            .attr("r", 2.5)
-            .attr("fill", colorScale(status))
-            .attr("opacity", 0)
-            .on("mouseover", (event) => {
+          .append("circle")
+          .attr(
+            "cx",
+            xPos - jitterWidth / 2 + Math.random() * jitterWidth - 53,
+          )
+          .attr("cy", height) // Start from bottom
+          .attr("r", 2.5)
+          .attr("fill", colorScale(status))
+          .attr("opacity", 0)
+          .on("mouseover", (event) => {
+              const container = d3.select(".boxplot-class-survival").node().getBoundingClientRect();
               d3.select(".boxplot-class-survival")
                 .append("div")
                 .attr("id", "tooltip_class_box")
@@ -421,7 +421,7 @@ const BoxplotClassSurvival = ({ data, active }) => {
                   `,
                 )
                 .style("left", `${event.clientX - container.left + 10}px`)
-                .style("top", `${event.clientY - container.top - 85}px`)
+                .style("top", `${event.clientY - container.top - 65}px`)
             })
             .on("mouseout", () => {
               d3.select("#tooltip_class_box").remove();

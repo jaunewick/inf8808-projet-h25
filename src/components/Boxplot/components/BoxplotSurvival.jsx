@@ -314,7 +314,7 @@ function BoxplotSurvival({ data, active }) {
           Math.random() * jitterWidth -
           150,
       )
-      .attr("cy", height) // départ en bas
+      .attr("cy", height)
       .attr("r", 2.5)
       .attr("fill", (d) => (d.survived === "oui" ? "#1D3557" : "#E63946"))
       .attr("opacity", 0)
@@ -333,12 +333,12 @@ function BoxplotSurvival({ data, active }) {
         .style("padding", "5px")
         .style("pointer-events", "none")
         .style("opacity", 1)
-          .html(
-            `
-              <strong>Survie :</strong> <span style="color: ${d.survived === "oui" ? "#1D3557" : "#E63946"};">${d.survived === "oui" ? "Oui" : "Non"}</span><br>
-              <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
-            `,
-          )
+        .html(
+          `
+            <strong>Survie :</strong> <span style="color: ${d.survived === "oui" ? "#1D3557" : "#E63946"};">${d.survived === "oui" ? "Oui" : "Non"}</span><br>
+            <strong>Prix du billet :</strong> $${d.fare.toFixed(2)}
+          `,
+        )
       })
       .on("mouseout", () => {
         d3.select("#tooltip_point").remove();
