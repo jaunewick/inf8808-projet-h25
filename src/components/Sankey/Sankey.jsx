@@ -290,7 +290,6 @@ export default function SankeyDiagram({ data }) {
           : translator.getTranslation(source, d.id)
       )
       .on("mouseenter", (event, d) => {
-        console.log(d);
         displayTooltip(event, d);
       })
       .on("mousemove", (event, d) => {
